@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:util="http://www.springframework.org/schema/util"
+    xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd 
+http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <!-- 系统参数默认值,key请保持跟枚举SystemParam一致,具体含义注释请查看此枚举 -->
+    <!-- 由于扩展项目无法更改SystemParam,则新增加的参数需要自行建立相应的枚举 -->
+    <bean id="systemParam" class="com.llsfw.core.common.SystemParamDef">
+        <property name="data">
+            <util:map id="systemParam" map-class="java.util.HashMap" key-type="java.lang.String" value-type="java.lang.String">
+                <entry key="PAGE_SIZE" value="50" />
+                <entry key="SYSTEM_DEF_PSWD" value="123456" />
+                <entry key="SESSION_NAME" value="USER_SESSION" />
+                <entry key="SYSTEM_DEF_NAME" value="SYSTEM" />
+                <entry key="DETAILED_RECORDS" value="true" />
+                <entry key="TRIGGER_SEARCH_INTERVAL" value="60000" />
+                <entry key="SCHEDULED_LOG_KEEP_TIME" value="30" />
+                <entry key="SCHEDULED_TRIGGER_LOG_KEEP_TIME" value="30" />
+                <entry key="APP_LOG_KEEP_TIME" value="30" />
+                <!-- 以下为自定义区域 -->
+            </util:map>
+        </property>
+    </bean>
+
+</beans>
