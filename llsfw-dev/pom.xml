@@ -6,9 +6,9 @@
     <packaging>war</packaging>
     <version>0.0.1-SNAPSHOT</version>
     <name>llsfw-dev Maven Webapp</name>
-    <url>http://maven.apache.org</url>
+    <url>http://maven.apache.org</url> 
     
-    <dependencies> 
+    <dependencies>
 
         <!-- servlet-api -->
         <dependency>
