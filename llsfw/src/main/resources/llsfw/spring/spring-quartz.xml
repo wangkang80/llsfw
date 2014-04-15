@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:util="http://www.springframework.org/schema/util"
+    xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd 
+http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <!-- 引入属性文件 -->
+    <context:property-placeholder location="classpath:resources.properties" />
+
+    <!-- 计划任务监听器 -->
+    <bean id="schedulerListener" class="com.llsfw.core.scheduler.Listener.SchedulerListener" />
+
+    <!-- 全局触发器监听器 -->
+    <bean id="triggerListener" class="com.llsfw.core.scheduler.Listener.TriggerListener" />
+
+    <!-- 全局作业监听器 -->
+    <bean id="jobListener" class="com.llsfw.core.scheduler.Listener.JobListener" />
+
+    <!-- Quartz集群Schduler -->
+    <bean id="clusterQuartzScheduler" lazy-init="false" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+
+        <!-- quartz属性 -->
+        <property name="quartzProperties">
+            <props>
+
+                <!-- Configure scheduler -->
+                <prop key="org.quartz.scheduler.instanceName">clusterQuartzScheduler</prop>
+                <prop key="org.quartz.scheduler.instanceId">AUTO</prop>
+                <prop key="org.quartz.scheduler.skipUpdateCheck">true</prop>
+
+                <!-- Configure ThreadPool -->
+                <prop key="org.quartz.threadPool.class">org.quartz.simpl.SimpleThreadPool</prop>
+                <prop key="org.quartz.threadPool.threadCount">${scheduler.threadCount}</prop>
+                <prop key="org.quartz.threadPool.threadPriority">5</prop>
+
+                <!-- Configure JobStore and Cluster -->
+                <prop key="org.quartz.jobStore.class">org.quartz.impl.jdbcjobstore.JobStoreTX</prop>
+                <prop key="org.quartz.jobStore.driverDelegateClass">${scheduler.driverDelegateClass}</prop>
+                <prop key="org.quartz.jobStore.useProperties">false</prop>
+                <prop key="org.quartz.jobStore.tablePrefix">QRTZ_</prop>
+                <prop key="org.quartz.jobStore.isClustered">true</prop>
+                <prop key="org.quartz.jobStore.clusterCheckinInterval">15000</prop>
+                <!-- <prop key="org.quartz.jobStore.misfireThreshold">60000</prop> -->
+
+            </props>
+        </property>
+
+        <!-- 启动时延期开始任务(秒) -->
+        <property name="startupDelay" value="${scheduler.startupDelay}" />
+
+        <!-- 保存Job数据到数据库所需的数据源 -->
+        <property name="dataSource" ref="dataSource" />
+
+        <!-- Job接受applicationContext的成员变量名 -->
+        <property name="applicationContextSchedulerContextKey" value="applicationContext" />
+
+        <!-- 计划任务监听器 -->
+        <property name="schedulerListeners">
+            <list>
+                <ref bean="schedulerListener" />
+            </list>
+        </property>
+
+        <!-- 全局触发器监听器 -->
+        <property name="globalTriggerListeners">
+            <list>
+                <ref bean="triggerListener" />
+            </list>
+        </property>
+
+        <!-- 全局作业监听器 -->
+        <property name="globalJobListeners">
+            <list>
+                <ref bean="jobListener" />
+            </list>
+        </property>
+
+        <!-- Triggers集成,可以不配置,则需要调用接口,动态操作数据库 -->
+        <property name="triggers" ref="schedulerConfig" />
+    </bean>
+</beans>

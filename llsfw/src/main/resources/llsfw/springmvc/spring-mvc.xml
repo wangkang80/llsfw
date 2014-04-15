@@ -1,0 +1,137 @@
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:context="http://www.springframework.org/schema/context" xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <!-- @Controller注解方式标识控制器 -->
+    <!-- <mvc:annotation-driven /> -->
+
+    <!-- 引入拦截器配置文件 -->
+    <import resource="spring-interceptors.xml" />
+
+
+    <!-- 开启controller注解支持 关闭默认的过滤器,并且只扫描Controller和ControllerAdvice -->
+    <context:component-scan base-package="com.*.*.controller" use-default-filters="false">
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+        <context:include-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice" />
+    </context:component-scan>
+
+    <!-- 启动Spring MVC的注解功能，完成请求和注解POJO的映射 -->
+    <mvc:annotation-driven conversion-service="conversionService">
+
+        <!-- 异步支持 默认30秒超时 -->
+        <!-- <mvc:async-support default-timeout="30000" task-executor="executor" /> -->
+
+        <mvc:message-converters>
+            <!-- 字节流转换器 -->
+            <bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter" />
+            <!-- string转换器,编码为UTF-8，防止乱码 -->
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <constructor-arg value="UTF-8" />
+                <property name="supportedMediaTypes">
+                    <list>
+                        <bean class="org.springframework.http.MediaType">
+                            <constructor-arg index="0" value="text" />
+                            <constructor-arg index="1" value="plain" />
+                            <constructor-arg index="2" value="UTF-8" />
+                        </bean>
+                        <bean class="org.springframework.http.MediaType">
+                            <constructor-arg index="0" value="*" />
+                            <constructor-arg index="1" value="*" />
+                            <constructor-arg index="2" value="UTF-8" />
+                        </bean>
+                    </list>
+                </property>
+            </bean>
+            <!-- json转换器 -->
+            <bean class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
+                <property name="supportedMediaTypes">
+                    <list>
+                        <!-- 避免IE执行AJAX时,返回JSON出现下载文件 -->
+                        <value>text/html;charset=UTF-8</value>
+                    </list>
+                </property>
+                <property name="features">
+                    <list>
+                        <!-- 将空置的字段输出 -->
+                        <value>WriteMapNullValue</value>
+                    </list>
+                </property>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+    <!-- 类型转换及数据格式化 -->
+    <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean" />
+
+    <!-- 当在web.xml 中 DispatcherServlet使用 <url-pattern>/</url-pattern> 映射时，能映射静态资源 -->
+    <mvc:default-servlet-handler />
+
+    <!-- 默认请求路径为loginController/index -->
+    <mvc:view-controller path="/" view-name="redirect:loginController/index" />
+
+    <!-- 配置静态资源，直接映射到对应的文件夹，不被DispatcherServlet处理 -->
+    <mvc:resources mapping="/static/**" location="/WEB-INF/static/" />
+
+    <!-- 视图解释器 -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
+        <property name="contentType" value="text/html" />
+        <property name="prefix" value="/WEB-INF/jsp/" />
+        <property name="suffix" value=".jsp" />
+    </bean>
+
+    <!-- 上传拦截，如最大上传值及最小上传值 -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- 设置最大上传文件大小为2G -->
+        <property name="maxUploadSize" value="2147483648" />
+        <!-- 设置最大上在内存中的大小 40K -->
+        <property name="maxInMemorySize" value="40960" />
+        <!-- 设置最大上在内存中的大小 编码为uft-8 -->
+        <property name="defaultEncoding" value="utf-8" />
+    </bean>
+
+    <!-- 内容协商管理器 -->
+    <!--1、首先检查路径扩展名（如my.pdf）；2、其次检查Parameter（如my?format=pdf）；3、检查Accept Header -->
+    <bean id="contentNegotiationManager" class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+        <property name="favorPathExtension" value="true" /><!-- 扩展名至mimeType的映射,即 /user.json => application/json -->
+        <property name="favorParameter" value="true" /><!-- 用于开启 /userinfo/123?format=json 的支持 -->
+        <property name="parameterName" value="format" />
+        <property name="ignoreAcceptHeader" value="false" /><!-- 是否忽略Accept Header -->
+        <property name="mediaTypes"><!--扩展名到MIME的映射；favorPathExtension, favorParameter是true时起作用 -->
+            <value>
+                json=application/json
+                xml=application/xml
+                html=text/html
+            </value>
+        </property>
+        <!-- 默认的content type -->
+        <property name="defaultContentType" value="text/html" />
+    </bean>
+
+    <!-- ========================= VIEW定义 ========================= -->
+    <!-- 内容协商视图解析器；根据客户端的不同的请求决定不同的 view进行响应, 如 /blog/1.json /blog/1.xml -->
+    <!-- 会自动根据解析的contentType来决定使用哪个视图解析器（默认使用整个web应用中的viewResolver） -->
+    <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver" p:order="0">
+        <!-- 内容协商管理器 用于决定media type -->
+        <property name="contentNegotiationManager" ref="contentNegotiationManager" />
+        <!-- 默认视图 放在解析链最后 -->
+        <property name="defaultViews">
+            <list>
+                <bean class="com.alibaba.fastjson.support.spring.FastJsonJsonView" />
+            </list>
+        </property>
+    </bean>
+
+    <!-- 控制器异常处理 -->
+    <bean id="exceptionHandlerExceptionResolver" class="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver">
+        <property name="contentNegotiationManager" ref="contentNegotiationManager" />
+    </bean>
+    <bean class="com.llsfw.core.exception.DefaultExceptionHandler" />
+
+</beans>

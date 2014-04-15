@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.llsfw.core.mapper.expand.IFunctionExpMapper">
+    <sql id="Base_Column_List">
+        D.FUNCTION_CODE,
+        D.FUNCTION_NAME,
+        D.STATUS,
+        D.PARENT_FUNCTION_CODE,
+        D.SORT,
+        D.LEVEL_NO,
+        D.REQUEST_URL
+    </sql>
+    <sql id="Column_List">
+        ''''||D.PARENT_FUNCTION_CODE||''''
+    </sql>
+    <select id="getUserHasFunctionCode" resultType="java.lang.String">
+        SELECT DISTINCT
+        <include refid="Column_List" />
+        FROM
+        TT_FUNCTION D,TT_USER_ROLE A,TT_ROLE_FUNCTION B
+        WHERE
+        A.ROLE_CODE=B.ROLE_CODE
+        AND B.FUNCTION_CODE=D.FUNCTION_CODE
+        AND
+        D.STATUS=1
+        AND A.LOGIN_NAME=#{loginName}
+    </select>
+    <select id="getFunctionListCode" resultType="java.lang.String">
+        SELECT DISTINCT
+        <include refid="Column_List" />
+        FROM
+        TT_FUNCTION D
+        WHERE D.FUNCTION_CODE in (${functionCodes})
+    </select>
+    <select id="getFunctionList" resultType="java.util.HashMap">
+        SELECT DISTINCT
+        <include refid="Base_Column_List" />
+        FROM
+        TT_FUNCTION D
+        WHERE D.FUNCTION_CODE in (${functionCodes})
+        <if test="parentFunctionCode">
+            AND D.PARENT_FUNCTION_CODE=#{parentFunctionCode}
+        </if>
+        ORDER BY D.SORT ASC
+    </select>
+    <select id="getUserHasFunction" resultType="java.util.HashMap">
+        SELECT DISTINCT
+        <include refid="Base_Column_List" />
+        FROM
+        TT_FUNCTION D,TT_USER_ROLE A,TT_ROLE_FUNCTION B
+        WHERE
+        A.ROLE_CODE=B.ROLE_CODE
+        AND B.FUNCTION_CODE=D.FUNCTION_CODE
+        AND
+        D.STATUS=1
+        AND A.LOGIN_NAME=#{loginName}
+        <if test="parentFunctionCode">
+            AND D.PARENT_FUNCTION_CODE=#{parentFunctionCode}
+        </if>
+        ORDER BY D.SORT ASC
+    </select>
+</mapper>

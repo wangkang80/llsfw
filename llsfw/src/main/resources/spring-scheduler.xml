@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:util="http://www.springframework.org/schema/util"
+    xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd 
+http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <!-- 计划任务配置 -->
+    <util:list id="schedulerConfig">
+        <ref bean="clearScheduledLogTrigger" />
+        <ref bean="clearScheduledTriggerLogTrigger" />
+        <ref bean="clearAppLogTrigger" />
+    </util:list>
+
+    <!-- 清理计划任务日志(每天凌晨1点执行) -->
+    <bean id="clearScheduledLogTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="clearScheduledLogJobDetail" />
+        <property name="group" value="SystemAutoRun" />
+        <property name="cronExpression" value="0 0 1 * * ? " />
+    </bean>
+    <bean id="clearScheduledLogJobDetail" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+        <property name="jobClass" value="com.llsfw.core.scheduler.ClearScheduledLog" />
+        <property name="group" value="SystemAutoRun" />
+        <property name="durability" value="true" />
+    </bean>
+
+    <!-- 清理计划任务执行日志(每天凌晨2点执行) -->
+    <bean id="clearScheduledTriggerLogTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="clearScheduledTriggerLogJobDetail" />
+        <property name="group" value="SystemAutoRun" />
+        <property name="cronExpression" value="0 0 2 * * ? " />
+    </bean>
+    <bean id="clearScheduledTriggerLogJobDetail" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+        <property name="jobClass" value="com.llsfw.core.scheduler.ClearScheduledTriggerLog" />
+        <property name="group" value="SystemAutoRun" />
+        <property name="durability" value="true" />
+    </bean>
+
+    <!-- 清理计划任务执行日志(每天凌晨3点执行) -->
+    <bean id="clearAppLogTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="clearAppLogJobDetail" />
+        <property name="group" value="SystemAutoRun" />
+        <property name="cronExpression" value="0 0 3 * * ? " />
+    </bean>
+    <bean id="clearAppLogJobDetail" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+        <property name="jobClass" value="com.llsfw.core.scheduler.ClearAppLog" />
+        <property name="group" value="SystemAutoRun" />
+        <property name="durability" value="true" />
+    </bean>
+</beans>

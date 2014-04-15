@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:util="http://www.springframework.org/schema/util"
+    xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd 
+http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <!-- 引入属性文件 -->
+    <context:property-placeholder location="classpath:resources.properties" />
+
+    <!-- 系统配置 -->
+    <bean id="appConfig" class="com.llsfw.core.model.expand.appconfig.AppConfig">
+
+        <!-- 应用程序标题 -->
+        <property name="appTitle" value="${appConfig.appTitle}" />
+
+        <!-- 头文件 -->
+        <property name="headPageConfig" ref="headPageConfig" />
+
+        <!-- 登陆页面 -->
+        <property name="loginPageConfig" ref="loginPageConfig" />
+
+        <!-- 顶部页面 -->
+        <property name="topPageConfig" ref="topPageConfig" />
+
+    </bean>
+
+    <!-- 头文件配置(有默认值,在构造方法中查看,具体修改那个值,可放开注释) -->
+    <bean id="headPageConfig" class="com.llsfw.core.model.expand.appconfig.HeadPageConfig">
+
+        <!-- easyui的主题,有如下选择:default,black,bootstrap,gray,icons,metro -->
+        <property name="easyuiThemesName" value="${headPageConfig.easyuiThemesName}" />
+
+    </bean>
+
+    <!-- 登陆界面配置(有默认值,在构造方法中查看,具体修改那个值,可放开注释) -->
+    <bean id="loginPageConfig" class="com.llsfw.core.model.expand.appconfig.LoginPageConfig">
+
+        <!-- 登陆界面背景图片(尺寸5*5) -->
+        <property name="loginPageBackgroundImagePath" value="${loginPageConfig.loginPageBackgroundImagePath}" />
+
+        <!-- 登陆界面标题图片(尺寸4*62) -->
+        <property name="loginPageTileBackgroundImagePath" value="${loginPageConfig.loginPageTileBackgroundImagePath}" />
+
+        <!-- 登陆界面logo图片(尺寸390*62) -->
+        <property name="loginPageLogoImagePath" value="${loginPageConfig.loginPageLogoImagePath}" />
+
+    </bean>
+
+    <!-- 顶部界面配置(有默认值,在构造方法中查看,具体修改那个值,可放开注释) -->
+    <bean id="topPageConfig" class="com.llsfw.core.model.expand.appconfig.TopPageConfig">
+
+        <!-- 顶部界面背景图片(尺寸6*62) -->
+        <property name="topPageBackgroundImagePath" value="${topPageConfig.topPageBackgroundImagePath}" />
+
+        <!-- 顶部界面logo图片(尺寸370*62) -->
+        <property name="topPageLogoImagePath" value="${topPageConfig.topPageLogoImagePath}" />
+
+    </bean>
+
+</beans>

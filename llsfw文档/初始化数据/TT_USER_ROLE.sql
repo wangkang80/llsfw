@@ -1,0 +1,6 @@
+﻿SET DEFINE OFF;
+Insert into TT_USER_ROLE
+   (LOGIN_NAME, ROLE_CODE, CREATE_BY, CREATE_DATE)
+ Values
+   ('admin', 'admin', 'SYSTEM', TO_DATE('12/15/2013 15:32:41', 'MM/DD/YYYY HH24:MI:SS'));
+COMMIT;

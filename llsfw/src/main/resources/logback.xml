@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- For assistance related to logback-translator or configuration -->
+<!-- files in general, please contact the logback user mailing list -->
+<!-- at http://www.qos.ch/mailman/listinfo/logback-user -->
+<!-- -->
+<!-- For professional support please see -->
+<!-- http://www.qos.ch/shop/products/professionalSupport -->
+<!-- -->
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
+
+    <!-- 变量 -->
+    <property name="appName" value="llsfw" />
+    <property name="logDir" value="F:/llsfw_file/log/" />
+    <property name="pattern" value="[%-5p][%d{yy-MM-dd HH:mm:ss}][%t]==&gt;%m==&gt;%c==&gt;%L%n" />
+    <property name="maxFileSize" value="50MB" />
+    <property name="jndi" value="java:comp/env/llsfw" />
+
+
+    <!-- 获取时间戳字符串 -->
+    <timestamp key="bySecond" datePattern="yyyyMMdd'T'HHmmss" />
+
+    <!-- 上下文名称 -->
+    <contextName>${appName}</contextName>
+
+    <!-- 控制台输出 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- encoder 默认配置为PatternLayoutEncoder -->
+        <encoder>
+            <pattern>${pattern}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 文件滚动输出 INFO -->
+    <appender name="FILE_INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logDir}runtime.log</file>
+        <!-- 定义归档 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>${logDir}runtime.%i.log.zip</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>12</maxIndex>
+        </rollingPolicy>
+        <!-- 定义文件大小 -->
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>${maxFileSize}</maxFileSize>
+        </triggeringPolicy>
+        <!-- 格式化输出 -->
+        <encoder>
+            <pattern>${pattern}</pattern>
+        </encoder>
+        <!-- 过滤器 -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <!-- 文件滚动输出 ERROR -->
+    <appender name="FILE_ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logDir}runtime_error.log</file>
+        <!-- 定义归档 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>${logDir}runtime_error.%i.log.zip</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>12</maxIndex>
+        </rollingPolicy>
+        <!-- 定义文件大小 -->
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <maxFileSize>${maxFileSize}</maxFileSize>
+        </triggeringPolicy>
+        <!-- 格式化输出 -->
+        <encoder>
+            <pattern>${pattern}</pattern>
+        </encoder>
+        <!-- 过滤器 -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <!-- 日志输出配置 -->
+    <root level="INFO">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE_INFO" />
+        <appender-ref ref="FILE_ERROR" />
+        <!-- <appender-ref ref="DB_ERROR" /> -->
+        <!-- <appender-ref ref="EMAIL_ERROR" /> -->
+    </root>
+
+    <!-- 数据库输出 ERROR -->
+    <!-- <appender name="DB_ERROR" class="ch.qos.logback.classic.db.DBAppender"> <connectionSource class="ch.qos.logback.core.db.JNDIConnectionSource"> 
+        <jndiLocation>${jndi}</jndiLocation> </connectionSource> 过滤器 <filter class="ch.qos.logback.classic.filter.ThresholdFilter"> <level>ERROR</level> 
+        <onMatch>ACCEPT</onMatch> <onMismatch>DENY</onMismatch> </filter> </appender> -->
+
+    <!-- email -->
+    <!-- <appender name="EMAIL_ERROR" class="ch.qos.logback.classic.net.SMTPAppender"> <SMTPHost>smtp.163.com</SMTPHost> <Username>fringeframework@163.com</Username> 
+        <Password>wangkang123456</Password> <To>wangkangit@163.com</To> additional destinations are possible <From>fringeframework@163.com</From> <Subject>TESTING: 
+        %logger{20} - %m</Subject> <layout class="ch.qos.logback.classic.html.HTMLLayout"> </layout> 过滤器 <filter class="ch.qos.logback.classic.filter.ThresholdFilter"> 
+        <level>ERROR</level> <onMatch>ACCEPT</onMatch> <onMismatch>DENY</onMismatch> </filter> </appender> -->
+
+
+
+    <!-- 文件输出 -->
+    <!-- <appender name="FILE_APPENDER" class="ch.qos.logback.core.FileAppender"> <file>F:/llsfw_file/log/runtime_FILE_APPENDER.log</file> <append>true</append> 
+        <encoder> <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern> </encoder> </appender> -->
+
+    <!-- logback为java中的包 -->
+    <!-- <logger name="com.llsfw.core.scheduler" /> -->
+
+    <!--logback.LogbackDemo：类的全路径 -->
+    <!-- <logger name="com.llsfw.core.scheduler.TestJob" level="INFO" additivity="false"> <appender-ref ref="STDOUT" /> </logger> -->
+</configuration>

@@ -1,0 +1,31 @@
+[{
+	"text" : "全部",
+	"value" : ""
+},{
+	"text" : "misfired",
+	"value" : "misfired"
+}, {
+	"text" : "triggering",
+	"value" : "triggering"
+}, {
+	"text" : "vetoed(false)",
+	"value" : "vetoed(false)"
+}, {
+	"text" : "vetoed(true)",
+	"value" : "vetoed(true)"
+}, {
+	"text" : "executionVetoed",
+	"value" : "executionVetoed"
+}, {
+	"text" : "toBeExecuted",
+	"value" : "toBeExecuted"
+}, {
+	"text" : "executed",
+	"value" : "executed"
+}, {
+	"text" : "complete",
+	"value" : "complete"
+}, {
+	"text" : "error",
+	"value" : "error"
+}]

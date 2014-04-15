@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+    xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+    http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!-- 扫描classpath的包下的所有类，该包路径下的类可以不需要配置bean了 -->
+    <context:component-scan base-package="com.*.*.service" />
+
+    <!-- ***************事务配置************** -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
+    <!-- ***************定义事务切面************** -->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+
+            <!-- 详细说明,参考:http://www.360doc.com/content/14/0321/21/16418373_362565406.shtml -->
+
+            <!-- 默认所有方法都是REQUIRED -->
+            <!-- Required属性告诉容器某个特定的方法需要一个事务，如果上下文中已经存在事务，则加入；否则，开启一个事务 -->
+            <tx:method name="*" propagation="REQUIRED" rollback-for="Exception" />
+
+            <!-- supports开头的方法为SUPPORTS -->
+            <!-- Supports属性告诉容器，该方法不需要事务支持，但如果当前上下文中已经存在了一个事务，则加入其中 -->
+            <tx:method name="supports*" propagation="SUPPORTS" read-only="true" />
+
+        </tx:attributes>
+    </tx:advice>
+
+    <!-- ***************定义事务切面范围************** -->
+    <aop:config>
+        <aop:advisor pointcut="execution(* com.*.*.service..*.*(..))" advice-ref="txAdvice" />
+    </aop:config>
+</beans>

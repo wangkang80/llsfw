@@ -1,0 +1,100 @@
+@CHARSET "UTF-8";
+
+* {
+	font-size: 12px;
+	font-family: Tahoma, Verdana, 微软雅黑, 新宋体;
+}
+
+body {
+	font-family: helvetica, tahoma, verdana, sans-serif;
+	padding: 0px;
+	margin: 0px;
+}
+
+a {
+	color: Black;
+	text-decoration: none;
+}
+
+a:hover {
+	color: blue;
+	text-decoration: none;
+}
+
+div {
+	
+}
+
+h2 {
+	font-size: 18px;
+	font-weight: bold;
+	margin: 0;
+	margin-bottom: 15px;
+}
+
+input {
+	border: 1px solid #A1B9DF;
+	vertical-align: middle;
+}
+
+input:focus {
+	border: 1px solid #3A76C2;
+}
+
+table tr td {
+	font-weight: normal;
+	padding: 3px 2px;
+	vertical-align: middle;
+}
+
+.separator {
+	border-top: 1px solid #adadad;
+	height: 2px;
+	line-height: 2px;
+	overflow: hidden;
+}
+
+.toolbar {
+	padding: 12px 0 5px;
+	text-align: center;
+}
+
+.nav_cont {
+	width: 585px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.menu-tree li div {
+	margin: 2px 0px;
+	height: 24px;
+	padding-left: 10px;
+	padding-top: 2px;
+}
+
+.menu-tree li div:hover {
+	border: 1px dashed #99BBE8;
+	background: #E0ECFF;
+	cursor: pointer;
+}
+
+.menu-tree li div:hover a {
+	color: #416AA3;
+	text-decoration: none
+}
+
+.menu-tree li div.selected {
+	border: 1px solid #99BBE8;
+	background: #E0ECFF;
+	cursor: default;
+}
+
+.menu-tree li div.selected a {
+	color: #416AA3;
+	text-decoration: none;
+	font-weight: bold;
+}
+
+.icon-error {
+	background: url('icons/error.png') no-repeat center center;
+}
