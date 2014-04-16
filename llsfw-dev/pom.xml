@@ -4,7 +4,7 @@
     <groupId>llsfw-dev</groupId>
     <artifactId>llsfw-dev</artifactId>
     <packaging>war</packaging>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.RELEASE</version>
     <name>llsfw-dev Maven Webapp</name>
     <url>http://maven.apache.org</url>
     
@@ -21,20 +21,14 @@
         <dependency>
             <groupId>llsfw</groupId>
             <artifactId>llsfw-core</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>1.0.RELEASE</version>
         </dependency>
 
         <dependency>
             <groupId>llsfw</groupId>
             <artifactId>llsfw</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>1.0.RELEASE</version>
             <type>war</type>
-        </dependency>
-
-        <dependency>
-            <groupId>bfts</groupId>
-            <artifactId>bfts-dao</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
         <!-- oracle ###### mvn install:install-file -DgroupId=com.oracle -DartifactId=ojdbc6 -Dversion=11.2.0.1.0 -Dpackaging=jar -Dfile=F:\ojdbc6.jar -->
