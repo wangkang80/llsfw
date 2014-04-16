@@ -1,4 +1,4 @@
-注意点:
+注意点: 
 *.开发环境数据库链接方式默认为jndi,请注意配置.
 *.maven install时不会拷贝src/main/java下的xml文件,在POM配置后可解决
 
