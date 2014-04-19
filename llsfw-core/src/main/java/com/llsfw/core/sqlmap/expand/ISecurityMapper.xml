@@ -23,6 +23,6 @@
         FROM TT_USER_FUNCTION C,TT_FUNCTION D
         WHERE D.STATUS=1
         AND C.FUNCTION_CODE=D.FUNCTION_CODE
-        AND C.LOGIN_NAME=#{loginName}
+        AND C.LOGIN_NAME='A'
     </select>
 </mapper>

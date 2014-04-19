@@ -33,13 +33,13 @@
         <property name="usernameParam" value="username" />
         <property name="passwordParam" value="password" />
         <property name="rememberMeParam" value="rememberMe" />
-        <property name="loginUrl" value="/login" />
+        <property name="loginUrl" value="/loginController/login" />
     </bean>
 
     <!-- Shiro的Web过滤器 -->
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
         <property name="securityManager" ref="securityManager" />
-        <property name="loginUrl" value="/login" />
+        <property name="loginUrl" value="/loginController/login" />
         <property name="filters">
             <util:map>
                 <entry key="authc" value-ref="formAuthenticationFilter" />

@@ -14,7 +14,7 @@
         <param-value>classpath:logback.xml</param-value>
     </context-param>
 
-    <!-- (必须) spring context(与spring mvc的配置文件区分开来) -->
+    <!-- (必须) spring context(与spring mvc的配置文件区分开来)-->
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>

@@ -7,8 +7,8 @@
     <version>1.1-SNAPSHOT</version>
     <name>llsfw-dev Maven Webapp</name>
     <url>http://maven.apache.org</url>
-    
-    <dependencies> 
+
+    <dependencies>
 
         <!-- servlet-api -->
         <dependency>

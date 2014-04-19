@@ -45,14 +45,5 @@ public interface ISecurityMapper {
      */
     List<String> findRolePermissions(@Param("roleList") List<String> roleList);
 
-    /**
-     * <p>
-     * Description: 返回用户权限
-     * </p>
-     * 
-     * @param loginName 用户名
-     * @return 权限列表
-     */
     List<String> findUserPermissions(@Param("loginName") String loginName);
-
 }

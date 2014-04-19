@@ -134,7 +134,4 @@
     </bean>
     <bean class="com.llsfw.core.exception.DefaultExceptionHandler" />
 
-    <!-- 导入shrio的配置 -->
-    <import resource="spring-mvc-shiro.xml" />
-
 </beans>

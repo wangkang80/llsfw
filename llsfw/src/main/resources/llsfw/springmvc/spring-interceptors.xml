@@ -10,16 +10,8 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
     <context:property-placeholder location="classpath:resources.properties" />
 
     <!-- 拦截器 -->
-    <mvc:interceptors>
-        <bean class="org.springframework.web.servlet.handler.ConversionServiceExposingInterceptor">
-            <constructor-arg ref="conversionService" />
-        </bean>
-        <mvc:interceptor>
-            <mvc:mapping path="/**" />
-            <bean class="com.llsfw.core.interceptors.AuthInterceptor">
-                <constructor-arg name="noAuthControll" value="${interceptors.noAuthControll}" />
-                <constructor-arg name="noSessionControll" value="${interceptors.noSessionControll}" />
-            </bean>
-        </mvc:interceptor>
-    </mvc:interceptors>
+    <!-- <mvc:interceptors> <bean class="org.springframework.web.servlet.handler.ConversionServiceExposingInterceptor"> <constructor-arg ref="conversionService" 
+        /> </bean> <mvc:interceptor> <mvc:mapping path="/**" /> <bean class="com.llsfw.core.interceptors.AuthInterceptor"> <constructor-arg name="noAuthControll" 
+        value="${interceptors.noAuthControll}" /> <constructor-arg name="noSessionControll" value="${interceptors.noSessionControll}" /> </bean> </mvc:interceptor> 
+        </mvc:interceptors> -->
 </beans>
