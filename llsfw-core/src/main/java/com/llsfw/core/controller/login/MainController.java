@@ -89,7 +89,8 @@ public class MainController extends BaseController {
     @RequestMapping("getOnlineUserList")
     @ResponseBody
     public List<TtOnlineUser> getOnlineUserList() {
-        return this.olus.getOnlineUserList();
+        //TODO 需要去除的方法
+        return new ArrayList<TtOnlineUser>();
     }
 
     /**

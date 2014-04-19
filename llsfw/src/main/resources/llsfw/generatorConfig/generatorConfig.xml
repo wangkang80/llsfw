@@ -26,8 +26,8 @@
         </commentGenerator>
 
         <!-- 数据库连接的信息：驱动类、连接地址、用户名、密码 -->
-        <jdbcConnection driverClass="oracle.jdbc.driver.OracleDriver" connectionURL="jdbc:oracle:thin:@10.180.6.188:1521:orcl"
-            userId="bfts" password="bfts" />
+        <jdbcConnection driverClass="oracle.jdbc.driver.OracleDriver" connectionURL="jdbc:oracle:thin:@127.0.0.1:1521:XE"
+            userId="llsfw" password="llsfw" />
 
         <!-- 解决数字转换问题 -->
         <javaTypeResolver>
@@ -46,15 +46,20 @@
         <javaClientGenerator targetPackage="com.llsfw.core.mapper.standard" targetProject="../../../java" type="XMLMAPPER" />
 
         <!-- 需要生成的表(整形数字使用NUMBER类型,浮点型数字使用FLOAT类型) -->
-        <table tableName="TT_FUNCTION"></table>
-        <table tableName="TT_ONLINE_USER"></table>
-        <table tableName="TT_SERVER_GLOBAL_PARAMETERS"></table>
         <table tableName="TT_APPLICATION_USER"></table>
-        <table tableName="TT_USER_ROLE"></table>
         <table tableName="TT_APP_LOG"></table>
+        <table tableName="TT_FUNCTION"></table>
+        <table tableName="TT_JOB"></table>
+        <table tableName="TT_ONLINE_USER"></table>
+        <table tableName="TT_ORGANIZATION"></table>
+        <table tableName="TT_PURVIEW"></table>
         <table tableName="TT_ROLE"></table>
         <table tableName="TT_ROLE_FUNCTION"></table>
         <table tableName="TT_SCHEDULED_LOG"></table>
         <table tableName="TT_SCHEDULED_TRIGGER_LOG"></table>
+        <table tableName="TT_SERVER_GLOBAL_PARAMETERS"></table>
+        <table tableName="TT_USER_FUNCTION"></table>
+        <table tableName="TT_USER_ORG_JOB"></table>
+        <table tableName="TT_USER_ROLE"></table>
     </context>
 </generatorConfiguration>
