@@ -41,12 +41,12 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-compress</artifactId>
-            <version>1.7</version>
+            <version>1.8</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.3</version>
+            <version>3.3.2</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
@@ -99,12 +99,12 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.6</version>
+            <version>1.7.7</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
-            <version>1.7.6</version>
+            <version>1.7.7</version>
         </dependency>
 
         <!-- log4j -->
@@ -114,24 +114,24 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>
-            <version>1.1.1</version>
+            <version>1.1.2</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.1.1</version>
+            <version>1.1.2</version>
         </dependency>
         <dependency>
             <groupId>org.logback-extensions</groupId>
             <artifactId>logback-ext-spring</artifactId>
-            <version>0.1.1</version>
+            <version>0.1.2</version>
         </dependency>
 
         <!-- mybatis -->
         <dependency>
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis</artifactId>
-            <version>3.2.5</version>
+            <version>3.2.7</version>
         </dependency>
         <dependency>
             <groupId>org.mybatis</groupId>
@@ -152,40 +152,57 @@
         </dependency>
 
         <!-- shiro -->
-        <!-- <dependency> <groupId>org.apache.shiro</groupId> <artifactId>shiro-core</artifactId> <version>1.2.3</version> </dependency> <dependency> 
-            <groupId>org.apache.shiro</groupId> <artifactId>shiro-ehcache</artifactId> <version>1.2.3</version> </dependency> <dependency> <groupId>org.apache.shiro</groupId> 
-            <artifactId>shiro-web</artifactId> <version>1.2.3</version> </dependency> <dependency> <groupId>org.apache.shiro</groupId> <artifactId>shiro-quartz</artifactId> 
-            <version>1.2.3</version> </dependency> <dependency> <groupId>org.apache.shiro</groupId> <artifactId>shiro-spring</artifactId> <version>1.2.3</version> 
-            </dependency> -->
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-core</artifactId>
+            <version>1.2.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-ehcache</artifactId>
+            <version>1.2.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-web</artifactId>
+            <version>1.2.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-spring</artifactId>
+            <version>1.2.3</version>
+        </dependency>
+        <!-- <dependency> <groupId>org.apache.shiro</groupId> <artifactId>shiro-quartz</artifactId> <version>1.2.3</version> </dependency> -->
+
 
         <!-- spring -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
-            <version>4.0.2.RELEASE</version>
+            <version>4.0.3.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>
-            <version>4.0.2.RELEASE</version>
+            <version>4.0.3.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
-            <version>4.0.2.RELEASE</version>
+            <version>4.0.3.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aspects</artifactId>
-            <version>4.0.2.RELEASE</version>
+            <version>4.0.3.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-jdbc</artifactId>
-            <version>4.0.2.RELEASE</version>
+            <version>4.0.3.RELEASE</version>
         </dependency>
 
-        <!-- jackson -->
+        <!-- fastjson -->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>

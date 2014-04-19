@@ -59,14 +59,6 @@
         <listener-class>com.llsfw.core.listener.AppConfigListener</listener-class>
     </listener>
 
-    <!-- (非必须)在线用户监听器 -->
-    <listener>
-        <description>OnlineListener</description>
-        <listener-class>com.llsfw.core.listener.OnlineListener</listener-class>
-    </listener>
-
-    <!-- 系统初始化监听器 -->
-
     <!-- (必须)字符编码过滤器 -->
     <filter>
         <filter-name>encodingFilter</filter-name>
@@ -88,9 +80,21 @@
     </filter-mapping>
 
     <!-- shiro 安全过滤器 -->
-    <!-- <filter> <filter-name>shiroFilter</filter-name> <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class> <async-supported>true</async-supported> 
-        <init-param> <param-name>targetFilterLifecycle</param-name> <param-value>true</param-value> </init-param> </filter> <filter-mapping> <filter-name>shiroFilter</filter-name> 
-        <url-pattern>/*</url-pattern> <dispatcher>REQUEST</dispatcher> </filter-mapping> -->
+    <filter>
+        <filter-name>shiroFilter</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+        <async-supported>true</async-supported>
+        <init-param>
+            <param-name>targetFilterLifecycle</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>shiroFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+    </filter-mapping>
 
     <!-- (必须) Spring MVC Servlet(与spring context的配置文件区分开来) -->
     <servlet>

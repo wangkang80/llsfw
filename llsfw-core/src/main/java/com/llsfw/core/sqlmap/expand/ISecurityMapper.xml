@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.llsfw.core.mapper.expand.ISecurityMapper">
+    <select id="findUserRoles" resultType="java.lang.String">
+        SELECT ROLE_CODE FROM TT_USER_ROLE A,TT_APPLICATION_USER B
+        WHERE A.LOGIN_NAME=B.LOGIN_NAME
+        AND A.LOGIN_NAME=#{loginName}
+        AND B.USER_STATUS=1
+    </select>
+    <select id="findRolePermissions" resultType="java.lang.String">
+        SELECT C.FUNCTION_CODE||':'||C.PURVIEW_CODE FUNCTION_PURVIEW
+        FROM TT_ROLE_FUNCTION C,TT_FUNCTION D
+        WHERE D.STATUS=1
+        AND
+        C.FUNCTION_CODE=D.FUNCTION_CODE
+        AND C.ROLE_CODE IN
+        <foreach collection="roleList" item="listItem" open="(" close=")" separator=",">
+            #{listItem}
+        </foreach>
+    </select>
+    <select id="findUserPermissions" resultType="java.lang.String">
+        SELECT C.FUNCTION_CODE||':'||C.PURVIEW_CODE FUNCTION_PURVIEW
+        FROM TT_USER_FUNCTION C,TT_FUNCTION D
+        WHERE D.STATUS=1
+        AND C.FUNCTION_CODE=D.FUNCTION_CODE
+        AND C.LOGIN_NAME=#{loginName}
+    </select>
+</mapper>
