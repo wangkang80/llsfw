@@ -6,17 +6,17 @@
  */
 package com.llsfw.core.controller.login;
 
-import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 
-import javax.servlet.http.HttpSession;
-
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.IncorrectCredentialsException;
+import org.apache.shiro.authc.LockedAccountException;
+import org.apache.shiro.authc.UnknownAccountException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.llsfw.core.common.SystemParam;
-import com.llsfw.core.model.expand.LoginUser;
 import com.llsfw.core.service.login.LoginService;
 import com.llsfw.core.service.serverparam.ParamService;
 
@@ -59,35 +59,19 @@ public class LoginController {
         return "llsfw/index";
     }
 
-    /**
-     * <p>
-     * Description: 登陆服务
-     * </p>
-     * 
-     * @param session session
-     * @param userName 用户名
-     * @param password 密码
-     * @return 操作结果
-     */
-    @RequestMapping("loginCheck")
+    @RequestMapping(value = "/login")
     @ResponseBody
-    public Map<String, Object> loginCheck(HttpSession session, String userName, String password) {
-        //设定返回值
-        Map<String, Object> rv = null;
-        rv = this.ls.loginCheck(userName, password);
-
-        //登陆成功
-        if ("success".equals(rv.get("code").toString())) {
-            //创建session对象
-            LoginUser lu = null;
-            lu = new LoginUser(this.ls.loadUser(userName));
-
-            //获得session名称
-            String sessionName = null;
-            sessionName = this.pss.getServerParamter(SystemParam.SESSION_NAME.name());
-
-            //放入session中
-            session.setAttribute(sessionName, lu);
+    public String login(HttpServletRequest req) {
+        String exceptionClassName = (String) req.getAttribute("shiroLoginFailure");
+        String rv = "success";
+        if (UnknownAccountException.class.getName().equals(exceptionClassName)) {
+            rv = "用户不存在";
+        } else if (LockedAccountException.class.getName().equals(exceptionClassName)) {
+            rv = "用户已停用";
+        } else if (IncorrectCredentialsException.class.getName().equals(exceptionClassName)) {
+            rv = "用户名/密码错误";
+        } else if (exceptionClassName != null) {
+            rv = "其他错误：" + exceptionClassName;
         }
         return rv;
     }

@@ -6,48 +6,47 @@
        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
-    <!-- 保证实现了Shiro内部lifecycle函数的bean执行 -->
+    <!-- shiro的bean生命周期 -->
     <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
 
-    <!-- 用户授权信息Cache（本机内存实现） -->
-    <bean id="memoryConstrainedCacheManager" class="org.apache.shiro.cache.MemoryConstrainedCacheManager" />
-
-    <!-- Realm实现 -->
-    <bean id="userRealm" class="com.llsfw.core.security.UserAutorRealm">
+    <!-- realm -->
+    <bean id="credentialsMatcher" class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+        <property name="hashAlgorithmName" value="md5" />
+        <property name="hashIterations" value="2" />
+        <property name="storedCredentialsHexEncoded" value="true" />
+    </bean>
+    <bean id="realm" class="com.llsfw.core.security.UserAuthenRealm">
+        <property name="credentialsMatcher" ref="credentialsMatcher" />
     </bean>
 
-    <!-- 会话管理器 -->
-    <bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
-        <property name="globalSessionTimeout" value="1200000" />
-    </bean>
-
-    <!-- 安全管理器 -->
+    <!-- web安全管理器 -->
     <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
-        <property name="realm" ref="userRealm" />
-        <property name="sessionManager" ref="sessionManager" />
-        <property name="cacheManager" ref="memoryConstrainedCacheManager" />
+        <property name="realm" ref="realm" />
     </bean>
 
     <!-- 基于Form表单的身份验证过滤器 -->
     <bean id="formAuthenticationFilter" class="org.apache.shiro.web.filter.authc.FormAuthenticationFilter">
-        <property name="usernameParam" value="username" />
+        <property name="usernameParam" value="userName" />
         <property name="passwordParam" value="password" />
-        <property name="rememberMeParam" value="rememberMe" />
-        <property name="loginUrl" value="/loginController/login" />
     </bean>
 
-    <!-- Shiro的Web过滤器 -->
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
         <property name="securityManager" ref="securityManager" />
         <property name="loginUrl" value="/loginController/login" />
         <property name="filters">
             <util:map>
-                <entry key="authc" value-ref="formAuthenticationFilter" />
+                <!-- 配置这个filter是为了让那些还没有登录的请求跳转到loginUrl去进行登录 -->
+                <entry key="authc">
+                    <bean class="org.apache.shiro.web.filter.authc.FormAuthenticationFilter" />
+                </entry>
             </util:map>
         </property>
         <property name="filterChainDefinitions">
+            <!-- /doLogin.htm = anon 表示/doLogin.htm匹配的请求属于匿名请求，允许那些还没有登录的用户访问 /err.htm = authc 表示/err.htm匹配的请求需要已经验证登录成功的用户访问，否则跳转到登录页面loginUrl进行登录 -->
             <value>
-                /login = authc
+                /static/** = anon
+                /loginController/index = anon
+                /loginController/login = authc
             </value>
         </property>
     </bean>

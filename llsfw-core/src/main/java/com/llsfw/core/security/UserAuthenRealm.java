@@ -1,5 +1,5 @@
 /**
- * UserAutorRealm.java
+ * UserAuthenRealm.java
  * Created at 2014年4月19日
  * Created by wangkang
  */
@@ -15,22 +15,23 @@ import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authc.UnknownAccountException;
-import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
-import org.apache.shiro.cache.CacheManager;
+import org.apache.shiro.crypto.SecureRandomNumberGenerator;
+import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.llsfw.core.common.UUID;
 import com.llsfw.core.mapper.expand.ISecurityMapper;
 import com.llsfw.core.mapper.standard.TtApplicationUserMapper;
 import com.llsfw.core.model.standard.TtApplicationUser;
 
 /**
  * <p>
- * ClassName: UserAutorRealm
+ * ClassName: UserAuthenRealm
  * </p>
  * <p>
  * Description: 用户权限验证
@@ -42,7 +43,7 @@ import com.llsfw.core.model.standard.TtApplicationUser;
  * Date: 2014年4月19日
  * </p>
  */
-public class UserAutorRealm extends AuthorizingRealm {
+public class UserAuthenRealm extends AuthorizingRealm {
 
     /**
      * <p>
@@ -89,12 +90,20 @@ public class UserAutorRealm extends AuthorizingRealm {
             throw new LockedAccountException(); //帐号锁定
         }
 
-        //交给AuthenticatingRealm使用CredentialsMatcher进行密码匹配，如果觉得人家的不好可以自定义实现
-        SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(user.getLoginName(), //用户名
-                user.getLoginPassword(), //密码
-                ByteSource.Util.bytes(user.getSalt()),//salt=username+salt
-                getName() //realm name
-        );
+        //交给AuthenticatingRealm使用CredentialsMatcher进行密码匹配
+        SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(user.getLoginName(),
+                user.getLoginPassword(), ByteSource.Util.bytes(user.getSalt()), getName());
         return authenticationInfo;
+    }
+
+    public static void main(String[] arge) {
+        String hashAlgorithmName = "md5";
+        String password = "123456";
+        String salt = new SecureRandomNumberGenerator().nextBytes().toHex();
+        int hashIterations = 2;
+        SimpleHash hash = new SimpleHash(hashAlgorithmName, password, ByteSource.Util.bytes(salt), hashIterations);
+        String encodedPassword = hash.toHex();
+        System.out.println(salt);
+        System.out.println(encodedPassword);
     }
 }

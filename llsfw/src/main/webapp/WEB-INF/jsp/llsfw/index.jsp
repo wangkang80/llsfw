@@ -21,13 +21,13 @@
     	resizable:false,
     	draggable:false"
 		style="width: 300px; height: 165px;">
-		<form id="loginForm" method="post" action="">
+		<form id="loginForm" method="post">
 			<div style="padding: 0px 50px 0px 50px">
 				<table width="100%" border="0">
 					<tr>
 						<td width="50px" align="right">用户名:</td>
 						<td>
-							<input id="userName" name="userName" type="text" style="width: 96%;" />
+							<input id="username" name="username" type="text" style="width: 96%;" />
 						</td>
 					</tr>
 					<tr>
