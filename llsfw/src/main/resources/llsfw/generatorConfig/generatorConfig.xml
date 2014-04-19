@@ -26,8 +26,8 @@
         </commentGenerator>
 
         <!-- 数据库连接的信息：驱动类、连接地址、用户名、密码 -->
-        <jdbcConnection driverClass="oracle.jdbc.driver.OracleDriver" connectionURL="jdbc:oracle:thin:@10.180.6.188:1521:orcl"
-            userId="bfts" password="bfts" />
+        <jdbcConnection driverClass="oracle.jdbc.driver.OracleDriver" connectionURL="jdbc:oracle:thin:@127.0.0.1:1521:xe"
+            userId="llsfw" password="llsfw" />
 
         <!-- 解决数字转换问题 -->
         <javaTypeResolver>
