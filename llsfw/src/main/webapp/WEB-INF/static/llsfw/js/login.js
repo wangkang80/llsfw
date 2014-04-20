@@ -1,5 +1,10 @@
 $(function() {
 
+	// 弹出服务器消息
+	if ($('#msg').val()) {
+		showErrorMsg($('#msg').val());
+	}
+
 	// 用户名
 	$("#username").validatebox({
 		required : true
@@ -32,35 +37,13 @@ $(function() {
 
 	// 登录
 	function login() {
-		$('#loginForm').attr('action', basePath + '/loginController/login');
-		$('#loginForm').form('submit', {
-			onSubmit : function() {// 提交前置事件
-				var isValid = $(this).form('validate');
-				if (isValid) {// 验证通过,弹出遮罩
-					$.messager.progress({
-						text : '登录中...',
-						interval : 200
-					});
-				}
-				return isValid; // return false will stop the form submission
-			},
-			success : function(data) {
-				// 关闭遮罩
-				$.messager.progress('close');
-				// 解析数据
-				var datas = data;
-				if (datas == 'success') {
-					$.messager.progress({
-						text : '登陆成功!请稍后....',
-						interval : 200
-					});
-					// 跳转到系统界面
-					setTimeout("window.location.href='" + basePath + "mainController/toMainPage';", 1000);
-				} else {
-					// 登录失败,弹出提示
-					showErrorMsg(datas);
-				}
-			}
-		});
+		// $('#loginForm').attr('action', basePath + '/loginController/login');
+		if ($('#loginForm').form('validate')) {
+			$.messager.progress({
+				text : '登录中...',
+				interval : 200
+			});
+			$('#loginForm').submit();
+		}
 	}
 });

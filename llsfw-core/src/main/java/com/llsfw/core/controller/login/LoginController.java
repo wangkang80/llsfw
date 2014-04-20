@@ -8,17 +8,11 @@ package com.llsfw.core.controller.login;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.UnknownAccountException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.llsfw.core.service.login.LoginService;
-import com.llsfw.core.service.serverparam.ParamService;
 
 /**
  * <p>
@@ -40,30 +34,18 @@ public class LoginController {
 
     /**
      * <p>
-     * Field pss: 参数服务
+     * Description: shiro自动验证,验证失败后,调用此方法,返回失败原因到界面
      * </p>
+     * 
+     * @param req 请求对象
+     * @return 登录页面
      */
-    @Autowired
-    private ParamService pss;
-
-    /**
-     * <p>
-     * Field ls: 登陆服务
-     * </p>
-     */
-    @Autowired
-    private LoginService ls;
-
-    @RequestMapping("index")
-    public String index() {
-        return "llsfw/index";
-    }
-
-    @RequestMapping(value = "/login")
-    @ResponseBody
+    @RequestMapping(value = "login")
     public String login(HttpServletRequest req) {
+        System.out.println(req.getRequestURL());
+        System.out.println(req.getMethod());
         String exceptionClassName = (String) req.getAttribute("shiroLoginFailure");
-        String rv = "success";
+        String rv = "请登录系统";
         if (UnknownAccountException.class.getName().equals(exceptionClassName)) {
             rv = "用户不存在";
         } else if (LockedAccountException.class.getName().equals(exceptionClassName)) {
@@ -73,6 +55,7 @@ public class LoginController {
         } else if (exceptionClassName != null) {
             rv = "其他错误：" + exceptionClassName;
         }
-        return rv;
+        req.setAttribute("rv", rv);
+        return "llsfw/login";
     }
 }

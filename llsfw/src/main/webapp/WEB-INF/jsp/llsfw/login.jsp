@@ -11,6 +11,7 @@
 		style="width: 100%; height: 62px; background-image: url(${pageContext.request.contextPath}/${appConfig.loginPageConfig.loginPageTileBackgroundImagePath});">
 		<img src="${pageContext.request.contextPath}/${appConfig.loginPageConfig.loginPageLogoImagePath}">
 	</div>
+	<input type="hidden" id="msg" value="${rv}" />
 	<div id="loginWindow" class="easyui-window"
 		data-options="
     	title:'登录',

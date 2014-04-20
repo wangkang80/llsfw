@@ -73,7 +73,7 @@
     <mvc:default-servlet-handler />
 
     <!-- 默认请求路径为loginController/index -->
-    <mvc:view-controller path="/" view-name="redirect:loginController/index" />
+    <!-- <mvc:view-controller path="/" view-name="redirect:loginController/index" /> -->
 
     <!-- 配置静态资源，直接映射到对应的文件夹，不被DispatcherServlet处理 -->
     <mvc:resources mapping="/static/**" location="/WEB-INF/static/" />
