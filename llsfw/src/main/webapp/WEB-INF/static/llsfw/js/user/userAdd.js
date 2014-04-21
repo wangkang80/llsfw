@@ -83,12 +83,11 @@ $(function() {
 					// 解析数据
 					var datas = strToJson(data);
 
-					if (datas.code == '1') {
+					if (datas.returnCode == '1') {
 						$('#user_window_add').window('close');
 						$('#user_table_search_btn').click();
-					} else if (datas.code == '-1') {
-						// 弹出提示
-						showErrorMsg(datas.message);
+					} else {
+						showErrorMsg(datas.result);
 					}
 				} catch (e) {
 					showErrorWindow(data);

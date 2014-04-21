@@ -1,62 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.llsfw.core.mapper.expand.IFunctionExpMapper">
-    <sql id="Base_Column_List">
-        D.FUNCTION_CODE,
-        D.FUNCTION_NAME,
-        D.STATUS,
-        D.PARENT_FUNCTION_CODE,
-        D.SORT,
-        D.LEVEL_NO,
-        D.REQUEST_URL
-    </sql>
-    <sql id="Column_List">
-        ''''||D.PARENT_FUNCTION_CODE||''''
-    </sql>
-    <select id="getUserHasFunctionCode" resultType="java.lang.String">
-        SELECT DISTINCT
-        <include refid="Column_List" />
-        FROM
-        TT_FUNCTION D,TT_USER_ROLE A,TT_ROLE_FUNCTION B
-        WHERE
-        A.ROLE_CODE=B.ROLE_CODE
-        AND B.FUNCTION_CODE=D.FUNCTION_CODE
-        AND
-        D.STATUS=1
-        AND A.LOGIN_NAME=#{loginName}
+    <select id="findNotIncludePurviewByRoleFunction" resultType="java.util.HashMap">
+        SELECT A.PURVIEW_CODE,A.PURVIEW_NAME FROM TT_PURVIEW A WHERE NOT
+        EXISTS(
+        SELECT 1 FROM TT_ROLE_FUNCTION B WHERE B.ROLE_CODE=#{roleCode}
+        AND A.FUNCTION_CODE=B.FUNCTION_CODE AND
+        A.PURVIEW_CODE=B.PURVIEW_CODE
+        ) AND A.function_code=#{functionCode}
+        ORDER BY A.PURVIEW_CODE ASC
     </select>
-    <select id="getFunctionListCode" resultType="java.lang.String">
+    <select id="findNotIncludeFunctionPurviewByRole" resultType="java.util.HashMap">
+        SELECT A.FUNCTION_CODE,A.PURVIEW_CODE FROM TT_PURVIEW A WHERE NOT
+        EXISTS(
+        SELECT B.FUNCTION_CODE,B.PURVIEW_CODE FROM TT_ROLE_FUNCTION B WHERE B.ROLE_CODE=#{roleCode}
+        AND
+        A.FUNCTION_CODE=B.FUNCTION_CODE AND A.PURVIEW_CODE=B.PURVIEW_CODE
+        )ORDER BY A.FUNCTION_CODE,A.PURVIEW_CODE ASC
+    </select>
+    <select id="findFunctionPurviewByRole" resultType="java.util.HashMap">
+        SELECT FUNCTION_CODE,PURVIEW_CODE FROM TT_ROLE_FUNCTION WHERE
+        ROLE_CODE=#{roleCode}
+    </select>
+    <select id="getParentFunctionListCode" resultType="java.lang.String">
         SELECT DISTINCT
-        <include refid="Column_List" />
-        FROM
-        TT_FUNCTION D
-        WHERE D.FUNCTION_CODE in (${functionCodes})
+        D.PARENT_FUNCTION_CODE
+        FROM TT_FUNCTION D
+        WHERE D.STATUS=1 AND D.FUNCTION_CODE in
+        <foreach collection="functionCodeList" item="listItem" open="(" close=")" separator=",">
+            #{listItem}
+        </foreach>
     </select>
     <select id="getFunctionList" resultType="java.util.HashMap">
-        SELECT DISTINCT
-        <include refid="Base_Column_List" />
-        FROM
-        TT_FUNCTION D
-        WHERE D.FUNCTION_CODE in (${functionCodes})
+        SELECT * FROM TT_FUNCTION D
+        WHERE D.STATUS=1
         <if test="parentFunctionCode">
             AND D.PARENT_FUNCTION_CODE=#{parentFunctionCode}
         </if>
-        ORDER BY D.SORT ASC
-    </select>
-    <select id="getUserHasFunction" resultType="java.util.HashMap">
-        SELECT DISTINCT
-        <include refid="Base_Column_List" />
-        FROM
-        TT_FUNCTION D,TT_USER_ROLE A,TT_ROLE_FUNCTION B
-        WHERE
-        A.ROLE_CODE=B.ROLE_CODE
-        AND B.FUNCTION_CODE=D.FUNCTION_CODE
-        AND
-        D.STATUS=1
-        AND A.LOGIN_NAME=#{loginName}
-        <if test="parentFunctionCode">
-            AND D.PARENT_FUNCTION_CODE=#{parentFunctionCode}
-        </if>
+        AND D.FUNCTION_CODE in
+        <foreach collection="functionCodeList" item="listItem" open="(" close=")" separator=",">
+            #{listItem}
+        </foreach>
         ORDER BY D.SORT ASC
     </select>
 </mapper>

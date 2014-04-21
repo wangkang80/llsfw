@@ -3,7 +3,7 @@
  */
 $(function() {
 	// 分页条数
-	var pageSize = getServerParam(basePath, 'PAGE_SIZE').parametersValue;
+	var pageSize = getServerParam(basePath, 'PAGE_SIZE');
 
 	// 查询按钮
 	$('#execution_history_search_btn').click(function() {

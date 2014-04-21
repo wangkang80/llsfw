@@ -6,21 +6,15 @@
  */
 package com.llsfw.core.service.serverparam;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import com.llsfw.core.common.SystemParamDef;
 import com.llsfw.core.mapper.standard.TtServerGlobalParametersMapper;
 import com.llsfw.core.model.standard.TtServerGlobalParameters;
-import com.llsfw.core.model.standard.TtServerGlobalParametersCriteria;
 
 /**
  * <p>
@@ -80,43 +74,10 @@ public class ParamService {
      * Description: 返回服务端参数
      * </p>
      * 
-     * @param typeCode 参数类型
-     * @return 参数列表
-     */
-    public Map<String, String> getServerParamters(String typeCode) {
-        Map<String, String> rv = new HashMap<String, String>();
-        List<TtServerGlobalParameters> tsgpList = this.getServerGlobalParamtersByTypeCode(typeCode);
-        if (CollectionUtils.isEmpty(tsgpList)) {
-            for (TtServerGlobalParameters tsgp : tsgpList) {
-                rv.put(tsgp.getParametersCode(), tsgp.getParametersValue());
-            }
-        }
-        return rv;
-    }
-
-    /**
-     * <p>
-     * Description: 返回服务端参数
-     * </p>
-     * 
      * @param code 参数名称
      * @return 参数对象
      */
-    public TtServerGlobalParameters getServerGlobalParamters(String code) {
+    private TtServerGlobalParameters getServerGlobalParamters(String code) {
         return this.tgpm.selectByPrimaryKey(code);
-    }
-
-    /**
-     * <p>
-     * Description: 返回服务端参数
-     * </p>
-     * 
-     * @param typeCode 参数类型
-     * @return 参数列表
-     */
-    public List<TtServerGlobalParameters> getServerGlobalParamtersByTypeCode(String typeCode) {
-        final TtServerGlobalParametersCriteria TSGPC = new TtServerGlobalParametersCriteria();
-        TSGPC.createCriteria().andParametersTypeCodeEqualTo(typeCode);
-        return this.tgpm.selectByExample(TSGPC);
     }
 }

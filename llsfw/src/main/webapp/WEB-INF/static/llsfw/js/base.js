@@ -31,7 +31,7 @@ $.ajaxSetup({
  */
 function showErrorWindow(errorMessage) {
 	$('#ajaxRequestErrWindow').window({
-		title : '错误提示',
+		title : '(错误/警告)提示',
 		content : errorMessage,
 		width : '600',
 		height : '400',
@@ -89,28 +89,6 @@ function getServerParam(path, parametersCode) {
 }
 
 /**
- * <p>
- * Description: 获得指定参数列表
- * </p>
- * 
- * @param parametersTypeCode
- *            参数类型
- * @return 参数对象列表
- */
-function getServerParamByTypeCode(path, parametersTypeCode) {
-	var parameters = null;
-	$.ajax({
-		type : 'POST',
-		url : path + '/pageInit/getServerParamByTypeCode?parametersTypeCode=' + parametersTypeCode,
-		success : function(data) {
-			// 解析数据
-			parameters = strToJson(data);
-		}
-	});
-	return parameters;
-}
-
-/**
  * 在页面中任何嵌套层次的窗口中获取顶层窗口
  * 
  * @return 当前页面的顶层窗口对象
@@ -137,7 +115,25 @@ function strToJson(str) {
 		return json;
 	}
 	return str;
+}
 
+/**
+ * 格式化功能级别
+ */
+function levelDisplay(value) {
+	if (value) {
+		if (value == '1') {
+			return '系统(' + value + ')';
+		} else if (value == '2') {
+			return '菜单(' + value + ')';
+		} else if (value == '3') {
+			return '功能(' + value + ')';
+		} else if (value == 'PURVIEW') {
+			return '权限(' + value + ')';
+		} else {
+			return '未知(' + value + ')';
+		}
+	}
 }
 
 // $.ajaxSetup({

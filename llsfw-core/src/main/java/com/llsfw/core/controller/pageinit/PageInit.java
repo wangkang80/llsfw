@@ -6,15 +6,12 @@
  */
 package com.llsfw.core.controller.pageinit;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.llsfw.core.controller.base.BaseController;
-import com.llsfw.core.model.standard.TtServerGlobalParameters;
 import com.llsfw.core.service.pageinit.PageInitService;
 
 /**
@@ -49,25 +46,11 @@ public class PageInit extends BaseController {
      * </p>
      * 
      * @param parametersCode 参数代码
-     * @return 参数对象
+     * @return 值
      */
     @RequestMapping("getServerParam")
     @ResponseBody
-    public TtServerGlobalParameters getServerParam(String parametersCode) {
-        return this.pis.getPs().getServerGlobalParamters(parametersCode);
-    }
-
-    /**
-     * <p>
-     * Description: 获得指定参数列表
-     * </p>
-     * 
-     * @param parametersTypeCode 参数类型
-     * @return 参数对象列表
-     */
-    @RequestMapping("getServerParamByTypeCode")
-    @ResponseBody
-    public List<TtServerGlobalParameters> getServerParamByTypeCode(String parametersTypeCode) {
-        return this.pis.getPs().getServerGlobalParamtersByTypeCode(parametersTypeCode);
+    public String getServerParam(String parametersCode) {
+        return this.pis.getPs().getServerParamter(parametersCode);
     }
 }

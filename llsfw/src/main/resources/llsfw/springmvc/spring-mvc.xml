@@ -27,6 +27,13 @@
         <!-- 异步支持 默认30秒超时 -->
         <!-- <mvc:async-support default-timeout="30000" task-executor="executor" /> -->
 
+        <!-- 参数解析器 -->
+        <mvc:argument-resolvers>
+            <!-- 将当前登陆的用户名注入到方法中 -->
+            <bean class="com.llsfw.core.security.resolver.CurrentUserMethodArgumentResolver" />
+        </mvc:argument-resolvers>
+
+        <!-- 消息转换器 -->
         <mvc:message-converters>
             <!-- 字节流转换器 -->
             <bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter" />

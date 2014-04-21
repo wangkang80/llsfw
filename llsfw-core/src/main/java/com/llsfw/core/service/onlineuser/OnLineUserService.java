@@ -6,16 +6,7 @@
  */
 package com.llsfw.core.service.onlineuser;
 
-import java.util.Date;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.llsfw.core.mapper.standard.TtOnlineUserMapper;
-import com.llsfw.core.model.expand.LoginUser;
-import com.llsfw.core.model.standard.TtOnlineUser;
-import com.llsfw.core.model.standard.TtOnlineUserCriteria;
 import com.llsfw.core.service.BaseService;
 
 /**

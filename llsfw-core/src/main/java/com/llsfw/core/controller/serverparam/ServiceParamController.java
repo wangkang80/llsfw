@@ -11,11 +11,13 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.llsfw.core.common.JsonResult;
 import com.llsfw.core.controller.base.BaseController;
 import com.llsfw.core.model.standard.TtServerGlobalParameters;
 import com.llsfw.core.service.serverparam.ServiceParamService;
@@ -48,46 +50,24 @@ public class ServiceParamController extends BaseController {
 
     /**
      * <p>
-     * Description: 跳转到参数新增界面
-     * </p>
-     * 
-     * @return 参数新增界面
-     */
-    @RequestMapping("toServerParamAdd")
-    public String toServerParamAdd() {
-        return "llsfw/serverParam/serverParamAdd";
-    }
-
-    @RequestMapping("toServerParamEdit")
-    public String toServerParamEdit(String PARAMETERS_CODE, HttpServletRequest request) {
-        request.setAttribute(PARAMETERS_CODE, PARAMETERS_CODE);
-        return "llsfw/serverParam/serverParamEdit";
-    }
-
-    /**
-     * <p>
-     * Description: 初始化方法
-     * </p>
-     * 
-     * @return 主页面
-     */
-    @RequestMapping("init")
-    public String init() {
-        return "llsfw/serverParam/serverParam";
-    }
-
-    /**
-     * <p>
      * Description: 删除参数
      * </p>
      * 
      * @param parametersCode 参数代码
      * @return 操作结果
      */
+    @RequiresPermissions("serviceParamController:delete")
     @RequestMapping("deleteParam")
     @ResponseBody
-    public Map<String, Object> deleteParam(String parametersCode) {
+    public JsonResult<String> deleteParam(String parametersCode) {
         return this.fsps.deleteParam(parametersCode);
+    }
+
+    @RequiresPermissions("serviceParamController:edit")
+    @RequestMapping("toServerParamEdit")
+    public String toServerParamEdit(String PARAMETERS_CODE, HttpServletRequest request) {
+        request.setAttribute(PARAMETERS_CODE, PARAMETERS_CODE);
+        return "llsfw/serverParam/serverParamEdit";
     }
 
     /**
@@ -100,9 +80,10 @@ public class ServiceParamController extends BaseController {
      * @return 操作结果
      * @throws Exception 异常
      */
+    @RequiresPermissions("serviceParamController:edit")
     @RequestMapping("editParameters")
     @ResponseBody
-    public Map<String, Object> editParameters(HttpServletRequest request, String parametersCode) throws Exception {
+    public JsonResult<String> editParameters(HttpServletRequest request, String parametersCode) throws Exception {
         return this.fsps.editParameters(request.getParameterMap(), parametersCode);
     }
 
@@ -114,10 +95,24 @@ public class ServiceParamController extends BaseController {
      * @param parametersCode 参数代码
      * @return 参数对象
      */
+    @RequiresPermissions("serviceParamController:edit")
     @RequestMapping("loadParam")
     @ResponseBody
     public TtServerGlobalParameters loadParam(String parametersCode) {
         return this.fsps.loadParam(parametersCode);
+    }
+
+    /**
+     * <p>
+     * Description: 跳转到参数新增界面
+     * </p>
+     * 
+     * @return 参数新增界面
+     */
+    @RequiresPermissions("serviceParamController:add")
+    @RequestMapping("toServerParamAdd")
+    public String toServerParamAdd() {
+        return "llsfw/serverParam/serverParamAdd";
     }
 
     /**
@@ -128,9 +123,10 @@ public class ServiceParamController extends BaseController {
      * @param tsgp 需保存参数的对象
      * @return 返回保存结果
      */
+    @RequiresPermissions("serviceParamController:add")
     @RequestMapping("addParameters")
     @ResponseBody
-    public Map<String, Object> addParameters(TtServerGlobalParameters tsgp) {
+    public JsonResult<String> addParameters(TtServerGlobalParameters tsgp) {
         return this.fsps.addParameters(tsgp);
     }
 
@@ -142,10 +138,24 @@ public class ServiceParamController extends BaseController {
      * @param parametersCode 参数代码
      * @return true:通过,false:不通过
      */
+    @RequiresPermissions("serviceParamController:add")
     @RequestMapping("parametersCodeUniqueCheck")
     @ResponseBody
     public boolean parametersCodeUniqueCheck(String parametersCode) {
         return this.fsps.parametersCodeUniqueCheck(parametersCode);
+    }
+
+    /**
+     * <p>
+     * Description: 初始化方法
+     * </p>
+     * 
+     * @return 主页面
+     */
+    @RequiresPermissions("serviceParamController:view")
+    @RequestMapping("init")
+    public String init() {
+        return "llsfw/serverParam/serverParam";
     }
 
     /**
@@ -158,24 +168,10 @@ public class ServiceParamController extends BaseController {
      * @param parametersTypeCode 参数类型
      * @return 参数列表
      */
+    @RequiresPermissions("serviceParamController:view")
     @RequestMapping("getParamsList")
     @ResponseBody
-    public List<Map<String, Object>> getParamsList(String parametersCode, String parametersDesc,
-            String parametersTypeCode) {
-        return this.fsps.getParamsList(parametersCode, parametersDesc, parametersTypeCode);
-    }
-
-    /**
-     * <p>
-     * Description: 返回所有的参数类型
-     * </p>
-     * 
-     * @param hasAll 是否包含全部
-     * @return 所有的参数类型
-     */
-    @RequestMapping("getAllParamType")
-    @ResponseBody
-    public List<Map<String, Object>> getAllParamType(boolean hasAll) {
-        return this.fsps.getAllParamType(hasAll);
+    public List<Map<String, Object>> getParamsList(String parametersCode, String parametersDesc) {
+        return this.fsps.getParamsList(parametersCode, parametersDesc);
     }
 }

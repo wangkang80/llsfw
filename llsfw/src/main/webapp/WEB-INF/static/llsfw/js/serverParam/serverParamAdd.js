@@ -22,32 +22,6 @@ $(function() {
 		validType : [ "length[1,250]" ]
 	});
 
-	// 类别描述
-	$('#parametersTypeName_add').combobox({
-		required : true,
-		url : basePath + 'serviceParamController/getAllParamType?hasAll=false',
-		valueField : 'PARAMETERS_TYPE_NAME',
-		textField : 'PARAMETERS_TYPE_NAME',
-		editable : true,
-		onSelect : function(rec) {
-			$('#parametersTypeCode_add').val(rec.PARAMETERS_TYPE_CODE);
-		}
-	// ,onLoadSuccess : function() { // 加载完成后,设置选中第一项
-	// var val = $(this).combobox("getData");
-	// for ( var item in val[0]) {
-	// if (item == "PARAMETERS_TYPE_CODE") {
-	// $(this).combobox("select", val[0][item]);
-	// }
-	// }
-	// }
-	});
-
-	// 类别代码
-	$('#parametersTypeCode_add').validatebox({
-		required : true,
-		validType : [ "length[1,100]", "not_chinese" ]
-	});
-
 	// 保存按钮
 	$('#parameters_add_btn').linkbutton({});
 
@@ -69,7 +43,7 @@ $(function() {
 						interval : 200
 					});
 				}
-				return isValid; // return false will stop the form submission
+				return isValid;
 			},
 			success : function(data) {
 				try {
@@ -79,14 +53,11 @@ $(function() {
 					// 解析数据
 					var datas = strToJson(data);
 
-					if (datas.code == '1') {
+					if (datas.returnCode == '1') {
 						$('#addServerParamWindows').window('close');
 						$('#serverParamSearchBtn').click();
-						$('#parametersTypeCode').combobox('reload');
-					} else if (datas.code == '-1') {// 类别描述重复
-						$('#parametersTypeName_add').select();
-						// 弹出提示
-						showErrorMsg(datas.message);
+					} else {
+						showErrorMsg(datas.result);
 					}
 				} catch (e) {
 					showErrorWindow(data);

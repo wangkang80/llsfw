@@ -37,7 +37,6 @@ $(function() {
 
 	// 登录
 	function login() {
-		// $('#loginForm').attr('action', basePath + '/loginController/login');
 		if ($('#loginForm').form('validate')) {
 			$.messager.progress({
 				text : '登录中...',

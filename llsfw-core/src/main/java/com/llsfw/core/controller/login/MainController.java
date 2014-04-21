@@ -6,24 +6,19 @@
  */
 package com.llsfw.core.controller.login;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import com.llsfw.core.common.SystemParam;
+
 import com.llsfw.core.controller.base.BaseController;
-import com.llsfw.core.model.expand.LoginUser;
-import com.llsfw.core.model.standard.TtOnlineUser;
+import com.llsfw.core.mapper.expand.ISecurityMapper;
+import com.llsfw.core.security.annotation.CurrentUser;
 import com.llsfw.core.service.function.FunctionService;
 import com.llsfw.core.service.onlineuser.OnLineUserService;
 import com.llsfw.core.service.serverparam.ParamService;
@@ -81,17 +76,11 @@ public class MainController extends BaseController {
 
     /**
      * <p>
-     * Description: 返回在线用户列表
+     * Field ism: 安全dao
      * </p>
-     * 
-     * @return 在线用户列表
      */
-    @RequestMapping("getOnlineUserList")
-    @ResponseBody
-    public List<TtOnlineUser> getOnlineUserList() {
-        //TODO 需要去除的方法
-        return new ArrayList<TtOnlineUser>();
-    }
+    @Autowired
+    private ISecurityMapper ism;
 
     /**
      * <p>
@@ -99,19 +88,13 @@ public class MainController extends BaseController {
      * </p>
      * 
      * @param appCode 应用代码
-     * @param session session对象
+     * @param loginName 登录名
      * @param request 请求对象
      * @return 菜单脚本
      */
     @RequestMapping("getMenuTreeAccordion")
-    public String getMenuTreeAccordion(String appCode, HttpSession session, HttpServletRequest request) {
-        //获得用户
-        LoginUser user = null;
-        user = this.getLoginUser(session);
-
-        //放入作用域
-        request.setAttribute("menuTreeAccordion", this.fs.getMenuTreeAccordion(user.getUser().getLoginName(), appCode));
-
+    public String getMenuTreeAccordion(String appCode, @CurrentUser String loginName, HttpServletRequest request) {
+        request.setAttribute("menuTreeAccordion", this.fs.getMenuTreeAccordion(loginName, appCode));
         return "llsfw/menu";
     }
 
@@ -125,12 +108,8 @@ public class MainController extends BaseController {
      */
     @RequestMapping("loadAppData")
     @ResponseBody
-    public List<Map<String, Object>> loadAppData(HttpSession session) {
-        //获得用户
-        LoginUser user = null;
-        user = this.getLoginUser(session);
-
-        return this.fs.loadAppData(user.getUser().getLoginName());
+    public List<Map<String, Object>> loadAppData(@CurrentUser String loginName) {
+        return this.fs.loadAppData(loginName);
     }
 
     /**
@@ -150,18 +129,14 @@ public class MainController extends BaseController {
      * Description: 修改密码
      * </p>
      * 
-     * @param session session对象
+     * @param loginName 登陆名
      * @param newPswd 新密码
      * @return 操作结果
      */
     @RequestMapping("changePswd")
     @ResponseBody
-    public Map<String, Object> changePswd(HttpSession session, String newPswd) {
-        //获得用户
-        LoginUser user = null;
-        user = this.getLoginUser(session);
-
-        return this.us.changePswd(user.getUser().getLoginName(), newPswd);
+    public Map<String, Object> changePswd(@CurrentUser String loginName, String newPswd) {
+        return this.us.changePswd(loginName, newPswd);
     }
 
     /**
@@ -169,40 +144,14 @@ public class MainController extends BaseController {
      * Description: 验证密码是否正确
      * </p>
      * 
-     * @param session session对象
+     * @param loginName 登陆名
      * @param oldPswd 旧密码
      * @return ture:正确,false:错误
      */
     @RequestMapping("pswdCheck")
     @ResponseBody
-    public boolean pswdCheck(HttpSession session, String oldPswd) {
-        //获得用户
-        LoginUser user = null;
-        user = this.getLoginUser(session);
-        return this.us.pswdCheck(user.getUser().getLoginName(), oldPswd);
-    }
-
-    /**
-     * <p>
-     * Description: 登出
-     * </p>
-     * 
-     * @param session session对象
-     * @return 操作结果
-     */
-    @RequestMapping("loginOut")
-    @ResponseBody
-    public Map<String, Object> loginOut(HttpSession session) {
-        //获得session名称
-        String sessionName = null;
-        sessionName = this.pss.getServerParamter(SystemParam.SESSION_NAME.name());
-        //移除session
-        session.removeAttribute(sessionName);
-        //返回
-        Map<String, Object> rv = null;
-        rv = new HashMap<String, Object>();
-        rv.put("code", "success");
-        return rv;
+    public boolean pswdCheck(@CurrentUser String loginName, String oldPswd) {
+        return this.us.pswdCheck(loginName, oldPswd);
     }
 
     /**
@@ -210,33 +159,15 @@ public class MainController extends BaseController {
      * Description: 加载top
      * </p>
      * 
-     * @param session session对象
+     * @param loginName 当前登陆名
      * @param request request对象
      * @return top页面
      */
     @RequestMapping("toTopPage")
-    public String toTopPage(HttpSession session, HttpServletRequest request) {
-        //获得用户
-        LoginUser user = null;
-        user = this.getLoginUser(session);
-
-        //获得角色列表
-        List<Map<String, Object>> roleList = null;
-        roleList = this.us.getUserRoleList(user.getUser().getLoginName());
-        List<String> roleArray = null;
-        roleArray = new ArrayList<String>();
-        if (!CollectionUtils.isEmpty(roleList)) {
-            for (Map<String, Object> role : roleList) {
-                String roleName = null;
-                roleName = role.get("ROLE_NAME").toString();
-                roleArray.add(roleName);
-            }
-        }
-
-        //放入作用域
-        request.setAttribute("userName", user.getUser().getUserName());
-        request.setAttribute("role", StringUtils.collectionToDelimitedString(roleArray, ","));
-
+    public String toTopPage(@CurrentUser String loginName, HttpServletRequest request) {
+        //TODO 需要改造
+        request.setAttribute("userName", loginName);
+        request.setAttribute("role", ism.findUserRoles(loginName));
         return "/llsfw/top";
     }
 
@@ -276,15 +207,4 @@ public class MainController extends BaseController {
         return "llsfw/left";
     }
 
-    /**
-     * <p>
-     * Description: 跳转到mainPage
-     * </p>
-     * 
-     * @return main页面
-     */
-    @RequestMapping("toMainPage")
-    public String toMainPage() {
-        return "llsfw/main";
-    }
 }

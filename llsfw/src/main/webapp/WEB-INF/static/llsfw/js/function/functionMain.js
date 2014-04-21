@@ -18,7 +18,7 @@ $(function() {
 		// queryParams : {},
 		idField : 'FUNCTION_CODE',
 		treeField : 'FUNCTION_NAME',
-		columns : [ [ {
+		frozenColumns : [ [ {
 			title : '功能名称',
 			field : 'FUNCTION_NAME',
 			align : 'left',
@@ -33,7 +33,8 @@ $(function() {
 			field : 'PARENT_FUNCTION_CODE',
 			align : 'left',
 			width : 100
-		}, {
+		} ] ],
+		columns : [ [ {
 			title : '功能状态',
 			field : 'STATUS',
 			align : 'left',
@@ -97,10 +98,22 @@ $(function() {
 				}
 			}
 		} ] ],
+		onClickRow : function(row) {
+			$('#function_purview_search_table').datagrid({
+				url : basePath + 'functionController/getPurviewList?functionCode=' + row.FUNCTION_CODE
+			});
+		},
 		onLoadError : function() {
 			showErrorWindow('数据加载失败!');
 		}
 	});
+
+	// 注意按钮
+	$('#function_warring_btn')
+			.click(
+					function() {
+						showErrorWindow('<font style="color: red;">注意:<br />*.将节点状态更改为[停用],会自动更新子节点的状态变为[停用]<br />*.将节点状态更改为[启用],会自动更新父节点的状态变为[启用]<br />*.删除节点,将会自动删除子节点,并且与之关联的角色数据也会删除<br />*.创建功能会自动创建操作权限[*],[view],并且这两个操作权限是不可删除的<br />*.删除操作权限会连带删除所有关联此操作权限的数据</font>');
+					});
 
 	// 绑定查询按钮事件
 	$('#function_search_btn').click(function() {
@@ -109,7 +122,7 @@ $(function() {
 
 	// 删除按钮
 	$('#function_delete_btn').click(function() {
-		var row = $('#function_search_table').datagrid('getSelected');
+		var row = $('#function_search_table').treegrid('getSelected');
 		if (row) {
 			$.messager.confirm('警告', '删除功能节点会一并删除子节点,并且会删除角色与功能的关联,请确认是否删除?', function(r) {
 				if (r) {
@@ -119,10 +132,11 @@ $(function() {
 						success : function(data) {
 							// 解析数据
 							var datas = strToJson(data);
-							if (datas.code == '1') {
+							if (datas.returnCode == '1') {
 								$('#function_search_btn').click();
+								$('#function_purview_search_table').datagrid('reload');
 							} else {
-								alert('删除失败..');
+								showErrorMsg('删除失败');
 							}
 						}
 					});
@@ -136,7 +150,7 @@ $(function() {
 
 	// 修改按钮
 	$('#function_edit_btn').click(function() {
-		var row = $('#function_search_table').datagrid('getSelected');
+		var row = $('#function_search_table').treegrid('getSelected');
 		if (row) {
 			// 弹出修改窗口
 			$('#function_edit_window').window({
@@ -158,7 +172,7 @@ $(function() {
 
 	// 新增按钮
 	$('#function_add_btn').click(function() {
-		var row = $('#function_search_table').datagrid('getSelected');
+		var row = $('#function_search_table').treegrid('getSelected');
 		var levelNo = row ? row.LEVEL_NO : 0;
 		var parentFunctionCode = row ? row.FUNCTION_CODE : '';
 
@@ -181,21 +195,122 @@ $(function() {
 			});
 		}
 	});
-});
 
-/**
- * 格式化功能级别
- */
-function levelDisplay(value) {
-	if (value) {
-		if (value == 1) {
-			return '系统(' + value + ')';
-		} else if (value == 2) {
-			return '菜单(' + value + ')';
-		} else if (value == 3) {
-			return '功能(' + value + ')';
-		} else {
-			return '未知(' + value + ')';
+	// 权限表格
+	$('#function_purview_search_table').datagrid({
+		title : '关联的权限列表',
+		method : 'post',
+		fit : true,
+		rownumbers : true,
+		singleSelect : true,
+		pagination : false,
+		toolbar : '#function_purview_search',
+		queryParams : {},
+		columns : [ [ {
+			title : '权限代码',
+			field : 'purviewCode',
+			align : 'left',
+			width : 100
+		}, {
+			title : '权限名称',
+			field : 'purviewName',
+			align : 'left',
+			width : 100
+		}, {
+			title : '创建人',
+			field : 'createBy',
+			align : 'left',
+			width : 100
+		}, {
+			title : '创建日期',
+			field : 'createDate',
+			align : 'left',
+			width : 100,
+			formatter : function(value, row, index) {
+				if (value) {
+					var unixTimestamp = new Date(value);
+					return unixTimestamp.toLocaleDateString();
+				}
+			}
+		} ] ],
+		onLoadError : function() {
+			showErrorMsg('数据加载失败!');
 		}
-	}
-}
+	});
+
+	// 删除操作权限
+	$('#function_purview_delete_btn').click(
+			function() {
+				var row = $('#function_purview_search_table').datagrid('getSelected');
+				if (row) {
+					if (row.purviewCode != "*" && row.purviewCode != "view") {
+						$.messager.confirm('警告', '是否确定删除此功能的操作权限?', function(r) {
+							if (r) {
+								$.ajax({
+									type : 'POST',
+									url : basePath + 'functionController/purviewDelete?functionCode=' + row.functionCode + '&purviewCode='
+											+ row.purviewCode,
+									success : function(data) {
+										// 解析数据
+										var datas = strToJson(data);
+										if (datas.returnCode == '1') {
+											$('#function_purview_search_table').datagrid('load');
+										} else {
+											showErrorMsg('删除失败');
+										}
+									}
+								});
+							}
+						});
+					} else {
+						showErrorMsg('不能删除[*]和[view]权限');
+					}
+				} else {
+					showErrorMsg('请选择要删除的操作权限');
+				}
+			});
+
+	// 新增操作权限
+	$('#function_purview_add_btn').click(function() {
+		var row = $('#function_search_table').treegrid('getSelected');
+		if (row) {
+			if (row.LEVEL_NO == 3) {
+				$('#function_purview_add_windwos').window({
+					title : '新增操作权限',
+					collapsible : false,
+					minimizable : false,
+					maximizable : false,
+					resizable : false,
+					modal : true,
+					width : 250,
+					height : 170,
+					href : basePath + 'functionController/toPurviewAdd?functionCode=' + row.FUNCTION_CODE
+				});
+			} else {
+				showErrorMsg('请在功能节点上添加操作权限');
+			}
+		} else {
+			showErrorMsg('请选择要添加操作权限的功能');
+		}
+	});
+
+	// 修改权限操作
+	$('#function_purview_edit_btn').click(function() {
+		var row = $('#function_purview_search_table').datagrid('getSelected');
+		if (row) {
+			$('#function_purview_edit_windwos').window({
+				title : '修改操作权限',
+				collapsible : false,
+				minimizable : false,
+				maximizable : false,
+				resizable : false,
+				modal : true,
+				width : 250,
+				height : 170,
+				href : basePath + 'functionController/toPurviewEdit?functionCode=' + row.functionCode + '&purviewCode=' + row.purviewCode
+			});
+		} else {
+			showErrorMsg('请选择要添加操作权限的功能');
+		}
+	});
+});

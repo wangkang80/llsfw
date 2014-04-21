@@ -52,10 +52,10 @@ $(function() {
 					// 解析数据
 					var datas = strToJson(data);
 
-					if (datas.code == '1') {
+					if (datas.returnCode == '1') {
 						$('#role_window_edit').window('close');
 						$('#role_table_search_btn').click();
-					} else if (datas.code == '-1') {
+					} else if (datas.returnCode == '-1') {
 						// 弹出提示
 						showErrorMsg(datas.message);
 					}

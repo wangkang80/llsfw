@@ -89,10 +89,9 @@ $(function() {
 			}
 		} ] ],
 		onClickRow : function(rowIndex, rowData) {
-			$('#user_role_table').datagrid({
-				url : basePath + 'userController/getUserRoleList?loginName=' + rowData.LOGIN_NAME
+			$('#user_job_table').datagrid({
+				url : basePath + 'userController/getUserJobList?loginName=' + rowData.LOGIN_NAME
 			});
-			$('#user_role_table').datagrid('load');
 		},
 		onLoadError : function() {
 			showErrorWindow('数据加载失败!');
@@ -213,6 +212,33 @@ $(function() {
 		}
 	});
 
+	// 删除
+	$('#user_table_delete_btn').click(function() {
+		var row = $('#user_table').datagrid('getSelected');
+		if (row) {
+			$.messager.confirm('警告', '将会删除用户以及用户与岗位的关联,是否要操作?', function(r) {
+				if (r) {
+					$.ajax({
+						type : 'POST',
+						url : basePath + 'userController/userDelete?loginName=' + row.LOGIN_NAME,
+						success : function(data) {
+							// 解析数据
+							var datas = strToJson(data);
+							if (datas.returnCode == '1') {
+								$('#user_table_search_btn').click();
+								$('#user_job_table').datagrid('reload');
+							} else {
+								showErrorMsg("删除失败");
+							}
+						}
+					});
+				}
+			});
+		} else {
+			showErrorMsg('请选择要删除的用户');
+		}
+	});
+
 	// 密码初始化
 	$('#user_table_set_defpswd_btn').click(function() {
 		var row = $('#user_table').datagrid('getSelected');
@@ -225,40 +251,39 @@ $(function() {
 						success : function(data) {
 							// 解析数据
 							var datas = strToJson(data);
-							if (datas.code == '1') {
+							if (datas.returnCode == '1') {
 								$('#user_table_search_btn').click();
 							} else {
-								alert('删除失败..');
+								showErrorMsg("初始化密码失败");
 							}
 						}
 					});
 				}
 			});
 		} else {
-			// 登录失败,弹出提示
 			showErrorMsg('请选择要初始化密码的用户');
 		}
 	});
 
 	// ---------------------------------------------------------------
 
-	$('#user_role_table').datagrid({
-		title : '关联的角色列表',
+	$('#user_job_table').datagrid({
+		title : '关联的岗位列表',
 		method : 'post',
 		fit : true,
 		rownumbers : true,
 		singleSelect : true,
 		pagination : false,
-		toolbar : '#user_role_table_param',
+		toolbar : '#user_job_table_param',
 		queryParams : {},
 		columns : [ [ {
-			title : '角色代码',
-			field : 'ROLE_CODE',
+			title : '岗位代码',
+			field : 'JOB_CODE',
 			align : 'left',
 			width : 100
 		}, {
-			title : '角色名称',
-			field : 'ROLE_NAME',
+			title : '岗位名称',
+			field : 'JOB_NAME',
 			align : 'left',
 			width : 100
 		}, {
@@ -283,39 +308,39 @@ $(function() {
 		}
 	});
 
-	// 删除功能
-	$('#user_role_table_delete_btn').click(function() {
-		var row = $('#user_role_table').datagrid('getSelected');
+	// 删除岗位
+	$('#user_job_table_delete_btn').click(function() {
+		var row = $('#user_job_table').datagrid('getSelected');
 		if (row) {
-			$.messager.confirm('警告', '是否确定删除此用户的角色关联?', function(r) {
+			$.messager.confirm('警告', '是否确定删除此用户的岗位关联?', function(r) {
 				if (r) {
 					$.ajax({
 						type : 'POST',
-						url : basePath + 'userController/deleteUserRole?loginName=' + row.LOGIN_NAME + '&roleCode=' + row.ROLE_CODE,
+						url : basePath + 'userController/deleteUserJob?loginName=' + row.LOGIN_NAME + '&jobCode=' + row.JOB_CODE,
 						success : function(data) {
 							// 解析数据
 							var datas = strToJson(data);
-							if (datas.code == '1') {
-								$('#user_role_table').datagrid('load');
+							if (datas.returnCode == '1') {
+								$('#user_job_table').datagrid('load');
 							} else {
-								alert('删除失败..');
+								showErrorMsg("删除失败");
 							}
 						}
 					});
 				}
 			});
 		} else {
-			showErrorMsg('请选择要删除的角色');
+			showErrorMsg('请选择要删除的岗位');
 		}
 	});
 
-	// 新增功能
-	$('#user_role_table_add_btn').click(function() {
+	// 新增岗位
+	$('#user_job_table_add_btn').click(function() {
 		var row = $('#user_table').datagrid('getSelected');
 		if (row) {
 			// 弹出新增窗口
-			$('#user_role_window_add').window({
-				title : '新增角色',
+			$('#user_job_window_add').window({
+				title : '新增岗位',
 				collapsible : false,
 				minimizable : false,
 				maximizable : false,
@@ -323,10 +348,10 @@ $(function() {
 				modal : true,
 				width : 300,
 				height : 350,
-				href : basePath + 'userController/toAddUserRole?loginName=' + row.LOGIN_NAME
+				href : basePath + 'userController/toAddUserJob?userName=' + row.LOGIN_NAME
 			});
 		} else {
-			showErrorMsg('请选择要添加角色的用户');
+			showErrorMsg('请选择要添加岗位的用户');
 		}
 	});
 

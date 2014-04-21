@@ -114,6 +114,13 @@ public class Constants {
     public static final int HTTP_STATUS_518 = 518;
 
     /**
+     * <p>
+     * Field CURRENT_LOGIN_NAME: 当前登陆的用户名
+     * </p>
+     */
+    public static final String CURRENT_LOGIN_NAME = "CURRENT_LOGIN_NAME";
+
+    /**
      * 获取登录用户IP地址
      * 
      * @param request 请求参数

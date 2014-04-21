@@ -12,6 +12,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.quartz.Job;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
@@ -56,66 +57,12 @@ public class QuartzController extends BaseController {
 
     /**
      * <p>
-     * Description: 跳转到执行历史界面
-     * </p>
-     * 
-     * @return 执行历史
-     */
-    @RequestMapping("toExecutionHistoryPage")
-    public String toExecutionHistoryPage(String triggerName, String triggerGroup, String jobName, String jonGroup,
-            HttpServletRequest request) {
-        request.setAttribute("triggerName", triggerName);
-        request.setAttribute("triggerGroup", triggerGroup);
-        request.setAttribute("jobName", jobName);
-        request.setAttribute("jonGroup", jonGroup);
-        return "llsfw/quartz/executionHistory";
-    }
-
-    /**
-     * <p>
-     * Description: 返回执行历史清单
-     * </p>
-     * 
-     * @param page 当前页
-     * @param rows 每页行数
-     * @return 执行历史清单
-     * @throws Exception 异常
-     */
-    @RequestMapping("loadExecutionHistoryList")
-    @ResponseBody
-    public Map<String, Object> loadExecutionHistoryList(int page, int rows, String execution_history_trigger_group,
-            String execution_history_trigger_name, String execution_history_job_group,
-            String execution_history_job_name, String execution_status) throws Exception {
-        return this.qs.loadExecutionHistoryList(page, rows, execution_history_trigger_group,
-                execution_history_trigger_name, execution_history_job_group, execution_history_job_name,
-                execution_status);
-    }
-
-    /**
-     * <p>
-     * Description: 跳转到操作历史界面
-     * </p>
-     * 
-     * @return 操作历史界面
-     */
-    @RequestMapping("toSchedulerLogPage")
-    public String toSchedulerLogPage() {
-        return "llsfw/quartz/schedulerLog";
-    }
-
-    @RequestMapping("loadSchedulerLogList")
-    @ResponseBody
-    public Map<String, Object> loadSchedulerLogList(int page, int rows) throws Exception {
-        return qs.loadSchedulerLogList(page, rows);
-    }
-
-    /**
-     * <p>
      * Description: 跳转到cron生成器界面
      * </p>
      * 
      * @return crom生成器界面
      */
+    @RequiresPermissions("quartzController:edit")
     @RequestMapping("toCronTriggersGeneratePage")
     public String toCronTriggersGeneratePage() {
         return "llsfw/quartz/cronTriggersGenerate";
@@ -132,6 +79,7 @@ public class QuartzController extends BaseController {
      * 
      * @return cron触发器列表
      */
+    @RequiresPermissions("quartzController:edit")
     @RequestMapping("getCronTriggerList")
     @ResponseBody
     public List<Map<String, Object>> getCronTriggerList(String sName, String jName, String jGroup) {
@@ -154,6 +102,7 @@ public class QuartzController extends BaseController {
      * @return 操作结果
      * @throws Exception 计划任务异常
      */
+    @RequiresPermissions("quartzController:edit")
     @RequestMapping("addCronTrigger")
     @ResponseBody
     public Map<String, Object> addCronTrigger(String jName, String jGroup, String tName, String tGroup,
@@ -177,6 +126,7 @@ public class QuartzController extends BaseController {
      * @return 操作结果
      * @throws Exception 计划任务异常
      */
+    @RequiresPermissions("quartzController:edit")
     @RequestMapping("schedulerOp")
     @ResponseBody
     public Map<String, Object> schedulerOp(String op, String jn, String jg, String tn, String tg) throws Exception {
@@ -197,6 +147,7 @@ public class QuartzController extends BaseController {
      * @return 操作结果
      * @throws Exception 计划任务异常
      */
+    @RequiresPermissions("quartzController:edit")
     @RequestMapping("addJobDetail")
     @ResponseBody
     public Map<String, Object> addJobDetail(String jName, String jGroup, String jClass, String jDesc,
@@ -213,6 +164,7 @@ public class QuartzController extends BaseController {
      * @return 操作结果
      * @throws SchedulerException 计划任务异常
      */
+    @RequiresPermissions("quartzController:edit")
     @RequestMapping("schedulerClear")
     @ResponseBody
     public Map<String, Object> schedulerClear(String pswd) throws SchedulerException {
@@ -230,6 +182,7 @@ public class QuartzController extends BaseController {
      * 
      * @return 简单触发器清单
      */
+    @RequiresPermissions("quartzController:edit")
     @RequestMapping("getSimpleTriggerList")
     @ResponseBody
     public List<Map<String, Object>> getSimpleTriggerList(String sName, String jName, String jGroup) {
@@ -244,6 +197,7 @@ public class QuartzController extends BaseController {
      * @return 触发器组别列表
      * @throws SchedulerException 计划任务异常
      */
+    @RequiresPermissions("quartzController:edit")
     @RequestMapping("getTriggerGroupNames")
     @ResponseBody
     public List<Map<String, Object>> getTriggerGroupNames() throws SchedulerException {
@@ -258,6 +212,7 @@ public class QuartzController extends BaseController {
      * @param jClass 类型
      * @return 是否通过 true:通过,false:不通过
      */
+    @RequiresPermissions("quartzController:edit")
     @RequestMapping("jClassCheck")
     @ResponseBody
     public boolean jClassCheck(String jClass) {
@@ -280,6 +235,7 @@ public class QuartzController extends BaseController {
      * @return 组别列表
      * @throws SchedulerException 计划任务异常
      */
+    @RequiresPermissions("quartzController:edit")
     @RequestMapping("getJobGroupNames")
     @ResponseBody
     public List<Map<String, Object>> getJobGroupNames() throws SchedulerException {
@@ -293,6 +249,7 @@ public class QuartzController extends BaseController {
      * 
      * @return 作业明细列表
      */
+    @RequiresPermissions("quartzController:edit")
     @RequestMapping("getJobDetail")
     @ResponseBody
     public List<Map<String, Object>> getJobDetail() {
@@ -307,6 +264,7 @@ public class QuartzController extends BaseController {
      * @param request 请求参数
      * @return 作业添加页面
      */
+    @RequiresPermissions("quartzController:edit")
     @RequestMapping("toAddJobDetail")
     public String toAddJobDetail(HttpServletRequest request) {
         request.setAttribute("defaultGroup", Scheduler.DEFAULT_GROUP);
@@ -321,6 +279,7 @@ public class QuartzController extends BaseController {
      * @param request 请求参数
      * @return simple触发器作业添加页面
      */
+    @RequiresPermissions("quartzController:edit")
     @RequestMapping("toAddCronTrigger")
     public String toAddCronTrigger(HttpServletRequest request) {
         request.setAttribute("defaultPriority", Trigger.DEFAULT_PRIORITY);
@@ -336,6 +295,7 @@ public class QuartzController extends BaseController {
      * @param request 请求参数
      * @return simple触发器作业添加页面
      */
+    @RequiresPermissions("quartzController:edit")
     @RequestMapping("toAddSimpleTrigger")
     public String toAddSimpleTrigger(HttpServletRequest request) {
         request.setAttribute("defaultPriority", Trigger.DEFAULT_PRIORITY);
@@ -361,6 +321,7 @@ public class QuartzController extends BaseController {
      * @return 操作结果
      * @throws Exception 计划任务异常
      */
+    @RequiresPermissions("quartzController:edit")
     @RequestMapping("addSimpleTirgger")
     @ResponseBody
     public Map<String, Object> addSimpleTirgger(String jName, String jGroup, String tName, String tGroup,
@@ -380,6 +341,7 @@ public class QuartzController extends BaseController {
      * @return 操作结果
      * @throws SchedulerException 计划任务异常
      */
+    @RequiresPermissions("quartzController:edit")
     @RequestMapping("schedulerStart")
     @ResponseBody
     public Map<String, Object> schedulerStart(int seconds) throws SchedulerException {
@@ -394,6 +356,7 @@ public class QuartzController extends BaseController {
      * @return 操作结果
      * @throws SchedulerException 计划任务异常
      */
+    @RequiresPermissions("quartzController:edit")
     @RequestMapping("schedulerStandby")
     @ResponseBody
     public Map<String, Object> schedulerStandby() throws SchedulerException {
@@ -409,10 +372,70 @@ public class QuartzController extends BaseController {
      * @return 操作结果
      * @throws SchedulerException 计划任务异常
      */
+    @RequiresPermissions("quartzController:edit")
     @RequestMapping("schedulerShutdown")
     @ResponseBody
     public Map<String, Object> schedulerShutdown(boolean waitForJobsToComplete) throws SchedulerException {
         return this.qs.schedulerShutdown(waitForJobsToComplete);
+    }
+
+    /**
+     * <p>
+     * Description: 跳转到执行历史界面
+     * </p>
+     * 
+     * @return 执行历史
+     */
+    @RequiresPermissions("quartzController:view")
+    @RequestMapping("toExecutionHistoryPage")
+    public String toExecutionHistoryPage(String triggerName, String triggerGroup, String jobName, String jonGroup,
+            HttpServletRequest request) {
+        request.setAttribute("triggerName", triggerName);
+        request.setAttribute("triggerGroup", triggerGroup);
+        request.setAttribute("jobName", jobName);
+        request.setAttribute("jonGroup", jonGroup);
+        return "llsfw/quartz/executionHistory";
+    }
+
+    /**
+     * <p>
+     * Description: 返回执行历史清单
+     * </p>
+     * 
+     * @param page 当前页
+     * @param rows 每页行数
+     * @return 执行历史清单
+     * @throws Exception 异常
+     */
+    @RequiresPermissions("quartzController:view")
+    @RequestMapping("loadExecutionHistoryList")
+    @ResponseBody
+    public Map<String, Object> loadExecutionHistoryList(int page, int rows, String execution_history_trigger_group,
+            String execution_history_trigger_name, String execution_history_job_group,
+            String execution_history_job_name, String execution_status) throws Exception {
+        return this.qs.loadExecutionHistoryList(page, rows, execution_history_trigger_group,
+                execution_history_trigger_name, execution_history_job_group, execution_history_job_name,
+                execution_status);
+    }
+
+    /**
+     * <p>
+     * Description: 跳转到操作历史界面
+     * </p>
+     * 
+     * @return 操作历史界面
+     */
+    @RequiresPermissions("quartzController:view")
+    @RequestMapping("toSchedulerLogPage")
+    public String toSchedulerLogPage() {
+        return "llsfw/quartz/schedulerLog";
+    }
+
+    @RequiresPermissions("quartzController:view")
+    @RequestMapping("loadSchedulerLogList")
+    @ResponseBody
+    public Map<String, Object> loadSchedulerLogList(int page, int rows) throws Exception {
+        return qs.loadSchedulerLogList(page, rows);
     }
 
     /**
@@ -430,6 +453,7 @@ public class QuartzController extends BaseController {
      * @return 计划任务明细
      * @throws SchedulerException 计划任务异常
      */
+    @RequiresPermissions("quartzController:view")
     @RequestMapping("getSchedulerDetail")
     public String getSchedulerDetail(HttpServletRequest request, String sName, String jName, String jGroup,
             String tName, String tGroup, String tType) throws SchedulerException {
@@ -469,6 +493,7 @@ public class QuartzController extends BaseController {
      * 
      * @return 正在执行的任务列表
      */
+    @RequiresPermissions("quartzController:view")
     @RequestMapping("getFiredTriggers")
     @ResponseBody
     public List<Map<String, Object>> getFiredTriggers() {
@@ -486,6 +511,7 @@ public class QuartzController extends BaseController {
      * @param jGroupSearch 作业组别
      * @return 计划任务列表
      */
+    @RequiresPermissions("quartzController:view")
     @RequestMapping("getTriggers")
     @ResponseBody
     public List<Map<String, Object>> getTriggers(String tNameSearch, String tGroupSearch, String jNameSearch,
@@ -500,6 +526,7 @@ public class QuartzController extends BaseController {
      * 
      * @return 主页面
      */
+    @RequiresPermissions("quartzController:view")
     @RequestMapping("init")
     public String init() {
         return "llsfw/quartz/quartzMain";

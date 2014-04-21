@@ -3,7 +3,7 @@
  */
 $(function() {
 	// 分页条数
-	var pageSize = getServerParam(basePath, 'PAGE_SIZE').parametersValue;
+	var pageSize = getServerParam(basePath, 'PAGE_SIZE');
 
 	// 构造表格
 	$('#scheduler_log_table').datagrid({

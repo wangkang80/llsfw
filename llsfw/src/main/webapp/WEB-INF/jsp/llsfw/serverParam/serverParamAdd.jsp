@@ -10,12 +10,6 @@
 	参数描述:
 	<input id="parametersDesc_add" name="parametersDesc" style="width: 150px; margin: 5px;" />
 	<br />
-	类别描述: &nbsp;
-	<input id="parametersTypeName_add" name="parametersTypeName" style="width: 150px; margin: 5px;" />
-	<br />
-	类别代码:
-	<input id="parametersTypeCode_add" name="parametersTypeCode" style="width: 150px; margin: 5px;" />
-	<br />
 	<center style="margin: 5px;">
 		<a id="parameters_add_btn" href="#">保存</a>
 	</center>

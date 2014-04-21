@@ -6,9 +6,6 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
 http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd 
 http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
-    <!-- 引入属性文件 -->
-    <context:property-placeholder location="classpath:resources.properties" />
-
     <!-- 系统配置 -->
     <bean id="appConfig" class="com.llsfw.core.model.expand.appconfig.AppConfig">
 

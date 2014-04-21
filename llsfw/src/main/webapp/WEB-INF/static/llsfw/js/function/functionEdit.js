@@ -20,6 +20,15 @@ $(function() {
 				validType : [ "length[1,45]" ]
 			});
 
+			// 上级名称(如果顶级,此框将不为必录)
+			$('#parentFunctionCode_edit').combobox({
+				required : $('#levelNo_edit').val() == "1" ? false : true,
+				url : basePath + 'functionController/loadParentFunction?levelNo=' + $('#levelNo_edit').val(),
+				valueField : 'functionCode',
+				textField : 'functionName',
+				editable : false
+			});
+
 			// 功能状态
 			$('#status_edit').combobox({
 				required : true,
@@ -86,12 +95,12 @@ $(function() {
 					// 解析数据
 					var datas = strToJson(data);
 
-					if (datas.code == '1') {
+					if (datas.returnCode == '1') {
 						$('#function_edit_window').window('close');
 						$('#function_search_btn').click();
 					} else {
 						// 弹出提示
-						showErrorMsg(datas.errorMessage);
+						showErrorMsg(datas.result);
 					}
 				} catch (e) {
 					showErrorWindow(data);

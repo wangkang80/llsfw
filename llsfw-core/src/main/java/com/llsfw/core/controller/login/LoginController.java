@@ -14,6 +14,8 @@ import org.apache.shiro.authc.UnknownAccountException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.llsfw.core.controller.base.BaseController;
+
 /**
  * <p>
  * ClassName: LoginController
@@ -29,8 +31,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * </p>
  */
 @Controller
-@RequestMapping("loginController")
-public class LoginController {
+public class LoginController extends BaseController {
+
+    /**
+     * <p>
+     * Description: 跳转到mainPage
+     * </p>
+     * 
+     * @return main页面
+     */
+    @RequestMapping("/")
+    public String toMainPage() {
+        return "llsfw/main";
+    }
 
     /**
      * <p>
@@ -42,10 +55,8 @@ public class LoginController {
      */
     @RequestMapping(value = "login")
     public String login(HttpServletRequest req) {
-        System.out.println(req.getRequestURL());
-        System.out.println(req.getMethod());
         String exceptionClassName = (String) req.getAttribute("shiroLoginFailure");
-        String rv = "请登录系统";
+        String rv = null;
         if (UnknownAccountException.class.getName().equals(exceptionClassName)) {
             rv = "用户不存在";
         } else if (LockedAccountException.class.getName().equals(exceptionClassName)) {

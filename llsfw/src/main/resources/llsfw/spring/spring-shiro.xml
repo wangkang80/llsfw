@@ -6,16 +6,14 @@
        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
-
     <!-- 凭证验证 -->
     <bean id="credentialsMatcher" class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
-        <property name="hashAlgorithmName" value="md5" />
-        <property name="hashIterations" value="2" />
-        <property name="storedCredentialsHexEncoded" value="true" />
+        <property name="hashAlgorithmName" value="${security.hashAlgorithmName}" />
+        <property name="hashIterations" value="${security.hashIterations}" />
     </bean>
 
     <!-- realm -->
-    <bean id="realm" class="com.llsfw.core.security.UserAuthenRealm">
+    <bean id="realm" class="com.llsfw.core.security.realm.UserAuthenRealm">
         <property name="cachingEnabled" value="false" />
         <property name="credentialsMatcher" ref="credentialsMatcher" />
     </bean>
@@ -29,22 +27,28 @@
     <bean id="formAuthenticationFilter" class="org.apache.shiro.web.filter.authc.FormAuthenticationFilter">
         <property name="usernameParam" value="username" />
         <property name="passwordParam" value="password" />
-        <property name="loginUrl" value="/loginController/login" />
+        <property name="loginUrl" value="/login" />
     </bean>
 
+    <!-- 登陆后,将登陆名称放入request中 -->
+    <bean id="bindLoginNameFilter" class="com.llsfw.core.security.filter.BindLoginNameFilter" />
+
+    <!-- shiro过滤器 -->
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
         <property name="securityManager" ref="securityManager" />
-        <property name="loginUrl" value="/loginController/login" />
+        <property name="loginUrl" value="/login" />
         <property name="filters">
             <util:map>
                 <entry key="authc" value-ref="formAuthenticationFilter" />
+                <entry key="bindLoginNameFilter" value-ref="bindLoginNameFilter" />
             </util:map>
         </property>
         <property name="filterChainDefinitions">
             <value>
                 /static/** = anon
-                /loginController/login = authc
-                /** = user
+                /login = authc
+                /logout = logout
+                /** = user,bindLoginNameFilter
             </value>
         </property>
     </bean>

@@ -11,19 +11,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.shiro.crypto.SecureRandomNumberGenerator;
+import org.apache.shiro.crypto.hash.SimpleHash;
+import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.llsfw.core.common.AutoLoadBean;
+import com.llsfw.core.common.Constants;
+import com.llsfw.core.common.JsonResult;
 import com.llsfw.core.common.SystemParam;
 import com.llsfw.core.mapper.standard.TtApplicationUserMapper;
-import com.llsfw.core.mapper.standard.TtUserRoleMapper;
+import com.llsfw.core.mapper.standard.TtUserJobMapper;
 import com.llsfw.core.model.standard.TtApplicationUser;
 import com.llsfw.core.model.standard.TtApplicationUserCriteria;
-import com.llsfw.core.model.standard.TtUserRole;
-import com.llsfw.core.model.standard.TtUserRoleCriteria;
+import com.llsfw.core.model.standard.TtUserJob;
+import com.llsfw.core.model.standard.TtUserJobCriteria;
 import com.llsfw.core.service.BaseService;
 
 /**
@@ -42,6 +47,31 @@ import com.llsfw.core.service.BaseService;
  */
 @Service
 public class UserService extends BaseService {
+
+    /**
+     * <p>
+     * Field hashAlgorithmName: 加密算法
+     * </p>
+     */
+    @Value("#{configProperties['security.hashAlgorithmName']}")
+    private String hashAlgorithmName;
+
+    /**
+     * <p>
+     * Field hashIterations: 迭代次数
+     * </p>
+     */
+    @Value("#{configProperties['security.hashIterations']}")
+    private int hashIterations;
+
+    /**
+     * <p>
+     * Field tujm: 岗位用户dao
+     * </p>
+     */
+    @Autowired
+    private TtUserJobMapper tujm;
+
     /**
      * <p>
      * Field taum: 用户
@@ -52,109 +82,90 @@ public class UserService extends BaseService {
 
     /**
      * <p>
-     * Field turm: 用户角色关联
-     * </p>
-     */
-    @Autowired
-    private TtUserRoleMapper turm;
-
-    /**
-     * <p>
-     * Description: 删除用户角色关联
+     * Description: 删除用户岗位关联
      * </p>
      * 
      * @param loginName 用户
-     * @param roleCode 角色
+     * @param jobCode 岗位
      * @return 操作结果
      */
-    public Map<String, Object> deleteUserRole(String loginName, String roleCode) {
-        TtUserRoleCriteria turc = null;
-        turc = new TtUserRoleCriteria();
-        turc.createCriteria().andLoginNameEqualTo(loginName).andRoleCodeEqualTo(roleCode);
-        this.turm.deleteByExample(turc);
-
-        //设定返回值
-        Map<String, Object> rv = null;
-        rv = new HashMap<String, Object>();
-        rv.put("code", "1");
-        return rv;
+    public JsonResult<String> deleteUserJob(String loginName, String jobCode) {
+        TtUserJobCriteria turc = null;
+        turc = new TtUserJobCriteria();
+        turc.createCriteria().andLoginNameEqualTo(loginName).andJobCodeEqualTo(jobCode);
+        this.tujm.deleteByExample(turc);
+        return new JsonResult<String>(Constants.SUCCESS, null);
     }
 
     /**
      * <p>
-     * Description: 添加用户角色关联
+     * Description: 添加用户岗位关联
      * </p>
      * 
      * @param loginName 用户名
-     * @param roleCodeList 角色列表
+     * @param jobCodeList 岗位列表
      * @param ln 操作任务
      * @return 操作结果
      */
-    public Map<String, Object> addUserRole(String loginName, String roleCodeList, String ln) {
-        String[] roleCodes = null;
-        roleCodes = roleCodeList.split(",");
-        if (ArrayUtils.isNotEmpty(roleCodes)) {
-            for (String roleCode : roleCodes) {
-                //删除
-                TtUserRoleCriteria turc = null;
-                turc = new TtUserRoleCriteria();
-                turc.createCriteria().andLoginNameEqualTo(loginName).andRoleCodeEqualTo(roleCode);
-                this.turm.deleteByExample(turc);
-
+    public JsonResult<String> addUserJob(String loginName, String userName, String jobCodeList) {
+        String[] jobCodes = null;
+        jobCodes = jobCodeList.split(",");
+        if (ArrayUtils.isNotEmpty(jobCodes)) {
+            for (String jobCode : jobCodes) {
+                //删除 
+                TtUserJobCriteria turc = null;
+                turc = new TtUserJobCriteria();
+                turc.createCriteria().andLoginNameEqualTo(userName).andJobCodeEqualTo(jobCode);
+                this.tujm.deleteByExample(turc);
                 //添加
-                TtUserRole tur = null;
-                tur = new TtUserRole();
-                tur.setCreateBy(ln);
+                TtUserJob tur = null;
+                tur = new TtUserJob();
+                tur.setCreateBy(loginName);
                 tur.setCreateDate(new Date());
-                tur.setLoginName(loginName);
-                tur.setRoleCode(roleCode);
-                this.turm.insert(tur);
+                tur.setLoginName(userName);
+                tur.setJobCode(jobCode);
+                this.tujm.insert(tur);
             }
         }
-
-        //设定返回值
-        Map<String, Object> rv = null;
-        rv = new HashMap<String, Object>();
-        rv.put("code", "1");
-        return rv;
+        return new JsonResult<String>(Constants.SUCCESS, null);
     }
 
     /**
      * <p>
-     * Description: 返回角色列列表
+     * Description: 返回岗位列列表
      * </p>
      * 
      * @param loginName 登录名
-     * @return 角色列表
+     * @return 岗位列表
      */
-    public List<Map<String, Object>> getRoleList(String loginName) {
+    public List<Map<String, Object>> getJobList(String loginName) {
         StringBuffer sql = null;
         sql = new StringBuffer();
-        sql.append(" SELECT A.ROLE_CODE,A.ROLE_NAME FROM TT_ROLE A");
+        sql.append(" SELECT A.JOB_CODE,A.JOB_NAME FROM TT_JOB A");
         sql.append(" WHERE NOT EXISTS(");
-        sql.append("     SELECT B.ROLE_CODE");
-        sql.append("     FROM TT_USER_ROLE B");
+        sql.append("     SELECT B.JOB_CODE");
+        sql.append("     FROM TT_USER_JOB B");
         sql.append("     WHERE B.LOGIN_NAME='" + loginName + "'");
-        sql.append("     AND B.ROLE_CODE=A.ROLE_CODE");
+        sql.append("     AND B.JOB_CODE=A.JOB_CODE");
         sql.append(" )");
-        sql.append(" ORDER BY A.ROLE_CODE ASC");
+        sql.append(" ORDER BY A.JOB_CODE ASC");
         return this.getImqm().queryMap(sql.toString());
     }
 
     /**
      * <p>
-     * Description: 返回用户角色列表
+     * Description: 返回用户岗位列表
      * </p>
      * 
      * @param loginName 当前用户名
-     * @return 角色列表
+     * @return 岗位列表
      */
-    public List<Map<String, Object>> getUserRoleList(String loginName) {
+    public List<Map<String, Object>> getUserJobList(String loginName) {
         StringBuffer sql = null;
         sql = new StringBuffer();
-        sql.append(" SELECT A.LOGIN_NAME,B.ROLE_CODE,B.ROLE_NAME,A.CREATE_DATE,A.CREATE_BY");
-        sql.append(" FROM TT_USER_ROLE A,TT_ROLE B");
-        sql.append(" WHERE A.ROLE_CODE=B.ROLE_CODE");
+        sql.append(" SELECT A.LOGIN_NAME,B.JOB_CODE,B.JOB_NAME,A.CREATE_DATE,A.CREATE_BY");
+        sql.append(" FROM TT_USER_JOB A,TT_JOB B");
+        sql.append(" WHERE A.JOB_CODE=B.JOB_CODE");
         sql.append(" AND A.LOGIN_NAME='" + loginName + "'");
         sql.append(" ORDER BY A.CREATE_DATE DESC");
         return this.getImqm().queryMap(sql.toString());
@@ -176,10 +187,14 @@ public class UserService extends BaseService {
         tau.setUpdateBy(loginName);
         tau.setUpdateDate(new Date());
 
-        //设置密码(MD5加密)
-        newPswd = DigestUtils.md5Hex(newPswd);
-        tau.setLoginPassword(newPswd);
+        //设置密码
+        String salt = new SecureRandomNumberGenerator().nextBytes().toHex();
+        SimpleHash hash = new SimpleHash(hashAlgorithmName, newPswd, ByteSource.Util.bytes(salt), hashIterations);
+        String encodedPassword = hash.toHex();
+        tau.setLoginPassword(encodedPassword);
+        tau.setSalt(salt);
 
+        //保存
         this.taum.updateByPrimaryKeySelective(tau);
 
         //设定返回值
@@ -201,8 +216,26 @@ public class UserService extends BaseService {
     public boolean pswdCheck(String loginName, String oldPswd) {
         TtApplicationUser tau = null;
         tau = this.taum.selectByPrimaryKey(loginName);
-        oldPswd = DigestUtils.md5Hex(oldPswd);
-        return tau.getLoginPassword().equals(oldPswd);
+        ByteSource salt = ByteSource.Util.bytes(tau.getSalt());
+        SimpleHash hash = new SimpleHash(this.hashAlgorithmName, oldPswd, salt, this.hashIterations);
+        String oldPswdEncodedPassword = hash.toHex();
+        return tau.getLoginPassword().equals(oldPswdEncodedPassword);
+    }
+
+    /**
+     * <p>
+     * Description: 删除用户
+     * </p>
+     * 
+     * @param loginName 用户名
+     * @return 操作结果
+     */
+    public JsonResult<String> userDelete(String loginName) {
+        TtUserJobCriteria tujc = new TtUserJobCriteria();
+        tujc.createCriteria().andLoginNameEqualTo(loginName);
+        this.tujm.deleteByExample(tujc);
+        this.taum.deleteByPrimaryKey(loginName);
+        return new JsonResult<String>(Constants.SUCCESS, null);
     }
 
     /**
@@ -214,7 +247,7 @@ public class UserService extends BaseService {
      * @param ln 操作人
      * @return 操作结果
      */
-    public Map<String, Object> saveDefPswd(String loginName, String ln) {
+    public JsonResult<String> saveDefPswd(String loginName, String ln) {
         TtApplicationUser tau = null;
         tau = new TtApplicationUser();
         tau.setLoginName(loginName);
@@ -224,16 +257,17 @@ public class UserService extends BaseService {
         //设置初始化密码(MD5加密)
         String defPswd = null;
         defPswd = this.getPs().getServerParamter(SystemParam.SYSTEM_DEF_PSWD.name());
-        defPswd = DigestUtils.md5Hex(defPswd);
-        tau.setLoginPassword(defPswd);
+        String salt = new SecureRandomNumberGenerator().nextBytes().toHex();
+        SimpleHash hash = new SimpleHash(hashAlgorithmName, defPswd, ByteSource.Util.bytes(salt), hashIterations);
+        String encodedPassword = hash.toHex();
+        tau.setLoginPassword(encodedPassword);
+        tau.setSalt(salt);
 
+        //更新
         this.taum.updateByPrimaryKeySelective(tau);
 
         //设定返回值
-        Map<String, Object> rv = null;
-        rv = new HashMap<String, Object>();
-        rv.put("code", "1");
-        return rv;
+        return new JsonResult<String>(Constants.SUCCESS, null);
     }
 
     /**
@@ -247,18 +281,13 @@ public class UserService extends BaseService {
      * @return 操作结果
      * @throws Exception 异常
      */
-    public Map<String, Object> editUser(Map<String, String[]> v, String loginName, String ln) throws Exception {
+    public JsonResult<String> editUser(Map<String, String[]> v, String loginName, String ln) throws Exception {
         TtApplicationUser tau = this.taum.selectByPrimaryKey(loginName);
         tau = AutoLoadBean.load(tau, v);
         tau.setUpdateBy(ln);
         tau.setUpdateDate(new Date());
         this.taum.updateByPrimaryKey(tau);
-
-        //设定返回值
-        Map<String, Object> rv = null;
-        rv = new HashMap<String, Object>();
-        rv.put("code", "1");
-        return rv;
+        return new JsonResult<String>(Constants.SUCCESS, null);
     }
 
     /**
@@ -282,21 +311,24 @@ public class UserService extends BaseService {
      * @param loginName 登录名
      * @return 操作结果
      */
-    public Map<String, Object> addUser(TtApplicationUser tau, String loginName) {
-        //设置初始化密码(MD5加密)
+    public JsonResult<String> addUser(TtApplicationUser tau, String loginName) {
+        //获得默认密码
         String defPswd = null;
         defPswd = this.getPs().getServerParamter(SystemParam.SYSTEM_DEF_PSWD.name());
-        defPswd = DigestUtils.md5Hex(defPswd);
-        tau.setLoginPassword(defPswd);
 
+        //设置密码
+        String salt = new SecureRandomNumberGenerator().nextBytes().toHex();
+        SimpleHash hash = new SimpleHash(hashAlgorithmName, defPswd, ByteSource.Util.bytes(salt), hashIterations);
+        String encodedPassword = hash.toHex();
+
+        //填充值,并且保存
+        tau.setLoginPassword(encodedPassword);
+        tau.setSalt(salt);
         tau.setCreateBy(loginName);
         tau.setCreateDate(new Date());
         this.taum.insertSelective(tau);
 
-        Map<String, Object> rv = null;
-        rv = new HashMap<String, Object>();
-        rv.put("code", "1");
-        return rv;
+        return new JsonResult<String>(Constants.SUCCESS, null);
     }
 
     /**

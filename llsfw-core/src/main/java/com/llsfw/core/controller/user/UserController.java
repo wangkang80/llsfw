@@ -10,15 +10,17 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.llsfw.core.common.JsonResult;
 import com.llsfw.core.controller.base.BaseController;
 import com.llsfw.core.model.standard.TtApplicationUser;
+import com.llsfw.core.security.annotation.CurrentUser;
 import com.llsfw.core.service.user.UserService;
 
 /**
@@ -48,119 +50,81 @@ public class UserController extends BaseController {
 
     /**
      * <p>
-     * Description: 跳转到用户新增界面
-     * </p>
-     * 
-     * @return 用户新增界面
-     */
-    @RequestMapping("toUserAdd")
-    public String toUserAdd() {
-        return "llsfw/user/userAdd";
-    }
-
-    /**
-     * <p>
-     * Description: 跳转到用户修改界面
-     * </p>
-     * 
-     * @param loginName 用户名
-     * @param request 请求
-     * @return 用户修改界面
-     */
-    @RequestMapping("toUserEdit")
-    public String toUserEdit(String loginName, HttpServletRequest request) {
-        request.setAttribute(loginName, loginName);
-        return "llsfw/user/userEdit";
-    }
-
-    /**
-     * <p>
-     * Description: 跳转到用户角色关联界面
-     * </p>
-     * 
-     * @param loginName 用户名
-     * @param request 请求
-     * @return 用户角色关联界面
-     */
-    @RequestMapping("toAddUserRole")
-    public String toAddUserRole(String loginName, HttpServletRequest request) {
-        request.setAttribute(loginName, loginName);
-        return "llsfw/user/addUserRole";
-    }
-
-    /**
-     * <p>
-     * Description: 初始化方法
-     * </p>
-     * 
-     * @return 主页面
-     */
-    @RequestMapping("init")
-    public String init() {
-        return "llsfw/user/userMain";
-    }
-
-    /**
-     * <p>
-     * Description: 删除用户角色关联
+     * Description: 删除用户岗位关联
      * </p>
      * 
      * @param loginName 用户
-     * @param roleCode 角色
+     * @param jobCode 岗位
      * @return 操作结果
      */
-    @RequestMapping("deleteUserRole")
+    @RequiresPermissions("userController:job_delete")
+    @RequestMapping("deleteUserJob")
     @ResponseBody
-    public Map<String, Object> deleteUserRole(String loginName, String roleCode) {
-        return this.us.deleteUserRole(loginName, roleCode);
+    public JsonResult<String> deleteUserJob(String loginName, String jobCode) {
+        return this.us.deleteUserJob(loginName, jobCode);
     }
 
     /**
      * <p>
-     * Description: 添加用户角色关联
+     * Description: 跳转到用户岗位关联界面
      * </p>
      * 
      * @param loginName 用户名
-     * @param roleCodeList 角色列表
+     * @param request 请求
+     * @return 用户岗位关联界面
+     */
+    @RequiresPermissions("userController:job_add")
+    @RequestMapping("toAddUserJob")
+    public String toAddUserJob(String userName, HttpServletRequest request) {
+        request.setAttribute("userName", userName);
+        return "llsfw/user/addUserJob";
+    }
+
+    /**
+     * <p>
+     * Description: 添加用户岗位关联
+     * </p>
+     * 
+     * @param loginName 用户名
+     * @param jobCodeList 岗位列表
      * @param s session对象
      * @return 操作结果
      */
-    @RequestMapping("addUserRole")
+    @RequiresPermissions("userController:job_add")
+    @RequestMapping("addUserJob")
     @ResponseBody
-    public Map<String, Object> addUserRole(String loginName, String roleCodeList, HttpSession s) {
-        //获取登录名
-        String ln = null;
-        ln = this.getLoginName(s);
-
-        return this.us.addUserRole(loginName, roleCodeList, ln);
+    public JsonResult<String> addUserJob(@CurrentUser String loginName, String userName, String jobCodeList) {
+        return this.us.addUserJob(loginName, userName, jobCodeList);
     }
 
     /**
      * <p>
-     * Description: 返回角色列列表
+     * Description: 返回岗位列列表
      * </p>
      * 
      * @param loginName 登录名
-     * @return 角色列表
+     * @return 岗位列表
      */
-    @RequestMapping("getRoleList")
+    @RequiresPermissions("userController:job_add")
+    @RequestMapping("getJobList")
     @ResponseBody
-    public List<Map<String, Object>> getRoleList(String loginName) {
-        return this.us.getRoleList(loginName);
+    public List<Map<String, Object>> getJobList(String loginName) {
+        return this.us.getJobList(loginName);
     }
 
     /**
      * <p>
-     * Description: 返回用户角色列表
+     * Description: 删除用户
      * </p>
      * 
-     * @param loginName 当前用户名
-     * @return 角色列表
+     * @param loginName 用户名
+     * @return 操作结果
      */
-    @RequestMapping("getUserRoleList")
+    @RequiresPermissions("userController:delete")
+    @RequestMapping("userDelete")
     @ResponseBody
-    public List<Map<String, Object>> getUserRoleList(String loginName) {
-        return this.us.getUserRoleList(loginName);
+    public JsonResult<String> userDelete(String loginName) {
+        return this.us.userDelete(loginName);
     }
 
     /**
@@ -172,14 +136,27 @@ public class UserController extends BaseController {
      * @param loginName 登录名
      * @return 操作结果
      */
+    @RequiresPermissions("userController:def_pswd")
     @RequestMapping("saveDefPswd")
     @ResponseBody
-    public Map<String, Object> saveDefPswd(HttpSession s, String loginName) {
-        //获取登录名
-        String ln = null;
-        ln = this.getLoginName(s);
+    public JsonResult<String> saveDefPswd(@CurrentUser String loginUser, String loginName) {
+        return this.us.saveDefPswd(loginName, loginUser);
+    }
 
-        return this.us.saveDefPswd(loginName, ln);
+    /**
+     * <p>
+     * Description: 跳转到用户修改界面
+     * </p>
+     * 
+     * @param loginName 用户名
+     * @param request 请求
+     * @return 用户修改界面
+     */
+    @RequiresPermissions("userController:edit")
+    @RequestMapping("toUserEdit")
+    public String toUserEdit(String loginName, HttpServletRequest request) {
+        request.setAttribute("loginName", loginName);
+        return "llsfw/user/userEdit";
     }
 
     /**
@@ -193,14 +170,12 @@ public class UserController extends BaseController {
      * @return 操作人
      * @throws Exception 异常
      */
+    @RequiresPermissions("userController:edit")
     @RequestMapping("editUser")
     @ResponseBody
-    public Map<String, Object> editUser(HttpSession s, HttpServletRequest r, String loginName) throws Exception {
-        //获取登录名
-        String ln = null;
-        ln = this.getLoginName(s);
-
-        return this.us.editUser(r.getParameterMap(), loginName, ln);
+    public JsonResult<String> editUser(@CurrentUser String loginUser, HttpServletRequest r, String loginName)
+            throws Exception {
+        return this.us.editUser(r.getParameterMap(), loginName, loginUser);
     }
 
     /**
@@ -211,6 +186,7 @@ public class UserController extends BaseController {
      * @param loginName 登陆名字
      * @return 用户
      */
+    @RequiresPermissions("userController:edit")
     @RequestMapping("loadUser")
     @ResponseBody
     public TtApplicationUser loadUser(String loginName) {
@@ -219,20 +195,30 @@ public class UserController extends BaseController {
 
     /**
      * <p>
+     * Description: 跳转到用户新增界面
+     * </p>
+     * 
+     * @return 用户新增界面
+     */
+    @RequiresPermissions("userController:add")
+    @RequestMapping("toUserAdd")
+    public String toUserAdd() {
+        return "llsfw/user/userAdd";
+    }
+
+    /**
+     * <p>
      * Description: 保存用户(密码初始化)
      * </p>
      * 
      * @param tau 用户对象
-     * @param session 登录名
+     * @param loginName 登录名
      * @return 操作结果
      */
+    @RequiresPermissions("userController:add")
     @RequestMapping("addUser")
     @ResponseBody
-    public Map<String, Object> addUser(TtApplicationUser tau, HttpSession session) {
-        //获取登录名
-        String loginName = null;
-        loginName = this.getLoginName(session);
-
+    public JsonResult<String> addUser(@CurrentUser String loginName, TtApplicationUser tau) {
         return this.us.addUser(tau, loginName);
     }
 
@@ -244,10 +230,39 @@ public class UserController extends BaseController {
      * @param loginName 登录名
      * @return true:通过,false:不通过
      */
+    @RequiresPermissions("userController:add")
     @RequestMapping("loginNameUniqueCheck")
     @ResponseBody
     public boolean loginNameUniqueCheck(String loginName) {
         return this.us.loginNameUniqueCheck(loginName);
+    }
+
+    /**
+     * <p>
+     * Description: 初始化方法
+     * </p>
+     * 
+     * @return 主页面
+     */
+    @RequiresPermissions("userController:view")
+    @RequestMapping("init")
+    public String init() {
+        return "llsfw/user/userMain";
+    }
+
+    /**
+     * <p>
+     * Description: 返回用户岗位列表
+     * </p>
+     * 
+     * @param loginName 当前用户名
+     * @return 岗位列表
+     */
+    @RequiresPermissions("userController:view")
+    @RequestMapping("getUserJobList")
+    @ResponseBody
+    public List<Map<String, Object>> getUserJobList(String loginName) {
+        return this.us.getUserJobList(loginName);
     }
 
     /**
@@ -257,6 +272,7 @@ public class UserController extends BaseController {
      * 
      * @return 用户列表
      */
+    @RequiresPermissions("userController:view")
     @RequestMapping("getUserList")
     @ResponseBody
     public List<Map<String, Object>> getUserList() {

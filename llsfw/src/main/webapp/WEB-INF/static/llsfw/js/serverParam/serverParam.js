@@ -28,16 +28,6 @@ $(function() {
 			field : 'PARAMETERS_DESC',
 			align : 'left',
 			width : 150
-		}, {
-			title : '类别代码',
-			field : 'PARAMETERS_TYPE_CODE',
-			align : 'left',
-			width : 100
-		}, {
-			title : '类别描述',
-			field : 'PARAMETERS_TYPE_NAME',
-			align : 'left',
-			width : 100
 		} ] ],
 		onLoadError : function() {
 			showErrorWindow('数据加载失败!');
@@ -48,31 +38,13 @@ $(function() {
 	$('#serverParamSearchBtn').click(function() {
 		$('#serverParamTable').datagrid('load', {
 			parametersCode : $('#parametersCode').val(),
-			parametersDesc : $('#parametersDesc').val(),
-			parametersTypeCode : $('#parametersTypeCode').combobox('getValue')
+			parametersDesc : $('#parametersDesc').val()
 		});
 	});
 
 	// 绑定查询事件
 	$('#parametersCode,#parametersDesc').keydown(function(e) {
 		if (e.keyCode == 13) {
-			$('#serverParamSearchBtn').click();
-		}
-	});
-	$('#parametersTypeCode').combobox({
-		url : basePath + 'serviceParamController/getAllParamType?hasAll=true',
-		valueField : 'PARAMETERS_TYPE_CODE',
-		textField : 'PARAMETERS_TYPE_NAME',
-		editable : false,
-		onLoadSuccess : function() { // 加载完成后,设置选中第一项
-			var val = $(this).combobox('getData');
-			for ( var item in val[0]) {
-				if (item == 'PARAMETERS_TYPE_CODE') {
-					$(this).combobox('select', val[0][item]);
-				}
-			}
-		},
-		onSelect : function(param) {
 			$('#serverParamSearchBtn').click();
 		}
 	});
@@ -88,7 +60,7 @@ $(function() {
 			resizable : false,
 			modal : true,
 			width : 250,
-			height : 230,
+			height : 200,
 			href : basePath + 'serviceParamController/toServerParamAdd'
 		});
 	});
@@ -105,11 +77,11 @@ $(function() {
 						success : function(data) {
 							// 解析数据
 							var datas = strToJson(data);
-							if (datas.code == '1') {
+							if (datas.returnCode == '1') {
 								$('#serverParamSearchBtn').click();
 								$('#parametersTypeCode').combobox('reload');
 							} else {
-								alert('删除失败..');
+								showErrorMsg(datas.result);
 							}
 						}
 					});
@@ -134,7 +106,7 @@ $(function() {
 				resizable : false,
 				modal : true,
 				width : 250,
-				height : 230,
+				height : 200,
 				href : basePath + 'serviceParamController/toServerParamEdit?PARAMETERS_CODE=' + row.PARAMETERS_CODE
 			});
 		} else {

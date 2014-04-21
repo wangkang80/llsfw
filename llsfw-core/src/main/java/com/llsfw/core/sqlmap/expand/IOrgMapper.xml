@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.llsfw.core.mapper.expand.IOrgMapper">
+    <select id="getNotExistsRoleByJobCode" resultType="java.util.HashMap">
+        SELECT A.ROLE_CODE,A.ROLE_NAME FROM TT_ROLE A
+        WHERE NOT EXISTS(
+        SELECT
+        B.ROLE_CODE
+        FROM TT_JOB_ROLE B
+        WHERE
+        B.JOB_CODE=#{jobCode}
+        AND B.ROLE_CODE=A.ROLE_CODE
+        )ORDER BY A.ROLE_CODE ASC
+    </select>
+    <select id="getRoleByJobCode" resultType="java.util.HashMap">
+        SELECT A.JOB_CODE,B.ROLE_CODE,B.ROLE_NAME,A.CREATE_BY,A.CREATE_DATE
+        FROM TT_JOB_ROLE
+        A,TT_ROLE B
+        WHERE A.ROLE_CODE=B.ROLE_CODE
+        AND A.JOB_CODE=#{jobCode}
+        ORDER BY A.CREATE_DATE DESC
+    </select>
+    <select id="getJobByOrgCode" resultType="java.util.HashMap">
+        SELECT A.JOB_CODE,A.JOB_NAME,
+        B.ORG_CODE,B.ORG_NAME,
+        A.CREATE_BY,A.CREATE_DATE,
+        A.UPDATE_BY,A.UPDATE_DATE
+        FROM TT_JOB
+        A,TT_ORGANIZATION B
+        WHERE A.ORG_CODE=B.ORG_CODE
+        <if test="orgCode">
+            AND B.ORG_CODE=#{orgCode}
+        </if>
+        ORDER BY A.CREATE_DATE
+        DESC
+    </select>
+    <select id="getRootOrg" resultType="java.util.HashMap">
+        SELECT ORG_CODE,ORG_NAME FROM TT_ORGANIZATION
+        WHERE PARENT_ORG_CODE IS NULL
+        ORDER BY ORG_SORT
+        ASC
+    </select>
+    <select id="getChildrenOrg" resultType="java.util.HashMap">
+        SELECT ORG_CODE,ORG_NAME FROM TT_ORGANIZATION
+        WHERE PARENT_ORG_CODE=#{parentOrgCode}
+        ORDER
+        BY ORG_SORT ASC
+    </select>
+</mapper>

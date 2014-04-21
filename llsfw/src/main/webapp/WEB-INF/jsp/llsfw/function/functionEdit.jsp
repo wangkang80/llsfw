@@ -15,7 +15,7 @@
 		<tr>
 			<td>上级代码:</td>
 			<td>
-				<input id="parentFunctionCode_edit" name="parentFunctionCode" readonly="readonly" style="width: 150px;" />
+				<input id="parentFunctionCode_edit" name="parentFunctionCode" style="width: 150px;" />
 			</td>
 			<td>功能状态:</td>
 			<td>

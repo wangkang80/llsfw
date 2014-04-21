@@ -4,12 +4,10 @@
 $(function() {
 
 	// 功能代码
-	$('#functionCode_add').validatebox(
-			{
-				required : true,
-				validType : [ "length[1,100]", "not_chinese",
-						"remote[basePath + 'functionController/functionCodeUniqueCheck', 'functionCode']" ]
-			});
+	$('#functionCode_add').validatebox({
+		required : true,
+		validType : [ "length[1,100]", "not_chinese", "remote[basePath + 'functionController/functionCodeUniqueCheck', 'functionCode']" ]
+	});
 
 	// 功能名称
 	$('#functionName_add').validatebox({
@@ -85,13 +83,12 @@ $(function() {
 
 					// 解析数据
 					var datas = strToJson(data);
-
-					if (datas.code == '1') {
+					if (datas.returnCode == '1') {
 						$('#function_add_window').window('close');
 						$('#function_search_btn').click();
 					} else {
 						// 弹出提示
-						showErrorMsg(datas.errorMessage);
+						showErrorMsg(datas.result);
 					}
 				} catch (e) {
 					showErrorWindow(data);

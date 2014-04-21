@@ -17,6 +17,7 @@ $(function() {
 			href : basePath + 'mainController/toChangePswd'
 		});
 	});
+
 	// 退出
 	$('#login_out_menu').click(function() {
 		$.messager.confirm('警告', '是否确定退出系统?', function(r) {
@@ -25,22 +26,7 @@ $(function() {
 					text : '请稍后...',
 					interval : 200
 				});
-				$.ajax({
-					type : 'POST',
-					url : basePath + 'mainController/loginOut',
-					success : function(data) {
-						// 关闭遮罩
-						$.messager.progress('close');
-						// 解析数据
-						var datas = strToJson(data);
-						if ('success' == datas.code) {
-							var top = getTopWinow();
-							top.location.href = basePath;
-						} else {
-							alert('操作失败');
-						}
-					}
-				});
+				top.location.href = basePath + 'logout';
 			}
 		});
 	});

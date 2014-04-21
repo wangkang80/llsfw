@@ -505,17 +505,17 @@ $(function() {
 
 	// 自动轮询
 	var TRIGGER_SEARCH_INTERVAL = getServerParam(basePath, 'TRIGGER_SEARCH_INTERVAL');
-	setInterval("$('#firedTriggers_search_btn').click();", TRIGGER_SEARCH_INTERVAL.parametersValue);
-	setInterval("$('#triggers_search_btn').click();", TRIGGER_SEARCH_INTERVAL.parametersValue);
+	setInterval("$('#firedTriggers_search_btn').click();", TRIGGER_SEARCH_INTERVAL);
+	setInterval("$('#triggers_search_btn').click();", TRIGGER_SEARCH_INTERVAL);
 
 	// 设置查询标题
 	$('#firedTriggers_search_btn').linkbutton({
-		text : '查询(' + TRIGGER_SEARCH_INTERVAL.parametersValue + 'ms)'
+		text : '查询(' + TRIGGER_SEARCH_INTERVAL + 'ms)'
 	});
 
 	// 设置查询标题
 	$('#triggers_search_btn').linkbutton({
-		text : '查询(' + TRIGGER_SEARCH_INTERVAL.parametersValue + 'ms)'
+		text : '查询(' + TRIGGER_SEARCH_INTERVAL + 'ms)'
 	});
 
 });

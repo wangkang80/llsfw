@@ -129,5 +129,15 @@ $
 							}
 						},
 						message : '两次输入的密码不一致！'
+					},
+					org_not_same : {
+						validator : function(value, param) {
+							if ($("#" + param[0]).val() != "" && value != "") {
+								return !($("#" + param[0]).val() == value);
+							} else {
+								return true;
+							}
+						},
+						message : '不能选择自身为上级组织!'
 					}
 				});

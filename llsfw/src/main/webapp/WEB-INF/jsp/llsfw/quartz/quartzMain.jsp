@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@taglib prefix="shiro" uri="http://shiro.apache.org/tags"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -20,35 +21,37 @@
 					<div id="triggers_search" style="height: auto;">
 						<div style="padding: 2px;">
 							<a href="#" class="easyui-linkbutton" data-options="plain:true" id="triggers_search_btn">查询</a>
-							<a href="#" class="easyui-linkbutton" data-options="plain:true" id="trigger_job_btn">触发</a>
-							<a href="#" class="easyui-menubutton" data-options="menu:'#job_trigger_add_menu'">编辑</a>
-							<a href="#" class="easyui-menubutton" data-options="menu:'#job_trigger_delete_menu'">删除</a>
-							<a href="#" class="easyui-menubutton" data-options="menu:'#job_trigger_pause_menu'">暂停</a>
-							<a href="#" class="easyui-menubutton" data-options="menu:'#job_trigger_resume_menu'">恢复</a>
+							<shiro:hasPermission name="orgController:edit">
+								<a href="#" class="easyui-linkbutton" data-options="plain:true" id="trigger_job_btn">触发</a>
+								<a href="#" class="easyui-menubutton" data-options="menu:'#job_trigger_add_menu'">编辑</a>
+								<a href="#" class="easyui-menubutton" data-options="menu:'#job_trigger_delete_menu'">删除</a>
+								<a href="#" class="easyui-menubutton" data-options="menu:'#job_trigger_pause_menu'">暂停</a>
+								<a href="#" class="easyui-menubutton" data-options="menu:'#job_trigger_resume_menu'">恢复</a>
+								<div id="job_trigger_add_menu" style="width: 120px;">
+									<div id="job_detail_add_btn">编辑作业</div>
+									<div class="menu-sep"></div>
+									<div id="simple_trigger_add_btn">编辑SIMPLE触发器</div>
+									<div id="cron_trigger_add_btn">编辑CRON触发器</div>
+								</div>
+								<div id="job_trigger_delete_menu" style="width: 120px;">
+									<div id="job_detail_delete_btn">删除作业</div>
+									<div class="menu-sep"></div>
+									<div id="trigger_delete_btn">删除触发器</div>
+								</div>
+								<div id="job_trigger_pause_menu" style="width: 120px;">
+									<div id="pause_all_btn">暂停所有</div>
+									<div class="menu-sep"></div>
+									<div id="pause_job_btn">暂停作业</div>
+									<div id="pause_trigger_btn">暂停触发器</div>
+								</div>
+								<div id="job_trigger_resume_menu" style="width: 120px;">
+									<div id="resume_all_btn">恢复所有</div>
+									<div class="menu-sep"></div>
+									<div id="resume_job_btn">恢复作业</div>
+									<div id="resume_trigger_btn">恢复触发器</div>
+								</div>
+							</shiro:hasPermission>
 							<a href="#" class="easyui-menubutton" data-options="menu:'#scheduler_log_menu'">记录</a>
-							<div id="job_trigger_add_menu" style="width: 120px;">
-								<div id="job_detail_add_btn">编辑作业</div>
-								<div class="menu-sep"></div>
-								<div id="simple_trigger_add_btn">编辑SIMPLE触发器</div>
-								<div id="cron_trigger_add_btn">编辑CRON触发器</div>
-							</div>
-							<div id="job_trigger_delete_menu" style="width: 120px;">
-								<div id="job_detail_delete_btn">删除作业</div>
-								<div class="menu-sep"></div>
-								<div id="trigger_delete_btn">删除触发器</div>
-							</div>
-							<div id="job_trigger_pause_menu" style="width: 120px;">
-								<div id="pause_all_btn">暂停所有</div>
-								<div class="menu-sep"></div>
-								<div id="pause_job_btn">暂停作业</div>
-								<div id="pause_trigger_btn">暂停触发器</div>
-							</div>
-							<div id="job_trigger_resume_menu" style="width: 120px;">
-								<div id="resume_all_btn">恢复所有</div>
-								<div class="menu-sep"></div>
-								<div id="resume_job_btn">恢复作业</div>
-								<div id="resume_trigger_btn">恢复触发器</div>
-							</div>
 							<div id="scheduler_log_menu" style="width: 120px;">
 								<div id="scheduler_log_btn">操作历史</div>
 								<div class="menu-sep"></div>

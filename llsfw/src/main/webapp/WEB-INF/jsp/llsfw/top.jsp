@@ -11,8 +11,8 @@
 	</div>
 	<div style="text-align: right; padding: 10px; position: absolute; right: 0px; bottom: 0px;">
 		<span style="color: #CC33FF">当前用户:</span>
-		<span style="color: #666633"> (${userName})</span>
-		<span style="color: #CC33FF">职务:</span>
+		<span style="color: #666633">${userName}</span>
+		<span style="color: #CC33FF">角色:</span>
 		<span style="color: #666633">${role}</span>
 		<br />
 		<a href="javascript:void(0);" class="easyui-menubutton" menu="#controll_panel_menu">控制面板</a>
