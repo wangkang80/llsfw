@@ -39,12 +39,11 @@ llsfw的包结构详解:
 		spring-systemParam.xml[公有配置文件,系统参数]
 
 待实现:
+*.完善系统功能
 *.添加shiro权限控制
 *.quartz监控功能完善
-*.(待定)探索quartz的远程监控功能
 *.探索工作流框架
 *.cache层使用redis数据库
-*.用bootstrap替换easyui
 
 了解/学习:
 Hadoop
