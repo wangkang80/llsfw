@@ -108,13 +108,6 @@ public class Constants {
 
     /**
      * <p>
-     * Field HTTP_STATUS_518: SESSION超时
-     * </p>
-     */
-    public static final int HTTP_STATUS_518 = 518;
-
-    /**
-     * <p>
      * Field CURRENT_LOGIN_NAME: 当前登陆的用户名
      * </p>
      */

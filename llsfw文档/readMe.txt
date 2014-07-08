@@ -40,10 +40,18 @@ llsfw的包结构详解:
 
 待实现:
 *.完善系统功能
-*.添加shiro权限控制
 *.quartz监控功能完善
 *.探索工作流框架
-*.cache层使用redis数据库
+*.添加移动,联通,电信短信发送和接受的支持
+*.添加OAuth2协议支持
+*.添加微信支持
+
+已实现:
+*.基于spring,spring mvc,ibatis,quartz等主流框架搭建的平台
+*.功能权限管理模块
+*.quartz计划任务监控和动态管理功能
+*.细颗粒的权限管控,控制到按钮
+*.分布式session,使用redis存储和缓存session(可切换为内存session)
 
 了解/学习:
 Hadoop
