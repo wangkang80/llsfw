@@ -14,36 +14,14 @@
 
     <!-- realm -->
     <bean id="realm" class="com.llsfw.core.security.realm.UserAuthenRealm">
+        <property name="cachingEnabled" value="false" />
         <property name="credentialsMatcher" ref="credentialsMatcher" />
     </bean>
 
-    <!-- 安全管理器 -->
+    <!-- web安全管理器 -->
     <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
-        <property name="sessionManager" ref="sessionManager" />
-        <property name="cacheManager" ref="cacheManager" />
         <property name="realm" ref="realm" />
     </bean>
-
-    <!-- session管理器 -->
-    <bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
-        <property name="globalSessionTimeout" value="1200000" />
-        <property name="sessionDAO" ref="sessionDAO" />
-    </bean>
-
-    <!-- sessionDao -->
-    <bean id="sessionDAO" class="com.llsfw.core.security.session.redis.RedisSessionDAO">
-        <property name="dbManager" ref="dbManager" />
-        <property name="keyPrefix" value="shiro_redis_session:" />
-    </bean>
-
-    <!-- 缓存管理器 -->
-    <bean id="cacheManager" class="com.llsfw.core.security.session.redis.RedisCacheManager">
-        <property name="dbManager" ref="dbManager" />
-        <property name="keyPrefix" value="shiro_redis_cache:" />
-    </bean>
-
-    <!-- 数据管理器 -->
-    <bean id="dbManager" class="com.llsfw.core.security.session.redis.DbManager" />
 
     <!-- 基于Form表单的身份验证过滤器 -->
     <bean id="formAuthenticationFilter" class="org.apache.shiro.web.filter.authc.FormAuthenticationFilter">
@@ -59,7 +37,6 @@
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
         <property name="securityManager" ref="securityManager" />
         <property name="loginUrl" value="/login" />
-        <property name="successUrl" value="/aaaa" />
         <property name="filters">
             <util:map>
                 <entry key="authc" value-ref="formAuthenticationFilter" />

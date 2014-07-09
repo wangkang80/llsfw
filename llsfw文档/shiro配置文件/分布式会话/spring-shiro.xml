@@ -43,7 +43,9 @@
     </bean>
 
     <!-- 数据管理器 -->
-    <bean id="dbManager" class="com.llsfw.core.security.session.redis.DbManager" />
+    <bean id="dbManager" class="com.llsfw.core.security.session.redis.DbManager">
+        <property name="redisTemplate" ref="redisTemplate" />
+    </bean>
 
     <!-- 基于Form表单的身份验证过滤器 -->
     <bean id="formAuthenticationFilter" class="org.apache.shiro.web.filter.authc.FormAuthenticationFilter">

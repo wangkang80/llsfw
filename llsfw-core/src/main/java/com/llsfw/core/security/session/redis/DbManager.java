@@ -7,7 +7,6 @@ package com.llsfw.core.security.session.redis;
 
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.RedisCallback;
@@ -29,8 +28,20 @@ import org.springframework.data.redis.core.RedisTemplate;
  */
 public class DbManager {
 
-    @Autowired
+    /**
+     * <p>
+     * Field redisTemplate: redis操作
+     * </p>
+     */
     private RedisTemplate<byte[], byte[]> redisTemplate;
+
+    public RedisTemplate<byte[], byte[]> getRedisTemplate() {
+        return redisTemplate;
+    }
+
+    public void setRedisTemplate(RedisTemplate<byte[], byte[]> redisTemplate) {
+        this.redisTemplate = redisTemplate;
+    }
 
     /**
      * <p>
