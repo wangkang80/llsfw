@@ -4,7 +4,7 @@
 
     <groupId>llsfw</groupId>
     <artifactId>llsfw-core</artifactId>
-    <version>1.1-RELEASE</version>
+    <version>1.2-RELEASE</version>
     <packaging>jar</packaging>
 
     <name>llsfw-core</name>
@@ -41,7 +41,7 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-compress</artifactId>
-            <version>1.8</version>
+            <version>1.8.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -49,9 +49,9 @@
             <version>3.3.2</version>
         </dependency>
         <dependency>
-            <groupId>commons-io</groupId>
+            <groupId>org.apache.commons</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.4</version>
+            <version>1.3.2</version>
         </dependency>
         <dependency>
             <groupId>commons-fileupload</groupId>
@@ -71,7 +71,7 @@
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <version>4.3.3</version>
+            <version>4.3.4</version>
         </dependency>
 
         <!-- oracle ###### mvn install:install-file -DgroupId=com.oracle -DartifactId=ojdbc6 -Dversion=11.2.0.1.0 -Dpackaging=jar -Dfile=F:\ojdbc6.jar -->
@@ -179,27 +179,27 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
-            <version>4.0.3.RELEASE</version>
+            <version>4.0.6.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>
-            <version>4.0.3.RELEASE</version>
+            <version>4.0.6.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
-            <version>4.0.3.RELEASE</version>
+            <version>4.0.6.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aspects</artifactId>
-            <version>4.0.3.RELEASE</version>
+            <version>4.0.6.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-jdbc</artifactId>
-            <version>4.0.3.RELEASE</version>
+            <version>4.0.6.RELEASE</version>
         </dependency>
 
         <!-- redis -->
@@ -211,7 +211,7 @@
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-redis</artifactId>
-            <version>1.3.0.RELEASE</version>
+            <version>1.3.1.RELEASE</version>
         </dependency>
 
         <!-- fastjson -->

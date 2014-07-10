@@ -4,7 +4,7 @@
     <groupId>llsfw</groupId>
     <artifactId>llsfw-generator</artifactId>
     <packaging>war</packaging>
-    <version>1.1-RELEASE</version>
+    <version>1.2-RELEASE</version>
     <name>llsfw-generator Maven Webapp</name>
     <url>http://maven.apache.org</url>
 
