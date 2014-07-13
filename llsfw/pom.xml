@@ -4,7 +4,7 @@
     <groupId>llsfw</groupId>
     <artifactId>llsfw</artifactId>
     <packaging>war</packaging>
-    <version>1.2-RELEASE</version>
+    <version>1.1-RELEASE</version>
     <name>llsfw Maven Webapp</name>
     <url>http://maven.apache.org</url>
 
@@ -17,7 +17,7 @@
         <dependency>
             <groupId>llsfw</groupId>
             <artifactId>llsfw-core</artifactId>
-            <version>1.2-RELEASE</version>
+            <version>1.1-RELEASE</version>
         </dependency>
 
     </dependencies>
