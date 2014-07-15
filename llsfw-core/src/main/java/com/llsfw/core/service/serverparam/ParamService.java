@@ -55,7 +55,8 @@ public class ParamService {
      * <p>
      * Description: 返回服务端参数<br />
      * 优先获取数据库中的配置,如果数据库中没有配置,则从spring-config.xml配置中获取<br />
-     * 如果都没有设置的话,则返回为null
+     * 如果都没有设置的话,则返回为null<br />
+     * 逻辑考虑:数据库中环境变量表默认可不初始化数据,只有在实际需求和应用配置不匹配的情况下,可做配置,变更程序行为.
      * </p>
      * 
      * @param code 参数名称
