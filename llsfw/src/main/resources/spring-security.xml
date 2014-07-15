@@ -6,32 +6,14 @@
        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
-    <!-- 凭证验证 -->
-    <bean id="credentialsMatcher" class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
-        <property name="hashAlgorithmName" value="${security.hashAlgorithmName}" />
-        <property name="hashIterations" value="${security.hashIterations}" />
-    </bean>
-
-    <!-- realm -->
-    <bean id="realm" class="com.llsfw.core.security.realm.UserAuthenRealm">
-        <property name="cachingEnabled" value="false" />
-        <property name="credentialsMatcher" ref="credentialsMatcher" />
-    </bean>
-
-    <!-- web安全管理器 -->
+    <!-- 安全管理器 -->
+    <!-- 注释掉sessionManager和cacheManager则为[内存会话] -->
+    <!-- 去注释sessionManager和cacheManager则为[集群会话] -->
     <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
         <property name="realm" ref="realm" />
+        <!-- <property name="sessionManager" ref="sessionManager" /> -->
+        <!-- <property name="cacheManager" ref="cacheManager" /> -->
     </bean>
-
-    <!-- 基于Form表单的身份验证过滤器 -->
-    <bean id="formAuthenticationFilter" class="org.apache.shiro.web.filter.authc.FormAuthenticationFilter">
-        <property name="usernameParam" value="username" />
-        <property name="passwordParam" value="password" />
-        <property name="loginUrl" value="/login" />
-    </bean>
-
-    <!-- 登陆后,将登陆名称放入request中 -->
-    <bean id="bindLoginNameFilter" class="com.llsfw.core.security.filter.BindLoginNameFilter" />
 
     <!-- shiro过滤器 -->
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
@@ -53,6 +35,4 @@
         </property>
     </bean>
 
-    <!-- shiro的bean生命周期 -->
-    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
 </beans>

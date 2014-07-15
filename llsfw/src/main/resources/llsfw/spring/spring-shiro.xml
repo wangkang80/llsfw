@@ -14,13 +14,31 @@
 
     <!-- realm -->
     <bean id="realm" class="com.llsfw.core.security.realm.UserAuthenRealm">
-        <property name="cachingEnabled" value="false" />
+        <property name="cachingEnabled" value="${security.cachingEnabled}" />
         <property name="credentialsMatcher" ref="credentialsMatcher" />
     </bean>
 
-    <!-- web安全管理器 -->
-    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
-        <property name="realm" ref="realm" />
+    <!-- session管理器 -->
+    <bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+        <property name="globalSessionTimeout" value="${security.globalSessionTimeout}" />
+        <property name="sessionDAO" ref="sessionDAO" />
+    </bean>
+
+    <!-- sessionDao -->
+    <bean id="sessionDAO" class="com.llsfw.core.security.session.redis.RedisSessionDAO">
+        <property name="dbManager" ref="dbManager" />
+        <property name="keyPrefix" value="${security.sessionDaoKeyPrefix}" />
+    </bean>
+
+    <!-- 缓存管理器 -->
+    <bean id="cacheManager" class="com.llsfw.core.security.session.redis.RedisCacheManager">
+        <property name="dbManager" ref="dbManager" />
+        <property name="keyPrefix" value="${security.cacheManagerKeyPrefix}" />
+    </bean>
+
+    <!-- 数据管理器 -->
+    <bean id="dbManager" class="com.llsfw.core.security.session.redis.DbManager">
+        <property name="redisTemplate" ref="redisTemplate" />
     </bean>
 
     <!-- 基于Form表单的身份验证过滤器 -->
@@ -33,26 +51,7 @@
     <!-- 登陆后,将登陆名称放入request中 -->
     <bean id="bindLoginNameFilter" class="com.llsfw.core.security.filter.BindLoginNameFilter" />
 
-    <!-- shiro过滤器 -->
-    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
-        <property name="securityManager" ref="securityManager" />
-        <property name="loginUrl" value="/login" />
-        <property name="filters">
-            <util:map>
-                <entry key="authc" value-ref="formAuthenticationFilter" />
-                <entry key="bindLoginNameFilter" value-ref="bindLoginNameFilter" />
-            </util:map>
-        </property>
-        <property name="filterChainDefinitions">
-            <value>
-                /static/** = anon
-                /login = authc
-                /logout = logout
-                /** = user,bindLoginNameFilter
-            </value>
-        </property>
-    </bean>
-
     <!-- shiro的bean生命周期 -->
     <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
+
 </beans>
