@@ -37,13 +37,14 @@
         </javaTypeResolver>
 
         <!-- Model生成配置 targetPackage：生成包路径，自动生成目录。targetProject：项目路经，可以绝对路径或者相对路径。 -->
-        <javaModelGenerator targetPackage="com.llsfw.core.model.standard" targetProject="../../../java"></javaModelGenerator>
+        <javaModelGenerator targetPackage="com.llsfw.core.model.standard" targetProject="../../../../../../llsfw-core/src/main/java"></javaModelGenerator>
 
         <!-- sqlMap配置 -->
-        <sqlMapGenerator targetPackage="standard" targetProject="../../../java/com/llsfw/core/sqlmap" />
+        <sqlMapGenerator targetPackage="standard" targetProject="../../../../../../llsfw-core/src/main/java/com/llsfw/core/sqlmap" />
 
         <!-- DAO接口的生成 -->
-        <javaClientGenerator targetPackage="com.llsfw.core.mapper.standard" targetProject="../../../java" type="XMLMAPPER" />
+        <javaClientGenerator targetPackage="com.llsfw.core.mapper.standard" targetProject="../../../../../../llsfw-core/src/main/java"
+            type="XMLMAPPER" />
 
         <!-- 需要生成的表(整形数字使用NUMBER类型,浮点型数字使用FLOAT类型) -->
         <table tableName="TT_USER_JOB"></table>
