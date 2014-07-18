@@ -12,8 +12,7 @@
     <!-- <mvc:annotation-driven /> -->
 
     <!-- 引入拦截器配置文件 -->
-    <import resource="spring-interceptors.xml" />
-
+    <import resource="classpath:spring-interceptors.xml" />
 
     <!-- 开启controller注解支持 关闭默认的过滤器,并且只扫描Controller和ControllerAdvice -->
     <context:component-scan base-package="com.*.*.controller" use-default-filters="false">
