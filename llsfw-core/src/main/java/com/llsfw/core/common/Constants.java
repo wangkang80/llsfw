@@ -24,7 +24,19 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class Constants {
 
-    //------------------------------------------------------------------------------------
+    /**
+     * <p>
+     * Field DEF_STATUS_0: 状态0
+     * </p>
+     */
+    public static final String DEF_STATUS_0 = "0";
+
+    /**
+     * <p>
+     * Field DEF_STATUS_1: 状态1
+     * </p>
+     */
+    public static final String DEF_STATUS_1 = "1";
 
     /**
      * <p>
