@@ -41,6 +41,56 @@ import org.dom4j.tree.DefaultAttribute;
  */
 public class XmlUtils {
 
+    /**
+     * <p>
+     * Description: 适用于列表文档
+     * </p>
+     * 
+     * @param doc
+     * @return
+     */
+    @SuppressWarnings("rawtypes")
+    public static List<Map<String, Object>> dom2MapList(Document doc) {
+        List<Map<String, Object>> maplist = new ArrayList<Map<String, Object>>();
+        // 判断需要解析的文档是否为空 
+        if (doc == null) {
+            return maplist;
+        }
+
+        // 获取根节点 
+        Element root = doc.getRootElement();
+
+        // 获取根节点下的子节点迭代器 
+        Iterator iterator = root.elementIterator();
+
+        // 循环子节点，开始向map中存值 
+        while (iterator.hasNext()) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            Element e = (Element) iterator.next();
+            List list = e.elements();
+
+            // 判断当前节点是否有子节点 
+            // 如果存在子节点调用element2Map(Element e)方法，不存在子节点直接存进map中 
+            if (list.size() > 0) {
+                map.put(e.getName(), element2Map(e));
+            } else {
+                saveAttribute2Map(map, e);
+                map.put(e.getName(), e.getText());
+            }
+            maplist.add(map);
+        }
+        return maplist;
+
+    }
+
+    /**
+     * <p>
+     * Description: 适用于单根文档
+     * </p>
+     * 
+     * @param doc
+     * @return
+     */
     @SuppressWarnings("rawtypes")
     public static Map<String, Object> dom2Map(Document doc) {
         Map<String, Object> map = new HashMap<String, Object>();
@@ -156,10 +206,9 @@ public class XmlUtils {
 
     public static void main(String[] args) throws DocumentException, UnsupportedEncodingException {
         Document doc = DocumentHelper
-                .parseText("<?xml version=\"1.0\" encoding=\"UTF-8\"?><ccsc><result>SUCESS</result><detail>abcdef</detail></ccsc>");
-        Map<String, Object> map = XmlUtils.dom2Map(doc);
-        String result = map.get("ccsc").toString();
-        System.out.println(result);
+                .parseText("<?xml version=\"1.0\" encoding=\"UTF-8\"?><ccsc><item_id value=\"1\"><op_name>publish</op_name></item_id><item_id value=\"2\"><op_name>unzip</op_name></item_id></ccsc>");
+        List<Map<String, Object>> itemIds = XmlUtils.dom2MapList(doc);
+        System.out.println(itemIds);
     }
 
 }
