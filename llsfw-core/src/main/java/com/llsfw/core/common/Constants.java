@@ -89,6 +89,8 @@ public class Constants {
      * </p>
      */
     public static final String COMMA = ",";
+    
+    public static final String BACKSLASH ="/";
     /**
      * <p>
      * Field APP_LEVEL: 应用级别
