@@ -1,6 +1,0 @@
-﻿SET DEFINE OFF;
-Insert into TT_ROLE
-   (ROLE_CODE, ROLE_NAME, CREATE_BY, CREATE_DATE)
- Values
-   ('admin', '系统管理员', 'SYSTEM', TO_DATE('12/14/2013 23:04:20', 'MM/DD/YYYY HH24:MI:SS'));
-COMMIT;
