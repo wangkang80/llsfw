@@ -83,7 +83,6 @@
     <filter>
         <filter-name>shiroFilter</filter-name>
         <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-        <async-supported>true</async-supported>
         <init-param>
             <param-name>targetFilterLifecycle</param-name>
             <param-value>true</param-value>
