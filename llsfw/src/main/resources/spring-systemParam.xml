@@ -17,9 +17,9 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
                 <entry key="SYSTEM_DEF_NAME" value="SYSTEM" />
                 <entry key="DETAILED_RECORDS" value="true" />
                 <entry key="TRIGGER_SEARCH_INTERVAL" value="60000" />
-                <entry key="SCHEDULED_LOG_KEEP_TIME" value="30" />
-                <entry key="SCHEDULED_TRIGGER_LOG_KEEP_TIME" value="30" />
-                <entry key="APP_LOG_KEEP_TIME" value="30" />
+                <entry key="SCHEDULED_LOG_KEEP_TIME" value="7" />
+                <entry key="SCHEDULED_TRIGGER_LOG_KEEP_TIME" value="7" />
+                <entry key="APP_LOG_KEEP_TIME" value="7" />
                 <!-- 以下为自定义区域 -->
             </util:map>
         </property>
