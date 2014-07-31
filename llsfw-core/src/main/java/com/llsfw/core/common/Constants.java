@@ -6,6 +6,11 @@
  */
 package com.llsfw.core.common;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -89,8 +94,8 @@ public class Constants {
      * </p>
      */
     public static final String COMMA = ",";
-    
-    public static final String BACKSLASH ="/";
+
+    public static final String BACKSLASH = "/";
     /**
      * <p>
      * Field APP_LEVEL: 应用级别
@@ -151,5 +156,37 @@ public class Constants {
             }
         }
         return ip;
+    }
+
+    /**
+     * 
+     * 读取返回的信息
+     * 
+     * @param in 输入流
+     * 
+     * @return 数据
+     */
+    public static String getData(InputStream in) {
+        String result = "";
+        StringBuilder sb = new StringBuilder();
+        BufferedReader br = new BufferedReader(new InputStreamReader(in));
+        String line = "";
+        try {
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+            }
+            br.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (result != null) {
+                try {
+                    br.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return sb.toString();
     }
 }
