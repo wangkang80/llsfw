@@ -69,5 +69,11 @@ public enum SystemParam {
      * Field APP_LOG_KEEP_TIME: 系统异常日志
      * </p>
      */
-    APP_LOG_KEEP_TIME
+    APP_LOG_KEEP_TIME,
+    /**
+     * <p>
+     * Field LOG_SCH_FLAG: 是否记录触发日志(如果是false)
+     * </p>
+     */
+    LOG_SCH_FLAG
 }

@@ -96,6 +96,13 @@ public class TriggerListenerService extends BaseService {
      */
     public void saveTriggerFired(Trigger trigger, JobExecutionContext context) throws SchedulerException { //2
 
+        //是否记录执行历史(true记录,false不记录)
+        String log = this.getPs().getServerParamter(SystemParam.LOG_SCH_FLAG.name());
+        boolean logRecords = null == log ? false : new Boolean(log);
+        if (!logRecords) {
+            return;
+        }
+
         //是否详细记录执行历史(true记录,false不记录)
         String dr = this.getPs().getServerParamter(SystemParam.DETAILED_RECORDS.name());
         boolean detailedRecords = null == dr ? false : new Boolean(dr);
@@ -148,6 +155,13 @@ public class TriggerListenerService extends BaseService {
         //是否否决
         boolean vetoed = false;
 
+        //是否记录执行历史(true记录,false不记录)
+        String log = this.getPs().getServerParamter(SystemParam.LOG_SCH_FLAG.name());
+        boolean logRecords = null == log ? false : new Boolean(log);
+        if (!logRecords) {
+            return vetoed;
+        }
+
         //是否详细记录执行历史(true记录,false不记录)
         String dr = this.getPs().getServerParamter(SystemParam.DETAILED_RECORDS.name());
         boolean detailedRecords = null == dr ? false : new Boolean(dr);
@@ -197,6 +211,13 @@ public class TriggerListenerService extends BaseService {
      * @throws SchedulerException 计划任务异常
      */
     public void saveJobToBeExecuted(JobExecutionContext context) throws SchedulerException { //4
+
+        //是否记录执行历史(true记录,false不记录)
+        String log = this.getPs().getServerParamter(SystemParam.LOG_SCH_FLAG.name());
+        boolean logRecords = null == log ? false : new Boolean(log);
+        if (!logRecords) {
+            return;
+        }
 
         //是否详细记录执行历史(true记录,false不记录)
         String dr = this.getPs().getServerParamter(SystemParam.DETAILED_RECORDS.name());
@@ -311,6 +332,13 @@ public class TriggerListenerService extends BaseService {
             }
         }
 
+        //是否记录执行历史(true记录,false不记录)
+        String log = this.getPs().getServerParamter(SystemParam.LOG_SCH_FLAG.name());
+        boolean logRecords = null == log ? false : new Boolean(log);
+        if (!logRecords) {
+            return;
+        }
+
         //是否详细记录执行历史(true记录,false不记录)
         String dr = this.getPs().getServerParamter(SystemParam.DETAILED_RECORDS.name());
         boolean detailedRecords = null == dr ? false : new Boolean(dr);
@@ -384,6 +412,13 @@ public class TriggerListenerService extends BaseService {
             if (exceptionDetail.length() > Constants.EXCEPTION_MSG_LENGTH) {
                 exceptionDetail = exceptionDetail.substring(0, Constants.EXCEPTION_MSG_LENGTH);
             }
+        }
+
+        //是否记录执行历史(true记录,false不记录)
+        String log = this.getPs().getServerParamter(SystemParam.LOG_SCH_FLAG.name());
+        boolean logRecords = null == log ? false : new Boolean(log);
+        if (!logRecords) {
+            return;
         }
 
         //获得计划任务实例

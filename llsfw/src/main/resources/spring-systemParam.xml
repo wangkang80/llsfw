@@ -16,6 +16,7 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
                 <entry key="SESSION_NAME" value="USER_SESSION" />
                 <entry key="SYSTEM_DEF_NAME" value="SYSTEM" />
                 <entry key="DETAILED_RECORDS" value="true" />
+                <entry key="LOG_SCH_FLAG" value="true" />
                 <entry key="TRIGGER_SEARCH_INTERVAL" value="60000" />
                 <entry key="SCHEDULED_LOG_KEEP_TIME" value="7" />
                 <entry key="SCHEDULED_TRIGGER_LOG_KEEP_TIME" value="7" />
