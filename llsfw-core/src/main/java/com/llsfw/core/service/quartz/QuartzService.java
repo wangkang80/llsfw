@@ -669,27 +669,22 @@ public class QuartzService extends BaseService {
         StringBuffer sql = null;
         sql = new StringBuffer("");
         sql.append(" SELECT  ");
-        sql.append(Constants.COL_SCHEDULER_NAME + com.llsfw.core.common.Constants.COMMA);
-        sql.append(Constants.COL_TRIGGER_NAME + com.llsfw.core.common.Constants.COMMA);
-        sql.append(Constants.COL_TRIGGER_GROUP + com.llsfw.core.common.Constants.COMMA);
-        sql.append(Constants.COL_CRON_EXPRESSION + com.llsfw.core.common.Constants.COMMA);
-        sql.append(Constants.COL_TIME_ZONE_ID + "");
+        sql.append("A." + Constants.COL_SCHEDULER_NAME + com.llsfw.core.common.Constants.COMMA);
+        sql.append("A." + Constants.COL_TRIGGER_NAME + com.llsfw.core.common.Constants.COMMA);
+        sql.append("A." + Constants.COL_TRIGGER_GROUP + com.llsfw.core.common.Constants.COMMA);
+        sql.append("A." + Constants.COL_CRON_EXPRESSION + com.llsfw.core.common.Constants.COMMA);
+        sql.append("A." + Constants.COL_TIME_ZONE_ID + "");
         sql.append(" FROM  ");
-        sql.append(Constants.DEFAULT_TABLE_PREFIX + Constants.TABLE_CRON_TRIGGERS);
-        sql.append(" WHERE  (" + Constants.COL_SCHEDULER_NAME + com.llsfw.core.common.Constants.COMMA
-                + Constants.COL_TRIGGER_NAME + com.llsfw.core.common.Constants.COMMA + Constants.COL_TRIGGER_GROUP
-                + ") IN ( ");
-        sql.append("    SELECT ");
-        sql.append("    " + Constants.COL_SCHEDULER_NAME + com.llsfw.core.common.Constants.COMMA);
-        sql.append("    " + Constants.COL_TRIGGER_NAME + com.llsfw.core.common.Constants.COMMA);
-        sql.append("    " + Constants.COL_TRIGGER_GROUP);
-        sql.append("    FROM ");
-        sql.append("    " + Constants.DEFAULT_TABLE_PREFIX + Constants.TABLE_TRIGGERS);
-        sql.append("    WHERE " + Constants.COL_SCHEDULER_NAME + "= '" + sName + "'  ");
-        sql.append("    AND  " + Constants.COL_JOB_NAME + "  = '" + jName + "'    ");
-        sql.append("    AND " + Constants.COL_JOB_GROUP + " =  '" + jGroup + "'    ");
-        sql.append("    AND " + Constants.COL_TRIGGER_TYPE + " =  'CRON'    ");
-        sql.append(" ) ");
+        sql.append(Constants.DEFAULT_TABLE_PREFIX + Constants.TABLE_CRON_TRIGGERS + " .A");
+        sql.append(Constants.DEFAULT_TABLE_PREFIX + Constants.TABLE_TRIGGERS + " .B");
+        sql.append(" WHERE  ");
+        sql.append(" A." + Constants.COL_SCHEDULER_NAME + "=B." + Constants.COL_SCHEDULER_NAME + "  ");
+        sql.append(" AND A." + Constants.COL_TRIGGER_NAME + "=B." + Constants.COL_TRIGGER_NAME + "  ");
+        sql.append(" AND A." + Constants.COL_TRIGGER_GROUP + "=B." + Constants.COL_TRIGGER_GROUP + "  ");
+        sql.append(" AND B." + Constants.COL_SCHEDULER_NAME + "='" + sName + "'  ");
+        sql.append(" AND B." + Constants.COL_JOB_NAME + "='" + jName + "'  ");
+        sql.append(" AND B." + Constants.COL_JOB_GROUP + "='" + jGroup + "'  ");
+        sql.append(" AND B." + Constants.COL_TRIGGER_TYPE + "='CRON'  ");
         return this.getImqm().queryMap(sql.toString());
     }
 
@@ -708,28 +703,23 @@ public class QuartzService extends BaseService {
         StringBuffer sql = null;
         sql = new StringBuffer("");
         sql.append(" SELECT ");
-        sql.append(Constants.COL_SCHEDULER_NAME + com.llsfw.core.common.Constants.COMMA);
-        sql.append(Constants.COL_TRIGGER_NAME + com.llsfw.core.common.Constants.COMMA);
-        sql.append(Constants.COL_TRIGGER_GROUP + com.llsfw.core.common.Constants.COMMA);
-        sql.append(Constants.COL_REPEAT_COUNT + com.llsfw.core.common.Constants.COMMA);
-        sql.append(Constants.COL_REPEAT_INTERVAL + com.llsfw.core.common.Constants.COMMA);
-        sql.append(Constants.COL_TIMES_TRIGGERED + "");
+        sql.append("A." + Constants.COL_SCHEDULER_NAME + com.llsfw.core.common.Constants.COMMA);
+        sql.append("A." + Constants.COL_TRIGGER_NAME + com.llsfw.core.common.Constants.COMMA);
+        sql.append("A." + Constants.COL_TRIGGER_GROUP + com.llsfw.core.common.Constants.COMMA);
+        sql.append("A." + Constants.COL_REPEAT_COUNT + com.llsfw.core.common.Constants.COMMA);
+        sql.append("A." + Constants.COL_REPEAT_INTERVAL + com.llsfw.core.common.Constants.COMMA);
+        sql.append("A." + Constants.COL_TIMES_TRIGGERED + "");
         sql.append(" FROM ");
-        sql.append(Constants.DEFAULT_TABLE_PREFIX + Constants.TABLE_SIMPLE_TRIGGERS);
-        sql.append(" WHERE  (" + Constants.COL_SCHEDULER_NAME + com.llsfw.core.common.Constants.COMMA
-                + Constants.COL_TRIGGER_NAME + com.llsfw.core.common.Constants.COMMA + Constants.COL_TRIGGER_GROUP
-                + ") IN ( ");
-        sql.append("    SELECT ");
-        sql.append("    " + Constants.COL_SCHEDULER_NAME + com.llsfw.core.common.Constants.COMMA);
-        sql.append("    " + Constants.COL_TRIGGER_NAME + com.llsfw.core.common.Constants.COMMA);
-        sql.append("    " + Constants.COL_TRIGGER_GROUP);
-        sql.append("    FROM ");
-        sql.append("    " + Constants.DEFAULT_TABLE_PREFIX + Constants.TABLE_TRIGGERS);
-        sql.append("    WHERE " + Constants.COL_SCHEDULER_NAME + "= '" + sName + "'  ");
-        sql.append("    AND  " + Constants.COL_JOB_NAME + "  = '" + jName + "'    ");
-        sql.append("    AND " + Constants.COL_JOB_GROUP + " =  '" + jGroup + "'    ");
-        sql.append("    AND " + Constants.COL_TRIGGER_TYPE + " =  'SIMPLE'    ");
-        sql.append(" ) ");
+        sql.append(Constants.DEFAULT_TABLE_PREFIX + Constants.TABLE_SIMPLE_TRIGGERS + " A,");
+        sql.append(Constants.DEFAULT_TABLE_PREFIX + Constants.TABLE_TRIGGERS + " B,");
+        sql.append(" WHERE  ");
+        sql.append(" A." + Constants.COL_SCHEDULER_NAME + "=B." + Constants.COL_SCHEDULER_NAME + "  ");
+        sql.append(" AND A." + Constants.COL_TRIGGER_NAME + "=B." + Constants.COL_TRIGGER_NAME + "  ");
+        sql.append(" AND A." + Constants.COL_TRIGGER_GROUP + "=B." + Constants.COL_TRIGGER_GROUP + "  ");
+        sql.append(" AND B." + Constants.COL_SCHEDULER_NAME + "='" + sName + "'  ");
+        sql.append(" AND B." + Constants.COL_JOB_NAME + "='" + jName + "'  ");
+        sql.append(" AND B." + Constants.COL_JOB_GROUP + "='" + jGroup + "'  ");
+        sql.append(" AND B." + Constants.COL_TRIGGER_TYPE + "='SIMPLE'  ");
         return this.getImqm().queryMap(sql.toString());
     }
 

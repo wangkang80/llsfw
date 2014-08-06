@@ -27,7 +27,7 @@
 								<a href="#" class="easyui-menubutton" data-options="menu:'#job_trigger_delete_menu'">删除</a>
 								<a href="#" class="easyui-menubutton" data-options="menu:'#job_trigger_pause_menu'">暂停</a>
 								<a href="#" class="easyui-menubutton" data-options="menu:'#job_trigger_resume_menu'">恢复</a>
-								<div id="job_trigger_add_menu" style="width: 120px;">
+								<div id="job_trigger_add_menu" style="width: 130px;">
 									<div id="job_detail_add_btn">编辑作业</div>
 									<div class="menu-sep"></div>
 									<div id="simple_trigger_add_btn">编辑SIMPLE触发器</div>
