@@ -675,8 +675,8 @@ public class QuartzService extends BaseService {
         sql.append("A." + Constants.COL_CRON_EXPRESSION + com.llsfw.core.common.Constants.COMMA);
         sql.append("A." + Constants.COL_TIME_ZONE_ID + "");
         sql.append(" FROM  ");
-        sql.append(Constants.DEFAULT_TABLE_PREFIX + Constants.TABLE_CRON_TRIGGERS + " .A");
-        sql.append(Constants.DEFAULT_TABLE_PREFIX + Constants.TABLE_TRIGGERS + " .B");
+        sql.append(Constants.DEFAULT_TABLE_PREFIX + Constants.TABLE_CRON_TRIGGERS + " A,");
+        sql.append(Constants.DEFAULT_TABLE_PREFIX + Constants.TABLE_TRIGGERS + " B");
         sql.append(" WHERE  ");
         sql.append(" A." + Constants.COL_SCHEDULER_NAME + "=B." + Constants.COL_SCHEDULER_NAME + "  ");
         sql.append(" AND A." + Constants.COL_TRIGGER_NAME + "=B." + Constants.COL_TRIGGER_NAME + "  ");
@@ -710,8 +710,8 @@ public class QuartzService extends BaseService {
         sql.append("A." + Constants.COL_REPEAT_INTERVAL + com.llsfw.core.common.Constants.COMMA);
         sql.append("A." + Constants.COL_TIMES_TRIGGERED + "");
         sql.append(" FROM ");
-        sql.append(Constants.DEFAULT_TABLE_PREFIX + Constants.TABLE_SIMPLE_TRIGGERS + " A,");
-        sql.append(Constants.DEFAULT_TABLE_PREFIX + Constants.TABLE_TRIGGERS + " B,");
+        sql.append(Constants.DEFAULT_TABLE_PREFIX + Constants.TABLE_SIMPLE_TRIGGERS + " A, ");
+        sql.append(Constants.DEFAULT_TABLE_PREFIX + Constants.TABLE_TRIGGERS + " B ");
         sql.append(" WHERE  ");
         sql.append(" A." + Constants.COL_SCHEDULER_NAME + "=B." + Constants.COL_SCHEDULER_NAME + "  ");
         sql.append(" AND A." + Constants.COL_TRIGGER_NAME + "=B." + Constants.COL_TRIGGER_NAME + "  ");
