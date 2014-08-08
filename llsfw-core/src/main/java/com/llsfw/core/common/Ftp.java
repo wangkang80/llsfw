@@ -6,11 +6,11 @@
  */
 package com.llsfw.core.common;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.RandomAccessFile;
 
@@ -247,8 +247,8 @@ public class Ftp {
             result = "-1";
         } else {
 
-            InputStream bis = null;
-            OutputStream bos = null;
+            BufferedInputStream bis = null;
+            BufferedOutputStream bos = null;
 
             //获得远程文件的大小
             long lRemoteSize = 0;
@@ -277,9 +277,9 @@ public class Ftp {
                         this.ftpClient.setRestartOffset(localSize);
 
                         //获得流(进行断点续传，并记录状态)
-                        bos = new FileOutputStream(f, true);
-                        bis = this.ftpClient.retrieveFileStream(new String(remote.getBytes(this.charSet),
-                                this.remoteCharSet));
+                        bos = new BufferedOutputStream(new FileOutputStream(f, true));
+                        bis = new BufferedInputStream(this.ftpClient.retrieveFileStream(new String(remote
+                                .getBytes(this.charSet), this.remoteCharSet)));
 
                         //字节流
                         byte[] bytes = null;
@@ -334,15 +334,15 @@ public class Ftp {
                     } else {
                         result = "0";
                     }
-
                 }
             } else {
+
                 try {
 
                     //获得流
-                    bos = new FileOutputStream(f);
-                    bis = this.ftpClient.retrieveFileStream(new String(remote.getBytes(this.charSet),
-                            this.remoteCharSet));
+                    bos = new BufferedOutputStream(new FileOutputStream(f));
+                    bis = new BufferedInputStream(this.ftpClient.retrieveFileStream(new String(remote
+                            .getBytes(this.charSet), this.remoteCharSet)));
 
                     //远程文件长度
                     long step = 0;
@@ -368,6 +368,7 @@ public class Ftp {
                             }
                         }
                     }
+
                 } catch (Throwable e) {
                     throw new Exception(e);
                 } finally {
@@ -454,8 +455,9 @@ public class Ftp {
         long localreadbytes = 0L;
         RandomAccessFile raf = null;
         raf = new RandomAccessFile(localFile, "r");
-        OutputStream bos = null;
-        bos = fc.appendFileStream(new String(remoteFile.getBytes(this.charSet), this.remoteCharSet));
+        BufferedOutputStream bos = null;
+        bos = new BufferedOutputStream(fc.appendFileStream(new String(remoteFile.getBytes(this.charSet),
+                this.remoteCharSet)), Constants.IO_BUFFERED);
 
         //断点续传     
         if (remoteSize > 0) {
