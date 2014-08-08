@@ -171,7 +171,7 @@ public class ZipFile {
                         zaos.putArchiveEntry(zipArchiveEntry);
                         InputStream is = null;
                         try {
-                            is = new BufferedInputStream(new FileInputStream(file));
+                            is = new BufferedInputStream(new FileInputStream(file), Constants.IO_BUFFERED);
                             byte[] buffer = null;
                             buffer = new byte[new Integer(this.byteSize)];
                             int len = -1;

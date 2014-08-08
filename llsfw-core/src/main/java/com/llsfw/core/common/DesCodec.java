@@ -6,10 +6,10 @@
  */
 package com.llsfw.core.common;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
 
@@ -180,9 +180,9 @@ public class DesCodec {
      * @throws Exception 异常
      */
     public void encryptFile(String file, String destFile, String key) throws Exception {
-        InputStream is = null;
-        OutputStream out = null;
-        CipherInputStream cis = null;
+        BufferedInputStream is = null;
+        BufferedOutputStream out = null;
+        BufferedInputStream cis = null;
         try {
             //还原密钥  
             Key k = null;
@@ -196,9 +196,9 @@ public class DesCodec {
             cipher.init(Cipher.ENCRYPT_MODE, k);
 
             //创建输入输出流
-            is = new FileInputStream(file);
-            out = new FileOutputStream(destFile);
-            cis = new CipherInputStream(is, cipher);
+            is = new BufferedInputStream(new FileInputStream(file), Constants.IO_BUFFERED);
+            out = new BufferedOutputStream(new FileOutputStream(destFile), Constants.IO_BUFFERED);
+            cis = new BufferedInputStream(new CipherInputStream(is, cipher), Constants.IO_BUFFERED);
 
             //开始写文件
             byte[] buffer = null;
@@ -218,6 +218,7 @@ public class DesCodec {
                 is.close();
             }
             if (out != null) {
+                out.flush();
                 out.close();
             }
         }
@@ -234,9 +235,9 @@ public class DesCodec {
      * @throws Exception 异常
      */
     public void decryptFile(String file, String destFile, String key) throws Exception {
-        InputStream is = null;
-        CipherInputStream cis = null;
-        OutputStream out = null;
+        BufferedInputStream is = null;
+        BufferedInputStream cis = null;
+        BufferedOutputStream out = null;
         try {
             //还原密钥  
             Key k = null;
@@ -250,9 +251,9 @@ public class DesCodec {
             cipher.init(Cipher.DECRYPT_MODE, k);
 
             //创建输入输出流
-            is = new FileInputStream(file);
-            out = new FileOutputStream(destFile);
-            cis = new CipherInputStream(is, cipher);
+            is = new BufferedInputStream(new FileInputStream(file), Constants.IO_BUFFERED);
+            out = new BufferedOutputStream(new FileOutputStream(destFile), Constants.IO_BUFFERED);
+            cis = new BufferedInputStream(new CipherInputStream(is, cipher), Constants.IO_BUFFERED);
 
             //开始写文件
             byte[] buffer = null;

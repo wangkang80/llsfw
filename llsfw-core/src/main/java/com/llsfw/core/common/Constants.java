@@ -52,10 +52,10 @@ public class Constants {
 
     /**
      * <p>
-     * Field IO_BUFFERED_1024: 缓冲区大小
+     * Field IO_BUFFERED: 缓冲区大小
      * </p>
      */
-    public static final int IO_BUFFERED_1024 = 1024;
+    public static final int IO_BUFFERED = 1024;
 
     /**
      * <p>

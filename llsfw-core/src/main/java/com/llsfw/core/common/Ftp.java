@@ -6,11 +6,11 @@
  */
 package com.llsfw.core.common;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.RandomAccessFile;
 
@@ -232,15 +232,19 @@ public class Ftp {
      *         0:下载失败<br />
      *         -1:远程文件不存在<br />
      *         -2:本地文件大于远程文件，下载中止<br />
-     * @throws IOException 异常
+     * @throws Exception 异常
      */
-    public String download(String remote, String local) throws IOException {
+    public String download(String remote, String local) throws Exception {
+
         //设置被动模式     
         this.ftpClient.enterLocalPassiveMode();
+
         //设置以二进制方式传输     
         this.ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+
         //返回状态
         String result = null;
+
         //检查远程文件是否存在     
         FTPFile[] files = null;
         files = this.ftpClient.listFiles(new String(remote.getBytes(this.charSet), this.remoteCharSet));
@@ -248,44 +252,89 @@ public class Ftp {
             this.log.info("远程文件不存在");
             result = "-1";
         } else {
-            //获得远程文件的大小
-            long lRemoteSize = 0;
-            lRemoteSize = files[0].getSize();
-            //获得本地文件对象(不存在,则创建)
-            File f = null;
-            f = new File(local);
-            //本地存在文件，进行断点下载     
-            if (f.exists()) {
-                //获得本地文件的长度
-                long localSize = 0;
-                localSize = f.length();
-                //判断本地文件大小是否大于远程文件大小     
-                if (localSize >= lRemoteSize) {
-                    this.log.info("本地文件大于远程文件，下载中止");
-                    result = "-2";
+
+            BufferedInputStream bis = null;
+            BufferedOutputStream bos = null;
+
+            try {
+
+                //获得远程文件的大小
+                long lRemoteSize = 0;
+                lRemoteSize = files[0].getSize();
+
+                //获得本地文件对象(不存在,则创建)
+                File f = null;
+                f = new File(local);
+
+                //本地存在文件，进行断点下载     
+                if (f.exists()) {
+
+                    //获得本地文件的长度
+                    long localSize = 0;
+                    localSize = f.length();
+
+                    //判断本地文件大小是否大于远程文件大小     
+                    if (localSize >= lRemoteSize) {
+                        this.log.info("本地文件大于远程文件，下载中止");
+                        result = "-2";
+                    } else {
+
+                        //设置开始点
+                        this.ftpClient.setRestartOffset(localSize);
+
+                        //获得流(进行断点续传，并记录状态)
+                        bos = new BufferedOutputStream(new FileOutputStream(f, true));
+                        bis = new BufferedInputStream(this.ftpClient.retrieveFileStream(new String(remote
+                                .getBytes(this.charSet), this.remoteCharSet)));
+
+                        //字节流
+                        byte[] bytes = null;
+                        bytes = new byte[this.byteSize];
+
+                        //远程文件长度
+                        long step = 0;
+                        step = lRemoteSize / this.sizeL100;
+
+                        //进度
+                        long process = 0;
+                        process = localSize / step;
+
+                        //开始下载
+                        int c;
+                        while ((c = bis.read(bytes)) != -1) {
+                            bos.write(bytes, 0, c);
+                            localSize += c;
+                            long nowProcess = 0;
+                            nowProcess = localSize / step;
+                            if (nowProcess > process) {
+                                process = nowProcess;
+                                if (process % this.sizeL10 == 0) {
+                                    this.log.info("下载进度：" + process);
+                                }
+                            }
+                        }
+                    }
                 } else {
-                    //进行断点续传，并记录状态     
-                    FileOutputStream out = null;
-                    out = new FileOutputStream(f, true);
-                    //设置开始点
-                    this.ftpClient.setRestartOffset(localSize);
+
                     //获得流
-                    InputStream in = null;
-                    in = this.ftpClient
-                            .retrieveFileStream(new String(remote.getBytes(this.charSet), this.remoteCharSet));
-                    //字节流
-                    byte[] bytes = null;
-                    bytes = new byte[this.byteSize];
+                    bos = new BufferedOutputStream(new FileOutputStream(f));
+                    bis = new BufferedInputStream(this.ftpClient.retrieveFileStream(new String(remote
+                            .getBytes(this.charSet), this.remoteCharSet)));
+
                     //远程文件长度
                     long step = 0;
                     step = lRemoteSize / this.sizeL100;
+
                     //进度
                     long process = 0;
-                    process = localSize / step;
+                    long localSize = 0L;
+
                     //开始下载
                     int c;
-                    while ((c = in.read(bytes)) != -1) {
-                        out.write(bytes, 0, c);
+                    byte[] bytes = null;
+                    bytes = new byte[this.byteSize];
+                    while ((c = bis.read(bytes)) != -1) {
+                        bos.write(bytes, 0, c);
                         localSize += c;
                         long nowProcess = 0;
                         nowProcess = localSize / step;
@@ -296,52 +345,30 @@ public class Ftp {
                             }
                         }
                     }
-                    in.close();
-                    out.close();
-                    boolean isDo = false;
-                    isDo = this.ftpClient.completePendingCommand();
-                    if (isDo) {
-                        result = "1";
-                    } else {
-                        result = "0";
-                    }
                 }
+            } catch (Throwable e) {
+                throw new Exception(e);
+            } finally {
+                if (null != bis) {
+                    bis.close();
+                }
+                if (null != bos) {
+                    try {
+                        bos.flush();
+                    } catch (Throwable e) {
+                        this.log.info("flush 失败");
+                    }
+                    bos.close();
+                }
+            }
+
+            //获得下载状态
+            boolean isDo = false;
+            isDo = this.ftpClient.completePendingCommand();
+            if (isDo) {
+                result = "1";
             } else {
-                OutputStream out = null;
-                out = new FileOutputStream(f);
-                InputStream in = null;
-                in = this.ftpClient.retrieveFileStream(new String(remote.getBytes(this.charSet), this.remoteCharSet));
-                //远程文件长度
-                long step = 0;
-                step = lRemoteSize / this.sizeL100;
-                //进度
-                long process = 0;
-                long localSize = 0L;
-                //开始下载
-                int c;
-                byte[] bytes = null;
-                bytes = new byte[this.byteSize];
-                while ((c = in.read(bytes)) != -1) {
-                    out.write(bytes, 0, c);
-                    localSize += c;
-                    long nowProcess = 0;
-                    nowProcess = localSize / step;
-                    if (nowProcess > process) {
-                        process = nowProcess;
-                        if (process % this.sizeL10 == 0) {
-                            this.log.info("下载进度：" + process);
-                        }
-                    }
-                }
-                in.close();
-                out.close();
-                boolean upNewStatus = false;
-                upNewStatus = this.ftpClient.completePendingCommand();
-                if (upNewStatus) {
-                    result = "1";
-                } else {
-                    result = "0";
-                }
+                result = "0";
             }
         }
         return result;
@@ -394,7 +421,7 @@ public class Ftp {
      * @throws Exception 异常
      */
     private String uploadFile(String remoteFile, File localFile, FTPClient fc, long remoteSize) throws Exception {
-        String status = null;
+
         //显示进度的上传     
         long step = 0;
         step = localFile.length() / this.sizeL100;
@@ -402,8 +429,10 @@ public class Ftp {
         long localreadbytes = 0L;
         RandomAccessFile raf = null;
         raf = new RandomAccessFile(localFile, "r");
-        OutputStream out = null;
-        out = fc.appendFileStream(new String(remoteFile.getBytes(this.charSet), this.remoteCharSet));
+        BufferedOutputStream bos = null;
+        bos = new BufferedOutputStream(fc.appendFileStream(new String(remoteFile.getBytes(this.charSet),
+                this.remoteCharSet)), Constants.IO_BUFFERED);
+
         //断点续传     
         if (remoteSize > 0) {
             fc.setRestartOffset(remoteSize);
@@ -411,21 +440,37 @@ public class Ftp {
             raf.seek(remoteSize);
             localreadbytes = remoteSize;
         }
-        byte[] bytes = null;
-        bytes = new byte[this.byteSize];
-        int c;
-        while ((c = raf.read(bytes)) != -1) {
-            out.write(bytes, 0, c);
-            localreadbytes += c;
-            if (localreadbytes / step != process) {
-                process = localreadbytes / step;
-                this.log.info("上传进度:" + process);
+
+        try {
+
+            //开始上传
+            byte[] bytes = null;
+            bytes = new byte[this.byteSize];
+            int c;
+            while (-1 != (c = raf.read(bytes))) {
+                bos.write(bytes, 0, c);
+                localreadbytes += c;
+                if (localreadbytes / step != process) {
+                    process = localreadbytes / step;
+                    this.log.info("上传进度:" + process);
+                }
             }
+
+        } catch (Throwable e) {
+            throw new Exception(e);
+        } finally {
+            try {
+                bos.flush();
+            } catch (Throwable e) {
+                this.log.info("flush 失败");
+            }
+            bos.close();
+            raf.close();
         }
-        out.flush();
-        raf.close();
-        out.close();
+
+        //判断上传结果
         boolean result = false;
+        String status = null;
         result = this.ftpClient.completePendingCommand();
         if (remoteSize > 0) {
             status = result ? "1" : "-1";
