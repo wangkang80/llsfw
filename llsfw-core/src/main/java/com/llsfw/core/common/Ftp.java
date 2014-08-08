@@ -250,28 +250,28 @@ public class Ftp {
             InputStream bis = null;
             OutputStream bos = null;
 
-            try {
+            //获得远程文件的大小
+            long lRemoteSize = 0;
+            lRemoteSize = files[0].getSize();
 
-                //获得远程文件的大小
-                long lRemoteSize = 0;
-                lRemoteSize = files[0].getSize();
+            //获得本地文件对象(不存在,则创建)
+            File f = null;
+            f = new File(local);
 
-                //获得本地文件对象(不存在,则创建)
-                File f = null;
-                f = new File(local);
+            //本地存在文件，进行断点下载     
+            if (f.exists()) {
 
-                //本地存在文件，进行断点下载     
-                if (f.exists()) {
+                //获得本地文件的长度
+                long localSize = 0;
+                localSize = f.length();
 
-                    //获得本地文件的长度
-                    long localSize = 0;
-                    localSize = f.length();
+                //判断本地文件大小是否大于远程文件大小     
+                if (localSize >= lRemoteSize) {
+                    this.log.info("本地文件大于等于远程文件,无需下载,下载中止");
+                    result = "1";
+                } else {
 
-                    //判断本地文件大小是否大于远程文件大小     
-                    if (localSize >= lRemoteSize) {
-                        this.log.info("本地文件大于等于远程文件,无需下载,下载中止");
-                        result = "1";
-                    } else {
+                    try {
 
                         //设置开始点
                         this.ftpClient.setRestartOffset(localSize);
@@ -307,8 +307,37 @@ public class Ftp {
                                 }
                             }
                         }
+
+                    } catch (Throwable e) {
+                        throw new Exception(e);
+                    } finally {
+                        if (null != bis) {
+                            bis.close();
+                        }
+                        if (null != bos) {
+                            try {
+                                bos.flush();
+                            } catch (Throwable e) {
+                                this.log.info("flush 失败");
+                            }
+                            bos.close();
+                        }
                     }
-                } else {
+
+                    //获得下载状态
+                    boolean isDo = false;
+                    if (this.ftpClient.sendNoOp()) {
+                        isDo = this.ftpClient.completePendingCommand();
+                    }
+                    if (isDo) {
+                        result = "1";
+                    } else {
+                        result = "0";
+                    }
+
+                }
+            } else {
+                try {
 
                     //获得流
                     bos = new FileOutputStream(f);
@@ -339,32 +368,32 @@ public class Ftp {
                             }
                         }
                     }
-                }
-            } catch (Throwable e) {
-                throw new Exception(e);
-            } finally {
-                if (null != bis) {
-                    bis.close();
-                }
-                if (null != bos) {
-                    try {
-                        bos.flush();
-                    } catch (Throwable e) {
-                        this.log.info("flush 失败");
+                } catch (Throwable e) {
+                    throw new Exception(e);
+                } finally {
+                    if (null != bis) {
+                        bis.close();
                     }
-                    bos.close();
+                    if (null != bos) {
+                        try {
+                            bos.flush();
+                        } catch (Throwable e) {
+                            this.log.info("flush 失败");
+                        }
+                        bos.close();
+                    }
                 }
-            }
 
-            //获得下载状态
-            boolean isDo = false;
-            if (this.ftpClient.sendNoOp()) {
-                isDo = this.ftpClient.completePendingCommand();
-            }
-            if (isDo) {
-                result = "1";
-            } else {
-                result = "0";
+                //获得下载状态
+                boolean isDo = false;
+                if (this.ftpClient.sendNoOp()) {
+                    isDo = this.ftpClient.completePendingCommand();
+                }
+                if (isDo) {
+                    result = "1";
+                } else {
+                    result = "0";
+                }
             }
         }
         return result;
