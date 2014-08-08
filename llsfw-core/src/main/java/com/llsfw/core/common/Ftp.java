@@ -6,11 +6,11 @@
  */
 package com.llsfw.core.common;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.RandomAccessFile;
 
@@ -162,9 +162,7 @@ public class Ftp {
      *         0:创建服务器远程目录结构失败<br />
      *         -1:上传文件失败<br />
      *         -2:上传新文件失败 <br />
-     *         -3:远端文件已经存在<br />
-     *         -4:远端文件大于本地文件大小<br />
-     *         -5:删除远端文件失败<br />
+     *         -3:删除远端文件失败<br />
      * @throws Exception 异常
      */
     public String upload(String local, String remote) throws Exception {
@@ -195,12 +193,9 @@ public class Ftp {
             f = new File(local);
             long localSize = 0;
             localSize = f.length();
-            if (remoteSize == localSize) {
-                this.log.info("远端文件已经存在");
-                result = "-3";
-            } else if (remoteSize > localSize) {
-                this.log.info("远端文件大于本地文件大小");
-                result = "-4";
+            if (remoteSize >= localSize) {
+                this.log.info("远端文件大于等于本地文件大小,无需上传,终止上传");
+                result = "1";
             } else {
                 //尝试移动文件内读取指针,实现断点续传     
                 result = uploadFile(remoteFileName, f, this.ftpClient, remoteSize);
@@ -209,7 +204,7 @@ public class Ftp {
                 if ("-1".equals(result)) {
                     if (!this.ftpClient.deleteFile(remoteFileName)) {
                         this.log.info("删除远端文件失败");
-                        return "-5";
+                        return "-3";
                     }
                     result = uploadFile(remoteFileName, f, this.ftpClient, 0);
                 }
@@ -231,7 +226,6 @@ public class Ftp {
      *         1:下载成功<br />
      *         0:下载失败<br />
      *         -1:远程文件不存在<br />
-     *         -2:本地文件大于远程文件，下载中止<br />
      * @throws Exception 异常
      */
     public String download(String remote, String local) throws Exception {
@@ -253,8 +247,8 @@ public class Ftp {
             result = "-1";
         } else {
 
-            BufferedInputStream bis = null;
-            BufferedOutputStream bos = null;
+            InputStream bis = null;
+            OutputStream bos = null;
 
             try {
 
@@ -275,17 +269,17 @@ public class Ftp {
 
                     //判断本地文件大小是否大于远程文件大小     
                     if (localSize >= lRemoteSize) {
-                        this.log.info("本地文件大于远程文件，下载中止");
-                        result = "-2";
+                        this.log.info("本地文件大于等于远程文件,无需下载,下载中止");
+                        result = "1";
                     } else {
 
                         //设置开始点
                         this.ftpClient.setRestartOffset(localSize);
 
                         //获得流(进行断点续传，并记录状态)
-                        bos = new BufferedOutputStream(new FileOutputStream(f, true));
-                        bis = new BufferedInputStream(this.ftpClient.retrieveFileStream(new String(remote
-                                .getBytes(this.charSet), this.remoteCharSet)));
+                        bos = new FileOutputStream(f, true);
+                        bis = this.ftpClient.retrieveFileStream(new String(remote.getBytes(this.charSet),
+                                this.remoteCharSet));
 
                         //字节流
                         byte[] bytes = null;
@@ -317,9 +311,9 @@ public class Ftp {
                 } else {
 
                     //获得流
-                    bos = new BufferedOutputStream(new FileOutputStream(f));
-                    bis = new BufferedInputStream(this.ftpClient.retrieveFileStream(new String(remote
-                            .getBytes(this.charSet), this.remoteCharSet)));
+                    bos = new FileOutputStream(f);
+                    bis = this.ftpClient.retrieveFileStream(new String(remote.getBytes(this.charSet),
+                            this.remoteCharSet));
 
                     //远程文件长度
                     long step = 0;
@@ -431,9 +425,8 @@ public class Ftp {
         long localreadbytes = 0L;
         RandomAccessFile raf = null;
         raf = new RandomAccessFile(localFile, "r");
-        BufferedOutputStream bos = null;
-        bos = new BufferedOutputStream(fc.appendFileStream(new String(remoteFile.getBytes(this.charSet),
-                this.remoteCharSet)), Constants.IO_BUFFERED);
+        OutputStream bos = null;
+        bos = fc.appendFileStream(new String(remoteFile.getBytes(this.charSet), this.remoteCharSet));
 
         //断点续传     
         if (remoteSize > 0) {
