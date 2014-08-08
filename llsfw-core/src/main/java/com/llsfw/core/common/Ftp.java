@@ -364,7 +364,9 @@ public class Ftp {
 
             //获得下载状态
             boolean isDo = false;
-            isDo = this.ftpClient.completePendingCommand();
+            if (this.ftpClient.sendNoOp()) {
+                isDo = this.ftpClient.completePendingCommand();
+            }
             if (isDo) {
                 result = "1";
             } else {
@@ -471,7 +473,9 @@ public class Ftp {
         //判断上传结果
         boolean result = false;
         String status = null;
-        result = this.ftpClient.completePendingCommand();
+        if (this.ftpClient.sendNoOp()) {
+            result = this.ftpClient.completePendingCommand();
+        }
         if (remoteSize > 0) {
             status = result ? "1" : "-1";
         } else {
