@@ -58,13 +58,14 @@ public class LoginController extends BaseController {
         String exceptionClassName = (String) req.getAttribute("shiroLoginFailure");
         String rv = null;
         if (UnknownAccountException.class.getName().equals(exceptionClassName)) {
-            rv = "用户不存在";
+            rv = "用户名/密码错误";
         } else if (LockedAccountException.class.getName().equals(exceptionClassName)) {
-            rv = "用户已停用";
+            rv = "用户被锁定";
         } else if (IncorrectCredentialsException.class.getName().equals(exceptionClassName)) {
             rv = "用户名/密码错误";
         } else if (exceptionClassName != null) {
-            rv = "其他错误：" + exceptionClassName;
+            rv = "未知错误,请联系管理员";
+            this.log.info(exceptionClassName);
         }
         req.setAttribute("rv", rv);
         return "llsfw/login";
