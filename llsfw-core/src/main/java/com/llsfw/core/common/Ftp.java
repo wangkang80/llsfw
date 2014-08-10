@@ -11,10 +11,8 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.RandomAccessFile;
 
-import org.apache.commons.net.PrintCommandListener;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
@@ -105,7 +103,7 @@ public class Ftp {
         //实例化FTP客户端
         this.ftpClient = new FTPClient();
         //设置将过程中使用到的命令输出到控制台     
-        this.ftpClient.addProtocolCommandListener(new PrintCommandListener(new PrintWriter(System.out)));
+        //this.ftpClient.addProtocolCommandListener(new PrintCommandListener(new PrintWriter(System.out)));
         //设置编码
         this.charSet = charSet;
     }
