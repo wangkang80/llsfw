@@ -44,9 +44,11 @@ public class DownLoadFile {
      * @param request 请求参数
      * @param response 响应参数
      * @param downloadFile 需下载的文件
+     * @param fileName 文件名称
      * @throws Exception 异常
      */
-    public void download(HttpServletRequest request, HttpServletResponse response, File downloadFile) throws Exception {
+    public void download(HttpServletRequest request, HttpServletResponse response, File downloadFile, String fileName)
+            throws Exception {
 
         //记录文件大小 
         long fileLength = downloadFile.length();
@@ -146,12 +148,12 @@ public class DownLoadFile {
             // 设置相应参数
             response.setContentType(Constants.setContentType(downloadFile.getName()));
             response.setHeader("Accept-Ranges", "bytes");
-            response.setHeader("Content-Length", String.valueOf(downloadFile.length()));
+            //response.setHeader("Content-Length", String.valueOf(downloadFile.length()));
             response.setHeader(
                     "Content-disposition",
                     "attachment; filename="
-                            + new String(downloadFile.getName().getBytes(
-                                    com.llsfw.core.common.Constants.DEF_CHARACTER_SET_ENCODING), "ISO8859-1"));
+                            + new String(fileName.getBytes(com.llsfw.core.common.Constants.DEF_CHARACTER_SET_ENCODING),
+                                    "ISO8859-1"));
 
             os = response.getOutputStream();
             out = new BufferedOutputStream(os);
