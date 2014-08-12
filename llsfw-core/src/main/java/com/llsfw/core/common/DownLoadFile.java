@@ -198,9 +198,11 @@ public class DownLoadFile {
                  * 掉其他正在下载同一字节段的线程， 强行中止字节读出，造成服务器抛 ClientAbortException。
                  * 所以，我们忽略这种异常
                  */
+                log.info("下载出错:", ie);
                 throw new Exception(ie);
             }
-        } catch (Exception e) {
+        } catch (Throwable e) {
+            log.info("下载出错:", e);
             throw new Exception(e);
         } finally {
             if (out != null) {
