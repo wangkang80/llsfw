@@ -188,6 +188,7 @@ public class DownLoadFile {
                     break;
                 }
                 }
+                out.flush();
             } catch (IOException ie) {
                 /**
                  * 在写数据的时候， 对于 ClientAbortException 之类的异常，
@@ -203,7 +204,6 @@ public class DownLoadFile {
             throw new Exception(e);
         } finally {
             if (out != null) {
-                out.flush();
                 out.close();
             }
             if (raf != null) {
