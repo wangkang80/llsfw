@@ -148,7 +148,7 @@ public class DownLoadFile {
             // 设置相应参数
             response.setContentType(Constants.setContentType(downloadFile.getName()));
             response.setHeader("Accept-Ranges", "bytes");
-            response.setHeader("Content-Length", String.valueOf(downloadFile.length()));
+            response.setHeader("Content-Length", String.valueOf(contentLength));
             response.setHeader(
                     "Content-disposition",
                     "attachment; filename="
@@ -201,7 +201,7 @@ public class DownLoadFile {
                  * 所以，我们忽略这种异常
                  */
                 log.info("下载出错:", ie);
-                throw new Exception(ie);
+                //throw new Exception(ie);
             }
         } catch (Throwable e) {
             log.info("下载出错:", e);
