@@ -148,7 +148,7 @@ public class DownLoadFile {
             // 设置相应参数
             response.setContentType(Constants.setContentType(downloadFile.getName()));
             response.setHeader("Accept-Ranges", "bytes");
-            //response.setHeader("Content-Length", String.valueOf(downloadFile.length()));
+            response.setHeader("Content-Length", String.valueOf(downloadFile.length()));
             response.setHeader(
                     "Content-disposition",
                     "attachment; filename="
