@@ -165,7 +165,7 @@ public class HttpUtil {
                 String contentRange = new StringBuffer("bytes ").append(new Long(pastLength).toString()).append("-")
                         .append(new Long(fileLength - 1).toString()).append("/")
                         .append(new Long(fileLength).toString()).toString();
-                log.info("contentRange:" + contentRange);
+                log.info("Content-Range:" + contentRange);
                 response.setHeader("Content-Range", contentRange);
             } else {
                 //是从开始下载 
@@ -173,9 +173,8 @@ public class HttpUtil {
             }
 
             // 设置相应参数
-            response.setHeader("Accept-Ranges", "bytes"); //如果是第一次下,还没有断点续传,状态是默认的 200,无需显式设置;响应的格式是:HTTP/1.1 200 OK 
             response.setContentType(Constants.setContentType(downloadFile.getName()));
-            response.setHeader("Accept-Ranges", "bytes");
+            response.setHeader("Accept-Ranges", "bytes"); //如果是第一次下,还没有断点续传,状态是默认的 200,无需显式设置;响应的格式是:HTTP/1.1 200 OK
             log.info("Content-Length:" + String.valueOf(contentLength));
             response.setHeader("Content-Length", String.valueOf(contentLength));
             response.setHeader(
