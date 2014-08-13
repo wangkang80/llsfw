@@ -176,6 +176,7 @@ public class HttpUtil {
             response.setHeader("Accept-Ranges", "bytes"); //如果是第一次下,还没有断点续传,状态是默认的 200,无需显式设置;响应的格式是:HTTP/1.1 200 OK 
             response.setContentType(Constants.setContentType(downloadFile.getName()));
             response.setHeader("Accept-Ranges", "bytes");
+            log.info("Content-Length:" + String.valueOf(contentLength));
             response.setHeader("Content-Length", String.valueOf(contentLength));
             response.setHeader(
                     "Content-disposition",
