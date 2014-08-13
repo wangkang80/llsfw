@@ -165,6 +165,7 @@ public class HttpUtil {
                 String contentRange = new StringBuffer("bytes ").append(new Long(pastLength).toString()).append("-")
                         .append(new Long(fileLength - 1).toString()).append("/")
                         .append(new Long(fileLength).toString()).toString();
+                log.info("contentRange:" + contentRange);
                 response.setHeader("Content-Range", contentRange);
             } else {
                 //是从开始下载 
