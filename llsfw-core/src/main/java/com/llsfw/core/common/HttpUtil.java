@@ -153,7 +153,7 @@ public class HttpUtil {
                 rangeBytes = request.getHeader("Range").replaceAll("bytes=", "");
                 rangeBytes = rangeBytes.substring(0, rangeBytes.indexOf('-'));
                 pastLength = Long.parseLong(rangeBytes.trim());
-                contentLength = fileLength - pastLength + 1;
+                contentLength = fileLength - pastLength;
             } else { //从开始进行下载 
                 contentLength = fileLength;//客户端要求全文下载 
             }
