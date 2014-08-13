@@ -13,9 +13,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
+import org.apache.commons.net.ftp.FTPHTTPClient;
 import org.apache.commons.net.ftp.FTPReply;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -100,6 +102,38 @@ public class Ftp {
      * @param charSet 字符编码
      */
     public Ftp(String charSet) {
+        //实例化FTP客户端
+        this.ftpClient = new FTPClient();
+        //设置将过程中使用到的命令输出到控制台     
+        //this.ftpClient.addProtocolCommandListener(new PrintCommandListener(new PrintWriter(System.out)));
+        //设置编码
+        this.charSet = charSet;
+    }
+
+    /**
+     * <p>
+     * Description: 构造函数(代理的方式,当代理参数不存在的时候,实例化的为普通对象)
+     * </p>
+     * 
+     * @param charSet 字符编码
+     * @param proxyHost 代理地址
+     * @param porxyPort 代理端口
+     */
+    public Ftp(String charSet, String proxyHost, String porxyPort) {
+
+        //判断是否有代理数据 实例化FTP客户端
+        if (!StringUtils.isEmpty(proxyHost) && !StringUtils.isEmpty(porxyPort)) {
+
+            //实例化FTP客户端
+            this.ftpClient = new FTPHTTPClient(proxyHost, new Integer(porxyPort));
+
+        } else {
+
+            //实例化FTP客户端
+            this.ftpClient = new FTPClient();
+
+        }
+
         //实例化FTP客户端
         this.ftpClient = new FTPClient();
         //设置将过程中使用到的命令输出到控制台     

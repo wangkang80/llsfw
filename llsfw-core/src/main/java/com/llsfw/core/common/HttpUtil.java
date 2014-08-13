@@ -1,5 +1,5 @@
 /**
- * DownLoadFile.java
+ * HttpUtil.java
  * Created at 2014-08-12
  * Created by wangkang
  * Copyright (C) 2014 SHANGHAI VOLKSWAGEN, All rights reserved.
@@ -14,12 +14,17 @@ import java.io.RandomAccessFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpHost;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * <p>
- * ClassName: DownLoadFile
+ * ClassName: HttpUtil
  * </p>
  * <p>
  * Description: 文件下载
@@ -31,9 +36,73 @@ import org.slf4j.LoggerFactory;
  * Date: 2014年8月12日
  * </p>
  */
-public class DownLoadFile {
+public class HttpUtil {
 
-    private static Logger log = LoggerFactory.getLogger(DownLoadFile.class);
+    private static Logger log = LoggerFactory.getLogger(HttpUtil.class);
+
+    /**
+     * <p>
+     * Description: 为httpclient请求设置代理(当代理为host和port为空的时候什么都不做)
+     * </p>
+     * 
+     * @param request 请求对象
+     * @param proxyHost 代理地址
+     * @param proxyPort 代理端口
+     * @return 设置代理后的请求
+     */
+    public HttpGet proxy(HttpGet request, String proxyHost, String proxyPort) {
+
+        //host和port都不为空的时候就设置代理
+        if (!StringUtils.isEmpty(proxyHost) && !StringUtils.isEmpty(proxyPort)) {
+
+            //设置代理对象 ip/代理名称,端口   
+            HttpHost proxy = null;
+            proxy = new HttpHost(proxyHost, new Integer(proxyPort));
+
+            //设置代理配置
+            RequestConfig config = null;
+            config = RequestConfig.custom().setProxy(proxy).build();
+
+            //设置代理
+            request.setConfig(config);
+
+        }
+
+        //返回
+        return request;
+    }
+
+    /**
+     * <p>
+     * Description: 为httpclient请求设置代理(当代理为host和port为空的时候什么都不做)
+     * </p>
+     * 
+     * @param request 请求对象
+     * @param proxyHost 代理地址
+     * @param proxyPort 代理端口
+     * @return 设置代理后的请求
+     */
+    public HttpPost proxy(HttpPost request, String proxyHost, String proxyPort) {
+
+        //host和port都不为空的时候就设置代理
+        if (!StringUtils.isEmpty(proxyHost) && !StringUtils.isEmpty(proxyPort)) {
+
+            //设置代理对象 ip/代理名称,端口   
+            HttpHost proxy = null;
+            proxy = new HttpHost(proxyHost, new Integer(proxyPort));
+
+            //设置代理配置
+            RequestConfig config = null;
+            config = RequestConfig.custom().setProxy(proxy).build();
+
+            //设置代理
+            request.setConfig(config);
+
+        }
+
+        //返回
+        return request;
+    }
 
     /**
      * <p>
