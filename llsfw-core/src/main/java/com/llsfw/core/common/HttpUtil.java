@@ -8,7 +8,6 @@ package com.llsfw.core.common;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.OutputStream;
 import java.io.RandomAccessFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -127,17 +126,11 @@ public class HttpUtil {
         //客户端请求的字节总量 
         long contentLength = 0;
 
-        //记录客户端传来的形如“bytes=27000-”或者“bytes=27000-39000”的内容 
-        String rangeBytes = "";
-
         //负责读取数据 
         RandomAccessFile raf = null;
 
-        //写出数据 
-        OutputStream os = null;
-
         //缓冲 
-        OutputStream out = null;
+        BufferedOutputStream out = null;
 
         //暂存容器
         byte b[] = new byte[Constants.IO_BUFFERED];
@@ -150,6 +143,7 @@ public class HttpUtil {
 
                 ////获取range,客户端请求的是 969998336 之后的字节 ,设置响应类型
                 response.setStatus(HttpServletResponse.SC_PARTIAL_CONTENT);
+                String rangeBytes = "";
                 rangeBytes = request.getHeader("Range").replaceAll("bytes=", "");
                 rangeBytes = rangeBytes.substring(0, rangeBytes.indexOf('-'));
                 pastLength = Long.parseLong(rangeBytes.trim());
@@ -183,8 +177,7 @@ public class HttpUtil {
                             + new String(fileName.getBytes(com.llsfw.core.common.Constants.DEF_CHARACTER_SET_ENCODING),
                                     "ISO8859-1"));
 
-            os = response.getOutputStream();
-            out = new BufferedOutputStream(os);
+            out = new BufferedOutputStream(response.getOutputStream());
             raf = new RandomAccessFile(downloadFile, "r");
 
             raf.seek(pastLength); //形如 bytes=969998336- 的客户端请求，跳过 969998336 个字节 
