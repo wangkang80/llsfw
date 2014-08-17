@@ -470,9 +470,9 @@ public class QuartzController extends BaseController {
             if (StringUtils.isEmpty(tType)) {
                 tType = this.qs.getTriggerType(sName, tName, tGroup);
             } else {
-                if (tType.endsWith(Constants.TTYPE_SIMPLE)) {
+                if (tType.equals(Constants.TTYPE_SIMPLE)) {
                     request.setAttribute("simpleTriggerDetail", this.qs.getSimpleTriggerDetail(sName, tName, tGroup));
-                } else if (tType.endsWith(Constants.TTYPE_CRON)) {
+                } else if (tType.equals(Constants.TTYPE_CRON)) {
                     request.setAttribute("cronTriggerDetail", this.qs.getCronTriggerDetail(sName, tName, tGroup));
                 }
             }
