@@ -5,6 +5,7 @@
  */
 package com.llsfw.core.service.security;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -111,14 +112,33 @@ public class SecurityService extends BaseService {
      */
     public Set<String> findUserPermissions(String loginName, List<String> roleList) {
         if (!CollectionUtils.isEmpty(roleList)) {
-            List<String> rolePermissions = ism.findRolePermissions(roleList);
-            List<String> userPermissions = ism.findUserPermissions(loginName);
+            List<String> rolePermissions = getPermisions(ism.findRolePermissions(roleList));
+            List<String> userPermissions = getPermisions(ism.findUserPermissions(loginName));
             Set<String> permissions = new HashSet<String>();
             permissions.addAll(rolePermissions);
             permissions.addAll(userPermissions);
             return permissions;
         }
         return null;
+    }
+
+    /**
+     * <p>
+     * Description: 将查询出来的权限数据拼接成权限字符串
+     * </p>
+     * 
+     * @param permisions 权限数据
+     * @return 权限字符串
+     */
+    private List<String> getPermisions(List<Map<String, Object>> permisions) {
+        List<String> rv = new ArrayList<String>();
+        if (!CollectionUtils.isEmpty(permisions)) {
+            for (Map<String, Object> item : permisions) {
+                String p = item.get("FUNCTION_CODE") + ":" + item.get("FUNCTION_PURVIEW");
+                rv.add(p);
+            }
+        }
+        return rv;
     }
 
     /**

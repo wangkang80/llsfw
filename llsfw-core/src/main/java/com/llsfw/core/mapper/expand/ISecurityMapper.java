@@ -6,6 +6,7 @@
 package com.llsfw.core.mapper.expand;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -43,7 +44,7 @@ public interface ISecurityMapper {
      * @param roleList 角色列表
      * @return 权限列表
      */
-    List<String> findRolePermissions(@Param("roleList") List<String> roleList);
+    List<Map<String, Object>> findRolePermissions(@Param("roleList") List<String> roleList);
 
     /**
      * <p>
@@ -53,7 +54,7 @@ public interface ISecurityMapper {
      * @param loginName 用户名
      * @return 权限列表
      */
-    List<String> findUserPermissions(@Param("loginName") String loginName);
+    List<Map<String, Object>> findUserPermissions(@Param("loginName") String loginName);
 
     /**
      * <p>

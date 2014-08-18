@@ -7,8 +7,8 @@
         WHERE A.LOGIN_NAME=#{loginName} AND A.JOB_CODE=B.JOB_CODE
         )
     </select>
-    <select id="findRolePermissions" resultType="java.lang.String">
-        SELECT A.FUNCTION_CODE||':'||A.PURVIEW_CODE FUNCTION_PURVIEW
+    <select id="findRolePermissions" resultType="java.util.HashMap">
+        SELECT A.FUNCTION_CODE,A.PURVIEW_CODE FUNCTION_PURVIEW
         FROM TT_ROLE_FUNCTION A
         LEFT JOIN TT_FUNCTION B ON
         A.FUNCTION_CODE=B.FUNCTION_CODE
@@ -19,10 +19,11 @@
             #{listItem}
         </foreach>
     </select>
-    <select id="findUserPermissions" resultType="java.lang.String">
-        SELECT A.FUNCTION_CODE||':'||A.PURVIEW_CODE FUNCTION_PURVIEW
+    <select id="findUserPermissions" resultType="java.util.HashMap">
+        SELECT A.FUNCTION_CODE,A.PURVIEW_CODE FUNCTION_PURVIEW
         FROM TT_USER_FUNCTION A
-        LEFT JOIN TT_FUNCTION B ON A.FUNCTION_CODE=B.FUNCTION_CODE
+        LEFT
+        JOIN TT_FUNCTION B ON A.FUNCTION_CODE=B.FUNCTION_CODE
         LEFT JOIN TT_PURVIEW C ON A.PURVIEW_CODE=C.FUNCTION_CODE AND
         A.PURVIEW_CODE=C.PURVIEW_CODE
         WHERE B.STATUS=1 AND A.LOGIN_NAME=#{loginName}
@@ -42,10 +43,12 @@
     <select id="findUserFunctions" resultType="java.lang.String">
         SELECT A.FUNCTION_CODE FUNCTION_PURVIEW
         FROM TT_USER_FUNCTION A
-        LEFT JOIN TT_FUNCTION B ON
+        LEFT JOIN TT_FUNCTION B
+        ON
         A.FUNCTION_CODE=B.FUNCTION_CODE
         LEFT JOIN TT_PURVIEW C ON A.PURVIEW_CODE=C.FUNCTION_CODE AND
         A.PURVIEW_CODE=C.PURVIEW_CODE
-        WHERE B.STATUS=1 AND A.LOGIN_NAME=#{loginName}
+        WHERE
+        B.STATUS=1 AND A.LOGIN_NAME=#{loginName}
     </select>
 </mapper>
