@@ -6,9 +6,19 @@
  */
 package com.llsfw.core.service.job;
 
+import java.util.Calendar;
+import java.util.Date;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.llsfw.core.common.SystemParam;
+import com.llsfw.core.mapper.standard.TtAppLogMapper;
+import com.llsfw.core.mapper.standard.TtScheduledLogMapper;
+import com.llsfw.core.mapper.standard.TtScheduledTriggerLogMapper;
+import com.llsfw.core.model.standard.TtAppLogCriteria;
+import com.llsfw.core.model.standard.TtScheduledLogCriteria;
+import com.llsfw.core.model.standard.TtScheduledTriggerLogCriteria;
 import com.llsfw.core.service.BaseService;
 
 /**
@@ -28,6 +38,15 @@ import com.llsfw.core.service.BaseService;
 @Service
 public class JobService extends BaseService {
 
+    @Autowired
+    private TtAppLogMapper talm;
+
+    @Autowired
+    private TtScheduledLogMapper tslm;
+
+    @Autowired
+    private TtScheduledTriggerLogMapper tstlm;
+
     /**
      * <p>
      * Description: 清理系统异常日志
@@ -38,11 +57,19 @@ public class JobService extends BaseService {
         //获取参数
         String appLogKeepTime = this.getPs().getServerParamter(SystemParam.APP_LOG_KEEP_TIME.name());
 
-        //SQL
-        String sql = "DELETE TT_APP_LOG WHERE CREATE_DATE<=SYSDATE-" + appLogKeepTime;
+        //计算归档日期
+        Calendar cd = null;
+        cd = Calendar.getInstance();
+        cd.setTime(new Date());
+        cd.add(Calendar.DATE, 0 - Integer.parseInt(appLogKeepTime));
 
-        //执行
-        this.getImqm().delete(sql);
+        //条件
+        TtAppLogCriteria tac = null;
+        tac = new TtAppLogCriteria();
+        tac.createCriteria().andCreateDateLessThanOrEqualTo(cd.getTime());
+
+        //删除
+        this.talm.deleteByExample(tac);
     }
 
     /**
@@ -55,11 +82,19 @@ public class JobService extends BaseService {
         //获取参数
         String scheduledLogKeepTime = this.getPs().getServerParamter(SystemParam.SCHEDULED_LOG_KEEP_TIME.name());
 
-        //SQL
-        String sql = "DELETE TT_SCHEDULED_LOG WHERE CREATE_DATE<=SYSDATE-" + scheduledLogKeepTime;
+        //计算归档日期
+        Calendar cd = null;
+        cd = Calendar.getInstance();
+        cd.setTime(new Date());
+        cd.add(Calendar.DATE, 0 - Integer.parseInt(scheduledLogKeepTime));
 
-        //执行
-        this.getImqm().delete(sql);
+        //条件
+        TtScheduledLogCriteria tac = null;
+        tac = new TtScheduledLogCriteria();
+        tac.createCriteria().andCreateDateLessThanOrEqualTo(cd.getTime());
+
+        //删除
+        this.tslm.deleteByExample(tac);
     }
 
     /**
@@ -73,10 +108,18 @@ public class JobService extends BaseService {
         String scheduledTriggerLogKeepTime = this.getPs().getServerParamter(
                 SystemParam.SCHEDULED_TRIGGER_LOG_KEEP_TIME.name());
 
-        //SQL
-        String sql = "DELETE TT_SCHEDULED_TRIGGER_LOG WHERE CREATE_DATE<=SYSDATE-" + scheduledTriggerLogKeepTime;
+        //计算归档日期
+        Calendar cd = null;
+        cd = Calendar.getInstance();
+        cd.setTime(new Date());
+        cd.add(Calendar.DATE, 0 - Integer.parseInt(scheduledTriggerLogKeepTime));
 
-        //执行
-        this.getImqm().delete(sql);
+        //条件
+        TtScheduledTriggerLogCriteria tac = null;
+        tac = new TtScheduledTriggerLogCriteria();
+        tac.createCriteria().andCreateDateLessThanOrEqualTo(cd.getTime());
+
+        //删除
+        this.tstlm.deleteByExample(tac);
     }
 }

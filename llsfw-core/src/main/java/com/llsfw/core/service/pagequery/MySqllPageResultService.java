@@ -1,5 +1,5 @@
 /**
- * OracelPageResultService.java
+ * MySqllPageResultService.java
  * Created at 2013-12-02
  * Created by wangkang
  * Copyright (C) llsfw.
@@ -13,13 +13,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.llsfw.core.common.SystemParam;
-import com.llsfw.core.mapper.expand.IPageResultMapperOracle;
+import com.llsfw.core.mapper.expand.IPageResultMapperMySql;
 import com.llsfw.core.model.expand.PageResult;
 import com.llsfw.core.service.serverparam.ParamService;
 
 /**
  * <p>
- * ClassName: OracelPageResultService
+ * ClassName: MySqllPageResultService
  * </p>
  * <p>
  * Description: 分页服务
@@ -32,7 +32,7 @@ import com.llsfw.core.service.serverparam.ParamService;
  * </p>
  */
 @Service
-public class OracelPageResultService implements IPageResult {
+public class MySqllPageResultService implements IPageResult {
 
     /**
      * <p>
@@ -40,7 +40,7 @@ public class OracelPageResultService implements IPageResult {
      * </p>
      */
     @Autowired
-    private IPageResultMapperOracle iq;
+    private IPageResultMapperMySql iq;
 
     /**
      * <p>
@@ -81,7 +81,7 @@ public class OracelPageResultService implements IPageResult {
             } else {
                 PRET.setCurPage(curPage);
             }
-            PRET.setRecords(this.iq.pageQuery(sql, pageSize, curPage));
+            PRET.setRecords(this.iq.pageQuery(sql, pageSize, (curPage - 1) * pageSize));
         } else {
             PRET.setCurPage(0);
             PRET.setTotalPages(0);

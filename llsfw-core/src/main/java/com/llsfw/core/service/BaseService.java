@@ -9,10 +9,11 @@ package com.llsfw.core.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.llsfw.core.mapper.expand.IMapQueryMapper;
-import com.llsfw.core.service.pagequery.OracelPageResultService;
+import com.llsfw.core.service.pagequery.IPageResult;
 import com.llsfw.core.service.serverparam.ParamService;
 
 /**
@@ -53,7 +54,8 @@ public class BaseService {
      * </p>
      */
     @Autowired
-    private OracelPageResultService prs;
+    @Qualifier("IPageResult")
+    private IPageResult prs;
 
     /**
      * <p>
@@ -67,24 +69,12 @@ public class BaseService {
         return this.imqm;
     }
 
-    public void setImqm(IMapQueryMapper imqm) {
-        this.imqm = imqm;
-    }
-
-    public OracelPageResultService getPrs() {
-        return this.prs;
-    }
-
-    public void setPrs(OracelPageResultService prs) {
-        this.prs = prs;
-    }
-
     public ParamService getPs() {
         return this.ps;
     }
 
-    public void setPs(ParamService ps) {
-        this.ps = ps;
+    public IPageResult getPrs() {
+        return prs;
     }
 
 }
