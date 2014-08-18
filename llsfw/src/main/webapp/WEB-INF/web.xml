@@ -114,14 +114,8 @@
     </servlet-mapping>
 
     <!-- CXF -->
-    <servlet>
-        <servlet-name>CXFService</servlet-name>
-        <servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>CXFService</servlet-name>
-        <url-pattern>/services/*</url-pattern>
-    </servlet-mapping>
+    <!-- <servlet> <servlet-name>CXFService</servlet-name> <servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class> </servlet> 
+        <servlet-mapping> <servlet-name>CXFService</servlet-name> <url-pattern>/services/*</url-pattern> </servlet-mapping> -->
 
     <session-config>
         <session-timeout>30</session-timeout>

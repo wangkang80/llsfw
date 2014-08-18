@@ -28,7 +28,6 @@
         <property name="filterChainDefinitions">
             <value>
                 /static/** = anon
-                /services/** = anon
                 /login = authc
                 /logout = logout
                 /** = user,bindLoginNameFilter
