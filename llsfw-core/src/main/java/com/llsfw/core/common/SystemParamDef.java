@@ -8,6 +8,9 @@ package com.llsfw.core.common;
 
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * <p>
  * ClassName: SystemParamDef
@@ -23,6 +26,14 @@ import java.util.Map;
  * </p>
  */
 public class SystemParamDef {
+
+    /**
+     * <p>
+     * Field log: 日志
+     * </p>
+     */
+    public Logger log = LoggerFactory.getLogger(this.getClass());
+
     /**
      * <p>
      * Field data: 存储的系统参数map
@@ -36,5 +47,6 @@ public class SystemParamDef {
 
     public void setData(Map<String, String> data) {
         this.data = data;
+        this.log.info("data:" + this.data);
     }
 }
