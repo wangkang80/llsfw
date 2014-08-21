@@ -11,12 +11,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.quartz.CronScheduleBuilder;
 import org.quartz.Job;
 import org.quartz.JobBuilder;
+import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
 import org.quartz.JobKey;
 import org.quartz.Scheduler;
@@ -33,6 +35,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.llsfw.core.model.expand.PageResult;
 import com.llsfw.core.service.BaseService;
 
@@ -61,6 +65,54 @@ public class QuartzService extends BaseService {
     @Autowired
     @Qualifier("clusterQuartzScheduler")
     private SchedulerFactoryBean s;
+
+    /**
+     * <p>
+     * Description: 获得作业的dataMap
+     * </p>
+     * 
+     * @param jName 作业名称
+     * @param jGroup 作业组别
+     * @return dataMap
+     * @throws SchedulerException 异常
+     */
+    public Map<String, Object> getJobDetailDataMap(String jName, String jGroup) throws SchedulerException {
+
+        //参数列表
+        List<Map<String, Object>> rvList = new ArrayList<Map<String, Object>>();
+
+        //设置jobkey
+        JobKey jk = null;
+        jk = new JobKey(jName, jGroup);
+
+        //判断作业是否存在,并且获取作业,和 dataMap
+        if (this.s.getScheduler().checkExists(jk)) {
+            JobDetail jd = this.s.getScheduler().getJobDetail(jk);
+            JobDataMap jdm = jd.getJobDataMap();
+            //判断是否存在dataMap
+            if (!CollectionUtils.isEmpty(jdm)) {
+                Iterator<String> keyIterator = jdm.keySet().iterator();
+                while (keyIterator.hasNext()) {
+                    String key = keyIterator.next();
+                    Object value = jdm.get(key);
+                    Map<String, Object> item = new HashMap<String, Object>();
+                    item.put("name", key);
+                    item.put("value", value);
+                    item.put("editor", "text");
+                    item.put("IS_DATABASE", true);
+                    rvList.add(item);
+                }
+            }
+        }
+
+        //拼装返回结果
+        Map<String, Object> rv = new HashMap<String, Object>();
+        rv.put("total", rvList.size());
+        rv.put("rows", rvList);
+        this.log.info("jobDataMap:" + rv);
+
+        return rv;
+    }
 
     /**
      * <p>
@@ -296,6 +348,44 @@ public class QuartzService extends BaseService {
 
     /**
      * <p>
+     * Description: 获得jobDataMap
+     * </p>
+     * 
+     * @param jobDetailDataMapHid json数据
+     * @return jobDataMap
+     */
+    private JobDataMap getJobDataMap(String jobDetailDataMapHid) {
+
+        //返回值
+        JobDataMap rv = new JobDataMap();
+
+        //判断有数据,才进行后续的操作
+        if (!org.apache.commons.lang3.StringUtils.isEmpty(jobDetailDataMapHid)
+                && !com.llsfw.core.common.Constants.EMPTY_JOB_MAP_DATA.equals(jobDetailDataMapHid)) {
+
+            //转换JSON数据
+            List<Map<String, String>> dataList = JSON.parseObject(jobDetailDataMapHid,
+                    new TypeReference<List<Map<String, String>>>() {
+                    });
+
+            //判断是否有数据,装载JobDataMap
+            if (!CollectionUtils.isEmpty(dataList)) {
+                for (Map<String, String> item : dataList) {
+                    String name = item.get("name");
+                    String value = item.get("value");
+                    if (!com.llsfw.core.common.Constants.DEFAULT_JOB_MAP_NAME.equals(name)
+                            && !com.llsfw.core.common.Constants.DEFAULT_JOB_MAP_VALUE.equals(value))
+                        rv.put(name, value);
+                }
+            }
+        }
+
+        //返回
+        return rv;
+    }
+
+    /**
+     * <p>
      * Description: 添加作业
      * </p>
      * 
@@ -305,14 +395,18 @@ public class QuartzService extends BaseService {
      * @param jDesc 作业描述
      * @param jobShouldRecover 遗漏恢复
      * @param jobDurability 是否耐用
+     * @param jobDetailDataMapHid dataMap
      * @return 操作结果
      * @throws Exception 计划任务异常
      */
     @SuppressWarnings("unchecked")
     public Map<String, Object> addJobDetail(String jName, String jGroup, String jClass, String jDesc,
-            boolean jobShouldRecover, boolean jobDurability) throws Exception {
+            boolean jobShouldRecover, boolean jobDurability, String jobDetailDataMapHid) throws Exception {
         Map<String, Object> rv = null;
         rv = new HashMap<String, Object>();
+
+        //获得jobDataMap
+        JobDataMap jobDataMap = this.getJobDataMap(jobDetailDataMapHid);
 
         //获得计划任务管理器 
         Scheduler sch = null;
@@ -325,7 +419,7 @@ public class QuartzService extends BaseService {
         //初始化jobdetail
         JobDetail jobDetail = null;
         jobDetail = JobBuilder.newJob((Class<Job>) Class.forName(jClass)).withIdentity(jk).withDescription(jDesc)
-                .requestRecovery(jobShouldRecover).storeDurably(jobDurability).build();
+                .requestRecovery(jobShouldRecover).storeDurably(jobDurability).setJobData(jobDataMap).build();
 
         //添加job
         sch.addJob(jobDetail, true, !jobDurability);

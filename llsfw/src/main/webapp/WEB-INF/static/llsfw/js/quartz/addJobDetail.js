@@ -56,7 +56,10 @@ $(function() {
 			$('#jDesc_add').val(rowData.DESCRIPTION);
 			$('#jobShouldRecover_add').prop("checked", rowData.REQUESTS_RECOVERY == '1' ? true : false);
 			$('#jobDurability_add').prop("checked", rowData.IS_DURABLE == '1' ? true : false);
-
+			$('#jobDetailDataMapTable').datagrid({
+				url : basePath + 'quartzController/getJobDetailDataMap?jName=' + rowData.JOB_NAME + '&jGroup=' + rowData.JOB_GROUP,
+				method : 'post'
+			});
 		},
 		onLoadError : function() {
 			showErrorWindow('数据加载失败!');
@@ -85,6 +88,104 @@ $(function() {
 		required : true,
 		validType : [ "length[1,100]" ]
 	});
+
+	// 作业dataMap
+	var editIndex = undefined;
+	$('#jobDetailDataMapTable').datagrid({
+		title : '作业参数',
+		toolbar : '#jobDetailDataMapParam',
+		height : 200,
+		rownumbers : true,
+		singleSelect : true,
+		fitColumns : true,
+		scrollbarSize : 0,
+		idField : 'name',
+		columns : [ [ {
+			title : 'Name',
+			field : 'name',
+			width : '45%',
+			editor : {
+				type : 'validatebox',
+				options : {
+					validType : [ "length[1,100]", "not_chinese" ],
+					required : true
+				}
+			}
+		}, {
+			title : 'Value',
+			field : 'value',
+			width : '45%',
+			editor : {
+				type : 'validatebox',
+				options : {
+					validType : [ "length[1,100]", "not_chinese" ],
+					required : true
+				}
+			}
+		} ] ],
+		onClickRow : onClickRow,
+		onLoadError : function() {
+			showErrorWindow('数据加载失败!');
+		}
+	});
+
+	// 添加作业参数
+	$('#jobDetailDataMapAdd').linkbutton({});
+
+	$('#jobDetailDataMapAdd').click(function() {
+		addJobDetailDataMap();
+	});
+
+	// 删除作业参数
+	$('#jobDetailDataMapRemove').linkbutton({});
+
+	$('#jobDetailDataMapRemove').click(function() {
+		removeJobDetailDataMap();
+	});
+	
+	function endEditing() {
+		if (editIndex == undefined) {
+			return true;
+		}
+		if ($('#jobDetailDataMapTable').datagrid('validateRow', editIndex)) {
+			$('#jobDetailDataMapTable').datagrid('endEdit', editIndex);
+			editIndex = undefined;
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	function onClickRow(index) {
+		if (editIndex != index) {
+			if (endEditing()) {
+				$('#jobDetailDataMapTable').datagrid('selectRow', index).datagrid('beginEdit', index);
+				editIndex = index;
+			} else {
+				$('#jobDetailDataMapTable').datagrid('selectRow', editIndex);
+			}
+		}
+	}
+	
+	function addJobDetailDataMap() {
+		if (endEditing()) {
+			$('#jobDetailDataMapTable').datagrid('appendRow', {
+				name : '填写参数',
+				value : '填写参数值',
+				editor : 'text'
+			});
+			editIndex = $('#jobDetailDataMapTable').datagrid('getRows').length - 1;
+			$('#jobDetailDataMapTable').datagrid('selectRow', editIndex).datagrid('beginEdit', editIndex);
+		}
+	}
+
+	function removeJobDetailDataMap() {
+		if (editIndex == undefined) {
+			return
+		}
+		$('#jobDetailDataMapTable').datagrid('cancelEdit', editIndex).datagrid('deleteRow', editIndex);
+		editIndex = undefined;
+	}
 
 	// 删除按钮
 	$('#job_detail_form_delete_btn').linkbutton({});
@@ -136,6 +237,14 @@ $(function() {
 
 	// 保存方法
 	function save() {
+		
+		// 获得数据
+		endEditing();
+		var dataArr=$('#jobDetailDataMapTable').datagrid('getData').rows;
+		var jsonData=JSON.stringify(dataArr);
+		$('#jobDetailDataMapHid').val(jsonData);
+		
+		// 表单操作
 		$('#job_detail_form_add').attr('action', basePath + 'quartzController/addJobDetail');
 		$('#job_detail_form_add').form('submit', {
 			onSubmit : function() {// 提交前置事件

@@ -57,6 +57,23 @@ public class QuartzController extends BaseController {
 
     /**
      * <p>
+     * Description: 获得作业的dataMap
+     * </p>
+     * 
+     * @param jName 作业名称
+     * @param jGroup 作业组别
+     * @return dataMap
+     * @throws SchedulerException 异常
+     */
+    @RequiresPermissions("quartzController:edit")
+    @RequestMapping("getJobDetailDataMap")
+    @ResponseBody
+    public Map<String, Object> getJobDetailDataMap(String jName, String jGroup) throws SchedulerException {
+        return this.qs.getJobDetailDataMap(jName, jGroup);
+    }
+
+    /**
+     * <p>
      * Description: 跳转到cron生成器界面
      * </p>
      * 
@@ -144,6 +161,7 @@ public class QuartzController extends BaseController {
      * @param jDesc 作业描述
      * @param jobShouldRecover 遗漏恢复
      * @param jobDurability 是否耐用
+     * @param jobDetailDataMapHid dataMap
      * @return 操作结果
      * @throws Exception 计划任务异常
      */
@@ -151,8 +169,8 @@ public class QuartzController extends BaseController {
     @RequestMapping("addJobDetail")
     @ResponseBody
     public Map<String, Object> addJobDetail(String jName, String jGroup, String jClass, String jDesc,
-            boolean jobShouldRecover, boolean jobDurability) throws Exception {
-        return this.qs.addJobDetail(jName, jGroup, jClass, jDesc, jobShouldRecover, jobDurability);
+            boolean jobShouldRecover, boolean jobDurability, String jobDetailDataMapHid) throws Exception {
+        return this.qs.addJobDetail(jName, jGroup, jClass, jDesc, jobShouldRecover, jobDurability,jobDetailDataMapHid);
     }
 
     /**

@@ -133,6 +133,27 @@ public class Constants {
     public static final String CURRENT_LOGIN_NAME = "CURRENT_LOGIN_NAME";
 
     /**
+     * <p>
+     * Field DEFAULT_JOB_MAP_NAME: 默认参数名
+     * </p>
+     */
+    public static final String DEFAULT_JOB_MAP_NAME = "填写参数";
+
+    /**
+     * <p>
+     * Field DEFAULT_JOB_MAP_VALUE: 默认参数值
+     * </p>
+     */
+    public static final String DEFAULT_JOB_MAP_VALUE = "填写参数值";
+
+    /**
+     * <p>
+     * Field DEFAULT_JOB_MAP_DATA: 空jobMap数据
+     * </p>
+     */
+    public static final String EMPTY_JOB_MAP_DATA = "[]";
+
+    /**
      * 获取登录用户IP地址
      * 
      * @param request 请求参数

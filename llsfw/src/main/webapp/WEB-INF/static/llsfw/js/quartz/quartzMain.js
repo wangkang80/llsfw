@@ -341,8 +341,8 @@ $(function() {
 			maximizable : false,
 			resizable : false,
 			modal : true,
-			width : 370,
-			height : 320,
+			width : 480,
+			height : 500,
 			href : basePath + 'quartzController/toAddJobDetail'
 		});
 	});
@@ -356,7 +356,7 @@ $(function() {
 			maximizable : false,
 			resizable : false,
 			modal : true,
-			width : 430,
+			width : 480,
 			height : 500,
 			href : basePath + 'quartzController/toAddSimpleTrigger'
 		});
@@ -371,7 +371,7 @@ $(function() {
 			maximizable : false,
 			resizable : false,
 			modal : true,
-			width : 430,
+			width : 480,
 			height : 500,
 			href : basePath + 'quartzController/toAddCronTrigger'
 		});

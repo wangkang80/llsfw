@@ -10,7 +10,7 @@
 		<tr>
 			<td>作业名称:</td>
 			<td>
-				<input id="cron_jName_view" name="jName" style="width: 250px;" />
+				<input id="cron_jName_view" name="jName" style="width: 320px;" />
 				&nbsp;&nbsp;
 				<a id="cron_triggers_clear_job" style="cursor: pointer;">清除</a>
 			</td>
@@ -18,20 +18,20 @@
 		<tr>
 			<td>作业组别:</td>
 			<td>
-				<input id="cron_jGroup_view" name="jGroup" style="width: 250px;" readonly="readonly" />
+				<input id="cron_jGroup_view" name="jGroup" style="width: 320px;" readonly="readonly" />
 			</td>
 		</tr>
 		<tr>
 			<td>作业CLASS:</td>
 			<td>
-				<input id="cron_jClass_view" name="jClass" style="width: 250px;" disabled="disabled" />
+				<input id="cron_jClass_view" name="jClass" style="width: 320px;" disabled="disabled" />
 			</td>
 
 		</tr>
 		<tr>
 			<td>作业描述:</td>
 			<td>
-				<input id="cron_jDesc_view" name="jDesc" style="width: 250px;" disabled="disabled" />
+				<input id="cron_jDesc_view" name="jDesc" style="width: 320px;" disabled="disabled" />
 			</td>
 		</tr>
 		<tr>
@@ -54,19 +54,19 @@
 		<tr>
 			<td>触发器名称:</td>
 			<td>
-				<input id="cron_tName_add" name="tName" style="width: 250px;" />
+				<input id="cron_tName_add" name="tName" style="width: 320px;" />
 			</td>
 		</tr>
 		<tr>
 			<td>触发器组别:</td>
 			<td>
-				<input id="cron_tGroup_add" name="tGroup" style="width: 250px;" value="${defaultGroup}" />
+				<input id="cron_tGroup_add" name="tGroup" style="width: 320px;" value="${defaultGroup}" />
 			</td>
 		</tr>
 		<tr>
 			<td>CRON表达式:</td>
 			<td>
-				<input id="cron_cronExpression_add" name="cronExpression" style="width: 250px;" />
+				<input id="cron_cronExpression_add" name="cronExpression" style="width: 320px;" />
 				&nbsp;&nbsp;
 				<a id="cron_triggers_generate" style="cursor: pointer;">生成</a>
 			</td>
@@ -74,19 +74,19 @@
 		<tr>
 			<td>优先级:</td>
 			<td>
-				<input id="cron_priority_add" name="priority" style="width: 250px;" value="${defaultPriority}" title="值越大,优先级越高" />
+				<input id="cron_priority_add" name="priority" style="width: 320px;" value="${defaultPriority}" title="值越大,优先级越高" />
 			</td>
 		</tr>
 		<tr>
 			<td>开始时间:</td>
 			<td>
-				<input id="cron_triggerStartTime_add" name="triggerStartTime" style="width: 250px;" title="如果为空,则为当前时间" />
+				<input id="cron_triggerStartTime_add" name="triggerStartTime" style="width: 320px;" title="如果为空,则为当前时间" />
 			</td>
 		</tr>
 		<tr>
 			<td>结束时间:</td>
 			<td>
-				<input id="cron_triggerEndTime_add" name="triggerEndTime" style="width: 250px;" title="可以为空" />
+				<input id="cron_triggerEndTime_add" name="triggerEndTime" style="width: 320px;" title="可以为空" />
 			</td>
 		</tr>
 		<tr>
