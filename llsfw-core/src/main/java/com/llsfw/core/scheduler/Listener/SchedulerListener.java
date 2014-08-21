@@ -70,7 +70,9 @@ public class SchedulerListener implements org.quartz.SchedulerListener {
 
     @Override
     public void triggerResumed(TriggerKey triggerKey) {
-        als.saveScheduledLog("(triggerResumed)" + triggerKey.getName() + "/" + triggerKey.getGroup() + "被恢复了");
+        if (triggerKey != null) {
+            als.saveScheduledLog("(triggerResumed)" + triggerKey.getName() + "/" + triggerKey.getGroup() + "被恢复了");
+        }
     }
 
     @Override

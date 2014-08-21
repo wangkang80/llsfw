@@ -39,7 +39,6 @@ public class TestJob extends AbstractBaseJob {
             this.log.info("====结束===" + json);
             this.log.info(" ");
         } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
