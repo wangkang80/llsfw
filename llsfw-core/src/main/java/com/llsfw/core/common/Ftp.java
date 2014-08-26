@@ -134,10 +134,9 @@ public class Ftp {
 
         }
 
-        //实例化FTP客户端
-        this.ftpClient = new FTPClient();
         //设置将过程中使用到的命令输出到控制台     
         //this.ftpClient.addProtocolCommandListener(new PrintCommandListener(new PrintWriter(System.out)));
+
         //设置编码
         this.charSet = charSet;
     }
