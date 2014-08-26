@@ -201,9 +201,7 @@ $(function() {
 		var jg = $('#jGroup_add').combobox('getValue');
 		var tn = '';
 		var tg = '';
-		if (jn == null || jg == null) {
-			showErrorMsg('请选择需要删除的数据');
-		} else {
+		if (jn && jg) {
 			var param = '?op=deleteJob';
 			param += '&jn=' + jn;
 			param += '&jg=' + jg;
@@ -224,6 +222,8 @@ $(function() {
 					}
 				}
 			});
+		} else {
+			showErrorMsg('请选择需要删除的数据');
 		}
 	}
 
