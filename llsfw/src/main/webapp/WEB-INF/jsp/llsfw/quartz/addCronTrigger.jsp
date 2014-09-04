@@ -42,7 +42,7 @@
 				遗漏恢复:
 				<input id="cron_jobShouldRecover_view" name="jobShouldRecover" type="checkbox" disabled="disabled"
 					title="属性为true，则当Quartz服务被中止后，再次启动或集群中其他机器接手任务时会尝试恢复执行之前未完成的所有任务。例如QuartzJob B，在每次00秒的时候启动，假如在03:00的任务执行完之后服务器1被中止，服务器2在05:15的时候才接手；如果shouldRecover属性为true，则服务器2会尝试着补回原来在04:00和05:00的时候应该做的任务，如果shouldRecover属性为false，则服务器2只会从06:00的时候再执行B" />
-				是否耐用:
+				是否持久:
 				<input id="cron_jobDurability_view" name="jobDurability" type="checkbox" disabled="disabled" />
 			</td>
 		</tr>

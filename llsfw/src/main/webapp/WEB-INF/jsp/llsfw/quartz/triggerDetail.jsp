@@ -251,7 +251,7 @@
 			<td width165pxpx" style="border: solid 1px #B4B4B4; word-break: break-all; WORD-WRAP: break-word;">${jobDetail.JOB_CLASS_NAME}</td>
 		</tr>
 		<tr>
-			<td width="80px" style="border: solid 1px #B4B4B4; word-break: break-all; WORD-WRAP: break-word;">是否耐用:</td>
+			<td width="80px" style="border: solid 1px #B4B4B4; word-break: break-all; WORD-WRAP: break-word;">是否持久:</td>
 			<td width="165px" style="border: solid 1px #B4B4B4; word-break: break-all; WORD-WRAP: break-word;">${jobDetail.IS_DURABLE}</td>
 		</tr>
 		<tr>

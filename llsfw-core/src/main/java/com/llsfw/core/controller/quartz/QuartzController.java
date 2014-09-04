@@ -160,7 +160,7 @@ public class QuartzController extends BaseController {
      * @param jClass 作业类
      * @param jDesc 作业描述
      * @param jobShouldRecover 遗漏恢复
-     * @param jobDurability 是否耐用
+     * @param jobDurability 是否持久
      * @param jobDetailDataMapHid dataMap
      * @return 操作结果
      * @throws Exception 计划任务异常

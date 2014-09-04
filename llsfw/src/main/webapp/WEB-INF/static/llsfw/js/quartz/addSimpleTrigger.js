@@ -38,7 +38,7 @@ $(function() {
 			field : 'DESCRIPTION',
 			width : 100
 		}, {
-			title : '是否耐用',
+			title : '是否持久',
 			field : 'IS_DURABLE',
 			width : 100
 		}, {
