@@ -98,12 +98,17 @@ public class ZipFile {
                 //把zip包中的每个文件读取出来
                 //然后把文件写到指定的文件夹
                 while ((archiveEntry = zais.getNextEntry()) != null) {
-                    //获取文件名
-                    String entryFileName = null;
-                    entryFileName = archiveEntry.getName();
+
+                    //如果是目录,则自动创建
+                    if (archiveEntry.isDirectory()) {
+                        File f = new File(saveFileDir + archiveEntry.getName());
+                        f.mkdir();
+                        continue;
+                    }
+
                     //构造解压出来的文件存放路径
                     String entryFilePath = null;
-                    entryFilePath = saveFileDir + entryFileName;
+                    entryFilePath = saveFileDir + archiveEntry.getName();
                     byte[] content = null;
                     content = new byte[new Integer(this.byteSize)];
                     OutputStream os = null;
