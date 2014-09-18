@@ -111,14 +111,10 @@ public class ZipFile {
                         //把解压出来的文件写到指定路径
                         File entryFile = null;
                         entryFile = new File(entryFilePath);
-                        if (entryFile.isDirectory()) {
-                            entryFile.mkdirs();
-                        } else {
-                            os = new FileOutputStream(entryFile);
-                            int r;
-                            while ((r = zais.read(content)) > 0) {
-                                os.write(content, 0, r);
-                            }
+                        os = new FileOutputStream(entryFile);
+                        int r;
+                        while ((r = zais.read(content)) > 0) {
+                            os.write(content, 0, r);
                         }
                     } catch (Exception throwable) {
                         this.log.error("解压缩错误:", throwable);
