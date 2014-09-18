@@ -441,6 +441,13 @@ public class Ftp {
      * @throws Exception 异常
      */
     public FTPFile[] getremoteFiles(String remotePath) throws Exception {
+
+        //设置被动模式     
+        this.ftpClient.enterLocalPassiveMode();
+
+        //设置以二进制方式传输     
+        this.ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+
         return this.ftpClient.listFiles(remotePath);
     }
 
@@ -456,6 +463,13 @@ public class Ftp {
     public boolean removeFile(String remotePath) throws IOException {
         boolean flag = false;
         if (this.ftpClient != null) {
+
+            //设置被动模式     
+            this.ftpClient.enterLocalPassiveMode();
+
+            //设置以二进制方式传输     
+            this.ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+
             flag = this.ftpClient.deleteFile(new String(remotePath.getBytes(this.charSet), this.remoteCharSet));
         }
         return flag;
