@@ -55,6 +55,13 @@ public class AppConfig implements Serializable {
 
     /**
      * <p>
+     * Field mainPageConfig: 主体界面配置
+     * </p>
+     */
+    private MainPageConfig mainPageConfig;
+
+    /**
+     * <p>
      * Description: 构造函数
      * </p>
      */
@@ -63,6 +70,7 @@ public class AppConfig implements Serializable {
         this.headPageConfig = new HeadPageConfig();
         this.loginPageConfig = new LoginPageConfig();
         this.topPageConfig = new TopPageConfig();
+        this.mainPageConfig = new MainPageConfig();
     }
 
     public String getAppTitle() {
@@ -99,6 +107,14 @@ public class AppConfig implements Serializable {
 
     public void setHeadPageConfig(HeadPageConfig headPageConfig) {
         this.headPageConfig = headPageConfig;
+    }
+
+    public MainPageConfig getMainPageConfig() {
+        return mainPageConfig;
+    }
+
+    public void setMainPageConfig(MainPageConfig mainPageConfig) {
+        this.mainPageConfig = mainPageConfig;
     }
 
 }

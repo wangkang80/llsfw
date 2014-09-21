@@ -21,6 +21,9 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
         <!-- 顶部页面 -->
         <property name="topPageConfig" ref="topPageConfig" />
 
+        <!-- 顶部页面 -->
+        <property name="mainPageConfig" ref="mainPageConfig" />
+
     </bean>
 
     <!-- 头文件配置(有默认值,在构造方法中查看,具体修改那个值,可放开注释) -->
@@ -53,6 +56,14 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
 
         <!-- 顶部界面logo图片(尺寸370*62) -->
         <property name="topPageLogoImagePath" value="${topPageConfig.topPageLogoImagePath}" />
+
+    </bean>
+
+    <!-- 主体界面配置(有默认值,在构造方法中查看,具体修改那个值,可放开注释) -->
+    <bean id="mainPageConfig" class="com.llsfw.core.model.expand.appconfig.MainPageConfig">
+
+        <!-- 顶部界面背景图片(尺寸6*62) -->
+        <property name="mainPagePath" value="${mainPageConfig.mainPagePath}" />
 
     </bean>
 

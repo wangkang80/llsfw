@@ -21,7 +21,7 @@
 	<!-- 中间 -->
 	<div data-options="region:'center'">
 		<div id="maintabs" class="easyui-tabs" data-options="fit:true,border:false,plain:true" style="">
-			<div title="欢迎" style="padding: 2px; overflow: hidden;" data-options="href:''"></div>
+			<div title="欢迎" style="padding: 2px; overflow: hidden;" data-options="href:'${appConfig.mainPageConfig.mainPagePath}'"></div>
 		</div>
 	</div>
 	<!-- 右侧 -->
