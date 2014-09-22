@@ -67,6 +67,28 @@ function showErrorMsg(msg) {
 }
 
 /**
+ * 弹出提示信息
+ * 
+ * @param msg
+ *            消息
+ */
+function showInfoMsg(msg) {
+	$.messager.show({
+		title : '提示',
+		width : 200,
+		height : 80,
+		msg : '<center>' + msg + '</center>',
+		timeout : 2000,
+		showType : null,
+		style : {
+			right : '',
+			top : document.body.scrollTop + document.documentElement.scrollTop,
+			bottom : ''
+		}
+	});
+}
+
+/**
  * <p>
  * Description: 获得指定参数
  * </p>
