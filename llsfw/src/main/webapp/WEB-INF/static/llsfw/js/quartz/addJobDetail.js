@@ -244,6 +244,12 @@ $(function() {
 		var jsonData=JSON.stringify(dataArr);
 		$('#jobDetailDataMapHid').val(jsonData);
 		
+		// 此jGroup_add下拉列表的text和value取值一致,并且text是可编辑的,就会带来一个问题
+		// 对于新编辑进去的text,下拉列表会取不到value,所有做如下这个动作解决此问题
+		// 这种方式只用在此情况下,其他情况不适用
+		var text=$('#jGroup_add').combobox('getText');
+		$('#jGroup_add').combobox('setValue',text);
+		
 		// 表单操作
 		$('#job_detail_form_add').attr('action', basePath + 'quartzController/addJobDetail');
 		$('#job_detail_form_add').form('submit', {

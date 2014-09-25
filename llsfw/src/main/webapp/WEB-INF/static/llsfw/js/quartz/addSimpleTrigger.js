@@ -135,6 +135,13 @@ $(function() {
 
 	// 保存方法
 	function save() {
+
+		// 此simple_tGroup_add下拉列表的text和value取值一致,并且text是可编辑的,就会带来一个问题
+		// 对于新编辑进去的text,下拉列表会取不到value,所有做如下这个动作解决此问题
+		// 这种方式只用在此情况下,其他情况不适用
+		var text = $('#simple_tGroup_add').combobox('getText');
+		$('#simple_tGroup_add').combobox('setValue', text);
+
 		$('#simple_triggers_form_add').attr('action', basePath + 'quartzController/addSimpleTirgger');
 		$('#simple_triggers_form_add').form('submit', {
 			onSubmit : function() {// 提交前置事件

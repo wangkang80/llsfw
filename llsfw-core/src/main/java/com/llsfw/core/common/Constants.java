@@ -31,6 +31,13 @@ public class Constants {
 
     /**
      * <p>
+     * Field DEF_USER_NAME: 系统用户名
+     * </p>
+     */
+    public static final String DEF_USER_NAME = "system";
+
+    /**
+     * <p>
      * Field DEF_STATUS_0: 状态0
      * </p>
      */

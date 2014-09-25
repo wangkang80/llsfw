@@ -937,7 +937,15 @@ public class QuartzService extends BaseService {
         sql.append(Constants.COL_TRIGGER_GROUP + com.llsfw.core.common.Constants.COMMA);
         sql.append(Constants.COL_JOB_NAME + com.llsfw.core.common.Constants.COMMA);
         sql.append(Constants.COL_JOB_GROUP + com.llsfw.core.common.Constants.COMMA);
-        sql.append(Constants.COL_DESCRIPTION + com.llsfw.core.common.Constants.COMMA);
+
+        sql.append("(");
+        sql.append("    SELECT " + Constants.COL_DESCRIPTION);
+        sql.append("    FROM ");
+        sql.append("    " + Constants.DEFAULT_TABLE_PREFIX + Constants.TABLE_JOB_DETAILS + " DETAIL");
+        sql.append("    WHERE DETAIL." + Constants.COL_JOB_NAME + "=" + "TRIGGERS." + Constants.COL_JOB_NAME);
+        sql.append("    AND DETAIL." + Constants.COL_JOB_GROUP + "=" + "TRIGGERS." + Constants.COL_JOB_GROUP);
+        sql.append(") AS " + Constants.COL_DESCRIPTION + com.llsfw.core.common.Constants.COMMA);
+
         sql.append(Constants.COL_NEXT_FIRE_TIME + com.llsfw.core.common.Constants.COMMA);
         sql.append(Constants.COL_PREV_FIRE_TIME + com.llsfw.core.common.Constants.COMMA);
         sql.append(Constants.COL_PRIORITY + com.llsfw.core.common.Constants.COMMA);
@@ -949,7 +957,7 @@ public class QuartzService extends BaseService {
         sql.append(Constants.COL_MISFIRE_INSTRUCTION);
         //sql.append(Constants.COL_JOB_DATAMAP);
         sql.append(" FROM ");
-        sql.append(Constants.DEFAULT_TABLE_PREFIX + Constants.TABLE_TRIGGERS);
+        sql.append(Constants.DEFAULT_TABLE_PREFIX + Constants.TABLE_TRIGGERS + " TRIGGERS");
         sql.append(" WHERE 1=1 ");
         if (!StringUtils.isEmpty(tNameSearch)) {
             sql.append(" AND UPPER(" + Constants.COL_TRIGGER_NAME + ") LIKE UPPER('%" + tNameSearch + "%') ");
