@@ -15,8 +15,8 @@
 				<shiro:hasPermission name="orgController:add">
 					<a href="#" class="easyui-menubutton" data-options="plain:false,menu:'#org_add_div_menu'">新增</a>
 					<div id="org_add_div_menu" style="width: 100px;">
-						<div id="org_add_root_btn">根节点</div>
-						<div id="org_add_item_btn">普通节点</div>
+						<div id="org_add_root_btn">根组织</div>
+						<div id="org_add_item_btn">普通组织</div>
 					</div>
 				</shiro:hasPermission>
 				<shiro:hasPermission name="orgController:edit">
