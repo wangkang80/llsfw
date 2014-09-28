@@ -33,10 +33,8 @@ $(function() {
 		$('#org_search_table').treegrid('reload');
 	});
 
-	// 新增按钮
-	$('#org_add_btn').click(function() {
-		var row = $('#org_search_table').treegrid('getSelected');
-		var parentOrgCode = row ? row.ORG_CODE : '';
+	// 新增根组织
+	$('#org_add_root_btn').click(function() {
 		$('#org_add_window').window({
 			title : '新增组织',
 			collapsible : false,
@@ -46,8 +44,28 @@ $(function() {
 			modal : true,
 			width : 470,
 			height : 150,
-			href : basePath + 'orgController/toOrgAdd?parentOrgCode=' + parentOrgCode
+			href : basePath + 'orgController/toOrgAdd'
 		});
+	});
+
+	// 新增叶组织
+	$('#org_add_item_btn').click(function() {
+		var row = $('#org_search_table').treegrid('getSelected');
+		if (row) {
+			$('#org_add_window').window({
+				title : '新增组织',
+				collapsible : false,
+				minimizable : false,
+				maximizable : false,
+				resizable : false,
+				modal : true,
+				width : 470,
+				height : 150,
+				href : basePath + 'orgController/toOrgAdd?parentOrgCode=' + row.ORG_CODE
+			});
+		} else {
+			showErrorMsg('请选择上级组织');
+		}
 	});
 
 	// 修改按钮

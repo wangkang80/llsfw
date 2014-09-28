@@ -36,7 +36,7 @@
     </select>
     <select id="getRootOrg" resultType="java.util.HashMap">
         SELECT ORG_CODE,ORG_NAME FROM TT_ORGANIZATION
-        WHERE PARENT_ORG_CODE IS NULL
+        WHERE PARENT_ORG_CODE IS NULL or PARENT_ORG_CODE= ''
         ORDER BY ORG_SORT
         ASC
     </select>
