@@ -6,12 +6,14 @@
  */
 package com.llsfw.core.service.user;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.util.ByteSource;
@@ -25,6 +27,7 @@ import com.llsfw.core.common.JsonResult;
 import com.llsfw.core.common.SystemParam;
 import com.llsfw.core.mapper.standard.TtApplicationUserMapper;
 import com.llsfw.core.mapper.standard.TtUserJobMapper;
+import com.llsfw.core.model.expand.PageResult;
 import com.llsfw.core.model.standard.TtApplicationUser;
 import com.llsfw.core.model.standard.TtApplicationUserCriteria;
 import com.llsfw.core.model.standard.TtUserJob;
@@ -162,13 +165,67 @@ public class UserService extends BaseService {
      */
     public List<Map<String, Object>> getUserJobList(String loginName) {
         StringBuffer sql = null;
-        sql = new StringBuffer();
-        sql.append(" SELECT A.LOGIN_NAME,B.JOB_CODE,B.JOB_NAME,A.CREATE_DATE,A.CREATE_BY");
-        sql.append(" FROM TT_USER_JOB A,TT_JOB B");
-        sql.append(" WHERE A.JOB_CODE=B.JOB_CODE");
-        sql.append(" AND A.LOGIN_NAME='" + loginName + "'");
-        sql.append(" ORDER BY A.CREATE_DATE DESC");
-        return this.getImqm().queryMap(sql.toString());
+        if (!StringUtils.isEmpty(loginName)) {
+            sql = new StringBuffer();
+            sql.append(" SELECT A.LOGIN_NAME,B.JOB_CODE,B.JOB_NAME,C.ORG_NAME,A.CREATE_DATE,A.CREATE_BY ");
+            sql.append(" FROM TT_USER_JOB A,TT_JOB B,TT_ORGANIZATION C ");
+            sql.append(" WHERE A.JOB_CODE=B.JOB_CODE AND B.ORG_CODE=C.ORG_CODE ");
+            sql.append(" AND A.LOGIN_NAME='" + loginName + "' ");
+            sql.append(" ORDER BY A.CREATE_DATE DESC ");
+            return this.getImqm().queryMap(sql.toString());
+        } else {
+            return new ArrayList<Map<String, Object>>();
+        }
+    }
+
+    /**
+     * <p>
+     * Description: 返回角色清单
+     * </p>
+     * 
+     * @param loginName 用户名
+     * @param jobName 岗位名
+     * @return 角色列表
+     */
+    public List<Map<String, Object>> getUserJobRoleList(String loginName, String jobName) {
+        StringBuffer sql = null;
+        if (!StringUtils.isEmpty(loginName)) {
+            sql = new StringBuffer();
+            sql.append(" SELECT A.ROLE_CODE,A.ROLE_NAME,C.JOB_NAME,B.CREATE_BY,B.CREATE_DATE ");
+            sql.append(" FROM TT_ROLE A,TT_JOB_ROLE B,TT_JOB C,TT_USER_JOB D ");
+            sql.append(" WHERE A.ROLE_CODE=B.ROLE_CODE AND B.JOB_CODE=C.JOB_CODE AND C.JOB_CODE=D.JOB_CODE ");
+            sql.append(" AND D.LOGIN_NAME='" + loginName + "' ");
+            if (!StringUtils.isEmpty(jobName)) {
+                sql.append(" AND B.JOB_CODE IN (" + jobName + ") ");
+            }
+            sql.append(" ORDER BY A.CREATE_DATE DESC ");
+            return this.getImqm().queryMap(sql.toString());
+        } else {
+            return new ArrayList<Map<String, Object>>();
+        }
+    }
+
+    public List<Map<String, Object>> getUserJobOrgTree(String loginName, String jobName) {
+        //获得所关联的组织数据
+        StringBuffer sql = null;
+        if (!StringUtils.isEmpty(loginName)) {
+            sql = new StringBuffer();
+            sql.append(" SELECT A.ROLE_CODE,A.ROLE_NAME,C.JOB_NAME,B.CREATE_BY,B.CREATE_DATE ");
+            sql.append(" FROM TT_ROLE A,TT_JOB_ROLE B,TT_JOB C,TT_USER_JOB D ");
+            sql.append(" WHERE A.ROLE_CODE=B.ROLE_CODE AND B.JOB_CODE=C.JOB_CODE AND C.JOB_CODE=D.JOB_CODE ");
+            sql.append(" AND D.LOGIN_NAME='" + loginName + "' ");
+            if (!StringUtils.isEmpty(jobName)) {
+                sql.append(" AND B.JOB_CODE IN (" + jobName + ") ");
+            }
+            sql.append(" ORDER BY A.CREATE_DATE DESC ");
+            return this.getImqm().queryMap(sql.toString());
+        } else {
+            return new ArrayList<Map<String, Object>>();
+        }
+    }
+
+    private List<Map<String, Object>> getAboutOrgData(String loginName, String jobName) {
+
     }
 
     /**
@@ -235,7 +292,7 @@ public class UserService extends BaseService {
         tujc.createCriteria().andLoginNameEqualTo(loginName);
         this.tujm.deleteByExample(tujc);
         this.taum.deleteByPrimaryKey(loginName);
-        return new JsonResult<String>(Constants.SUCCESS, null);
+        return new JsonResult<String>(Constants.SUCCESS, "删除成功");
     }
 
     /**
@@ -267,7 +324,7 @@ public class UserService extends BaseService {
         this.taum.updateByPrimaryKeySelective(tau);
 
         //设定返回值
-        return new JsonResult<String>(Constants.SUCCESS, null);
+        return new JsonResult<String>(Constants.SUCCESS, "初始化成功");
     }
 
     /**
@@ -287,7 +344,7 @@ public class UserService extends BaseService {
         tau.setUpdateBy(ln);
         tau.setUpdateDate(new Date());
         this.taum.updateByPrimaryKey(tau);
-        return new JsonResult<String>(Constants.SUCCESS, null);
+        return new JsonResult<String>(Constants.SUCCESS, "修改成功");
     }
 
     /**
@@ -328,7 +385,7 @@ public class UserService extends BaseService {
         tau.setCreateDate(new Date());
         this.taum.insertSelective(tau);
 
-        return new JsonResult<String>(Constants.SUCCESS, null);
+        return new JsonResult<String>(Constants.SUCCESS, "保存成功");
     }
 
     /**
@@ -351,9 +408,13 @@ public class UserService extends BaseService {
      * Description: 返回用户列表
      * </p>
      * 
+     * @param page 当前页
+     * @param rows 每页行数
+     * 
      * @return 用户列表
+     * @throws Exception
      */
-    public List<Map<String, Object>> getUserList() {
+    public Map<String, Object> getUserList(int page, int rows) throws Exception {
         StringBuffer sql = null;
         sql = new StringBuffer();
         sql.append("    SELECT  ");
@@ -369,6 +430,10 @@ public class UserService extends BaseService {
         sql.append("    UPDATE_DATE ");
         sql.append("    FROM TT_APPLICATION_USER    ");
         sql.append("    ORDER BY LOGIN_NAME ASC   ");
-        return this.getImqm().queryMap(sql.toString());
+        PageResult pr = this.getPrs().pageQuery(sql.toString(), rows, page);
+        Map<String, Object> rv = new HashMap<String, Object>();
+        rv.put("total", pr.getTotalRecords());
+        rv.put("rows", pr.getRecords());
+        return rv;
     }
 }

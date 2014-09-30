@@ -112,6 +112,8 @@ public class UserController extends BaseController {
         return this.us.getJobList(loginName);
     }
 
+    //-------------------------------新老分界线
+
     /**
      * <p>
      * Description: 删除用户
@@ -239,15 +241,20 @@ public class UserController extends BaseController {
 
     /**
      * <p>
-     * Description: 初始化方法
+     * Description: 返回用户列表
      * </p>
      * 
-     * @return 主页面
+     * @param page 当前页
+     * @param rows 每页行数
+     * 
+     * @return 用户列表
+     * @throws Exception
      */
     @RequiresPermissions("userController:view")
-    @RequestMapping("init")
-    public String init() {
-        return "llsfw/user/userMain";
+    @RequestMapping("getUserList")
+    @ResponseBody
+    public Map<String, Object> getUserList(int page, int rows) throws Exception {
+        return this.us.getUserList(page, rows);
     }
 
     /**
@@ -267,15 +274,37 @@ public class UserController extends BaseController {
 
     /**
      * <p>
-     * Description: 返回用户列表
+     * Description: 返回角色列表
      * </p>
      * 
-     * @return 用户列表
+     * @param loginName 用户名
+     * @param jobName 岗位名
+     * @return 角色列表
      */
     @RequiresPermissions("userController:view")
-    @RequestMapping("getUserList")
+    @RequestMapping("getUserJobRoleList")
     @ResponseBody
-    public List<Map<String, Object>> getUserList() {
-        return this.us.getUserList();
+    public List<Map<String, Object>> getUserJobRoleList(String loginName, String jobName) {
+        return this.us.getUserJobRoleList(loginName, jobName);
+    }
+
+    @RequiresPermissions("userController:view")
+    @RequestMapping("getUserJobOrgTree")
+    @ResponseBody
+    public List<Map<String, Object>> getUserJobOrgTree(String loginName, String jobName) {
+        return this.us.getUserJobOrgTree(loginName, jobName);
+    }
+
+    /**
+     * <p>
+     * Description: 初始化方法
+     * </p>
+     * 
+     * @return 主页面
+     */
+    @RequiresPermissions("userController:view")
+    @RequestMapping("init")
+    public String init() {
+        return "llsfw/user/userMain";
     }
 }

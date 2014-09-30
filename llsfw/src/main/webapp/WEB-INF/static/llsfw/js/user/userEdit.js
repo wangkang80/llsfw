@@ -87,6 +87,7 @@ $(function() {
 					if (datas.returnCode == '1') {
 						$('#user_window_edit').window('close');
 						$('#user_table_search_btn').click();
+						showInfoMsg(datas.result);
 					} else {
 						showErrorMsg(datas.result);
 					}
