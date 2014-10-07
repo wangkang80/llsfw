@@ -6,6 +6,7 @@
 <jsp:include page="/WEB-INF/jsp/llsfw/base/head.jsp" />
 <jsp:include page="/WEB-INF/jsp/llsfw/base/head_easyui_expand.jsp" />
 <script type="text/javascript" charset="UTF-8" src="${pageContext.request.contextPath}/static/llsfw/js/user/userMain.js"></script>
+<script type="text/javascript" charset="UTF-8" src="${pageContext.request.contextPath}/static/llsfw/common/tree.loadFilter.js"></script>
 <title>用户维护</title>
 </head>
 <body class="easyui-layout" data-options="fit:true">
@@ -26,16 +27,22 @@
 					<shiro:hasPermission name="userController:def_pswd">
 						<a id="user_table_set_defpswd_btn" href="#" class="easyui-linkbutton" data-options="plain:true">密码初始化</a>
 					</shiro:hasPermission>
-					<a id="user_table_job_permissions_btn" href="#" class="easyui-linkbutton" data-options="plain:true">岗位授权</a>
-					<a id="user_table_user_permissions_defpswd_btn" href="#" class="easyui-linkbutton" data-options="plain:true">直接授权</a>
+					<shiro:hasPermission name="userController:job_add">
+						<a id="user_table_job_permissions_btn" href="#" class="easyui-linkbutton" data-options="plain:true">岗位授权</a>
+					</shiro:hasPermission>
+					<shiro:hasPermission name="userController:function_add">
+						<a id="user_table_user_permissions_defpswd_btn" href="#" class="easyui-linkbutton" data-options="plain:true">直接授权</a>
+					</shiro:hasPermission>
 				</div>
 				<table id="user_table"></table>
 				<div id="user_window_add"></div>
 				<div id="user_window_edit"></div>
+				<div id="user_job_window_add"></div>
+				<div id="user_user_function_window_add"></div>
 			</div>
 			<div data-options="region:'south',split:true" style="height: 200px;">
 				<div class="easyui-layout" data-options="fit:true">
-					<div data-options="region:'west',split:true" style="width: 460px;">
+					<div data-options="region:'west',split:true" style="width: 50%;">
 						<table id="user_job_table"></table>
 					</div>
 					<div data-options="region:'center'">
@@ -45,20 +52,32 @@
 			</div>
 		</div>
 	</div>
-	<div data-options="region:'east',split:true" style="width: 450px;">
+	<div data-options="region:'east',split:true" style="width: 250px;">
 		<div class="easyui-layout" data-options="fit:true">
 			<div data-options="region:'center'">
 				<div id="PermissionsTabs" class="easyui-tabs" data-options="fit:true,border:false,plain:true">
-					<div title="所有权限" style="padding: 1px; overflow: hidden;" data-options="href:''"></div>
-					<div title="岗位权限" style="padding: 1px; overflow: hidden;" data-options="href:''"></div>
-					<div title="用户权限" style="padding: 1px; overflow: hidden;" data-options="href:''"></div>
+					<div title="所有权限" style="padding: 1px;" data-options="href:''">
+						<div id="user_job_org_function_all_table"></div>
+					</div>
+					<div title="岗位权限" style="padding: 1px;" data-options="href:''">
+						<div id="user_job_org_function_job_table"></div>
+					</div>
+					<div title="直接权限" style="padding: 1px;" data-options="href:''">
+						<div id="user_job_org_function_user_table"></div>
+					</div>
 				</div>
 			</div>
-			<div data-options="region:'south',split:true" style="height: 250px;">
+			<div data-options="region:'south',split:true" style="height: 50%;">
 				<div id="orgTabs" class="easyui-tabs" data-options="fit:true,border:false,plain:true">
-					<div title="所在机构" style="padding: 1px; overflow: hidden;" data-options="href:''"></div>
-					<div title="上级机构" style="padding: 1px; overflow: hidden;" data-options="href:''"></div>
-					<div title="下级机构" style="padding: 1px; overflow: hidden;" data-options="href:''"></div>
+					<div title="所在机构" style="padding: 1px;" data-options="href:''">
+						<div id="user_job_org_all_table"></div>
+					</div>
+					<div title="上级机构" style="padding: 1px;" data-options="href:''">
+						<div id="user_job_org_higher_table"></div>
+					</div>
+					<div title="下级机构" style="padding: 1px;" data-options="href:''">
+						<div id="user_job_org_lower_table"></div>
+					</div>
 				</div>
 			</div>
 		</div>

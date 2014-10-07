@@ -66,6 +66,60 @@ public class UserController extends BaseController {
 
     /**
      * <p>
+     * Description: 添加用户岗位关联
+     * </p>
+     * 
+     * @param loginName 用户名
+     * @param jobCodeList 岗位代码
+     * @return 操作结果
+     */
+    @RequiresPermissions("userController:job_add")
+    @RequestMapping("addUserJob")
+    @ResponseBody
+    public JsonResult<String> addUserJob(@CurrentUser String loginName, String userName, String jobCode) {
+        return this.us.addUserJob(loginName, userName, jobCode);
+    }
+
+    @RequiresPermissions("userController:job_add")
+    @RequestMapping("loadAddUserJobFunctionTree")
+    @ResponseBody
+    public List<Map<String, Object>> loadAddUserJobFunctionTree(String jobCode) {
+        return this.us.loadAddUserJobFunctionTree(jobCode);
+    }
+
+    /**
+     * <p>
+     * Description: 加载岗位清单
+     * </p>
+     * 
+     * @param loginName 用户名
+     * @param orgCodeList 组织清单
+     * @return 结果集
+     */
+    @RequiresPermissions("userController:job_add")
+    @RequestMapping("loadJobList")
+    @ResponseBody
+    public List<Map<String, Object>> loadJobList(String loginName, String orgCodeList) {
+        return this.us.loadJobList(loginName, orgCodeList);
+    }
+
+    /**
+     * <p>
+     * Description: 加载组织机构树
+     * </p>
+     * 
+     * @param userName 用户名
+     * @return 结果集
+     */
+    @RequiresPermissions("userController:job_add")
+    @RequestMapping("loadAllOrgTree")
+    @ResponseBody
+    public List<Map<String, Object>> loadAllOrgTree(String userName) {
+        return this.us.loadAllOrgTree(userName);
+    }
+
+    /**
+     * <p>
      * Description: 跳转到用户岗位关联界面
      * </p>
      * 
@@ -80,40 +134,76 @@ public class UserController extends BaseController {
         return "llsfw/user/addUserJob";
     }
 
+    //-------------------------------直接授权
+
     /**
      * <p>
-     * Description: 添加用户岗位关联
+     * Description: 取消直接授权
+     * </p>
+     * 
+     * @param userName 用户名
+     * @param functionCode 功能代码
+     * @param purviewCode 权限代码
+     * @return 操作结果
+     */
+    @RequiresPermissions("userController:function_add")
+    @RequestMapping("deleteUserFunction")
+    @ResponseBody
+    public JsonResult<String> deleteUserFunction(String userName, String functionCode, String purviewCode) {
+        return this.us.deleteUserFunction(userName, functionCode, purviewCode);
+    }
+
+    /**
+     * <p>
+     * Description: 添加直接权限
+     * </p>
+     * 
+     * @param loginName 登陆人
+     * @param userName 用户名
+     * @param functionCode 功能代码
+     * @param purviewCode 权限代码
+     * @return 操作结果
+     */
+    @RequiresPermissions("userController:function_add")
+    @RequestMapping("addUserFunction")
+    @ResponseBody
+    public JsonResult<String> addUserFunction(@CurrentUser String loginName, String userName, String functionCode,
+            String purviewCode) {
+        return this.us.addUserFunction(loginName, userName, functionCode, purviewCode);
+    }
+
+    /**
+     * <p>
+     * Description: 加载完整的功能权限树
+     * </p>
+     * 
+     * @param userName 用户名
+     * @return 功能权限树
+     */
+    @RequiresPermissions("userController:function_add")
+    @RequestMapping("loadUserFunctionTree")
+    @ResponseBody
+    public List<Map<String, Object>> loadUserFunctionTree(String userName) {
+        return this.us.loadUserFunctionTree(userName);
+    }
+
+    /**
+     * <p>
+     * Description: 跳转到用户岗位关联界面
      * </p>
      * 
      * @param loginName 用户名
-     * @param jobCodeList 岗位列表
-     * @param s session对象
-     * @return 操作结果
+     * @param request 请求
+     * @return 用户岗位关联界面
      */
-    @RequiresPermissions("userController:job_add")
-    @RequestMapping("addUserJob")
-    @ResponseBody
-    public JsonResult<String> addUserJob(@CurrentUser String loginName, String userName, String jobCodeList) {
-        return this.us.addUserJob(loginName, userName, jobCodeList);
+    @RequiresPermissions("userController:function_add")
+    @RequestMapping("toAddUserFunction")
+    public String toAddUserFunction(String userName, HttpServletRequest request) {
+        request.setAttribute("userName", userName);
+        return "llsfw/user/addUserFunction";
     }
 
-    /**
-     * <p>
-     * Description: 返回岗位列列表
-     * </p>
-     * 
-     * @param loginName 登录名
-     * @return 岗位列表
-     */
-    @RequiresPermissions("userController:job_add")
-    @RequestMapping("getJobList")
-    @ResponseBody
-    public List<Map<String, Object>> getJobList(String loginName) {
-        return this.us.getJobList(loginName);
-    }
-
-    //-------------------------------新老分界线
-
+    //-------------------------------主体功能
     /**
      * <p>
      * Description: 删除用户
@@ -288,11 +378,40 @@ public class UserController extends BaseController {
         return this.us.getUserJobRoleList(loginName, jobName);
     }
 
+    /**
+     * <p>
+     * Description: 加载用户关联的组织机构清单
+     * </p>
+     * 
+     * @param loginName 用户名
+     * @param jobName 岗位清单
+     * @param loadOrgType 加载类别
+     * @return 组织机构清单
+     */
     @RequiresPermissions("userController:view")
     @RequestMapping("getUserJobOrgTree")
     @ResponseBody
-    public List<Map<String, Object>> getUserJobOrgTree(String loginName, String jobName) {
-        return this.us.getUserJobOrgTree(loginName, jobName);
+    public List<Map<String, Object>> getUserJobOrgTree(String loginName, String jobName, String loadOrgType) {
+        return this.us.getUserJobOrgTree(loginName, jobName, loadOrgType);
+    }
+
+    /**
+     * <p>
+     * Description: 加载用户关联的功能清单
+     * </p>
+     * 
+     * @param loginName 用户名
+     * @param jobName 岗位清单
+     * @param roleName 角色清单
+     * @param loadFunctionType 加载类别
+     * @return 功能清单
+     */
+    @RequiresPermissions("userController:view")
+    @RequestMapping("getUserJobRoleFunctionTree")
+    @ResponseBody
+    public List<Map<String, Object>> getUserJobRoleFunctionTree(String loginName, String jobName, String roleName,
+            String loadFunctionType) {
+        return this.us.getUserJobRoleFunctionTree(loginName, jobName, roleName, loadFunctionType);
     }
 
     /**

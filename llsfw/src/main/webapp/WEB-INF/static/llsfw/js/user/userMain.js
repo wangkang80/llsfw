@@ -103,14 +103,21 @@ $(function() {
 		} ] ],
 		onClickRow : function(rowIndex, rowData) {
 			currUserName = rowData.LOGIN_NAME;
+			currJobCodeList = '';
+			currRoleCodeList = '';
 			loadUserJobTable(currUserName);
-			loadRoleTable(currUserName, '');
+			loadRoleTable(currUserName, currJobCodeList);
+			loadOrgTable(currUserName, currJobCodeList);
+			loadFunctionTable(currUserName, currJobCodeList, currRoleCodeList);
 		},
 		onLoadSuccess : function(data) {
 			currUserName = '';
 			currJobCodeList = '';
+			currRoleCodeList = '';
 			loadUserJobTable(currUserName);
 			loadRoleTable(currUserName, currJobCodeList);
+			loadOrgTable(currUserName, currJobCodeList);
+			loadFunctionTable(currUserName, currJobCodeList, currRoleCodeList);
 		},
 		onLoadError : function() {
 			showErrorWindow('数据加载失败!');
@@ -124,11 +131,43 @@ $(function() {
 		});
 	}
 
+	// 加载角色列表
 	function loadRoleTable() {
 		$('#user_job_role_table').datagrid({
 			url : basePath + 'userController/getUserJobRoleList?loginName=' + currUserName + '&jobName=' + currJobCodeList
 		});
 
+	}
+
+	// 加载功能树
+	function loadFunctionTable() {
+		$('#user_job_org_function_all_table').tree(
+				{
+					url : basePath + 'userController/getUserJobRoleFunctionTree?loginName=' + currUserName + '&jobName=' + currJobCodeList
+							+ '&roleName=' + currRoleCodeList
+				});
+		$('#user_job_org_function_job_table').tree(
+				{
+					url : basePath + 'userController/getUserJobRoleFunctionTree?loadFunctionType=1&loginName=' + currUserName + '&jobName='
+							+ currJobCodeList + '&roleName=' + currRoleCodeList
+				});
+		$('#user_job_org_function_user_table').tree({
+			url : basePath + 'userController/getUserJobRoleFunctionTree?loadFunctionType=2&loginName=' + currUserName
+		});
+
+	}
+
+	// 加载组织树
+	function loadOrgTable() {
+		$('#user_job_org_all_table').tree({
+			url : basePath + 'userController/getUserJobOrgTree?loginName=' + currUserName + '&jobName=' + currJobCodeList
+		});
+		$('#user_job_org_higher_table').tree({
+			url : basePath + 'userController/getUserJobOrgTree?loadOrgType=1&loginName=' + currUserName + '&jobName=' + currJobCodeList
+		});
+		$('#user_job_org_lower_table').tree({
+			url : basePath + 'userController/getUserJobOrgTree?loadOrgType=2&loginName=' + currUserName + '&jobName=' + currJobCodeList
+		});
 	}
 
 	// 绑定查询按钮事件
@@ -284,7 +323,10 @@ $(function() {
 				jobCodes = '';
 			}
 			currJobCodeList = jobCodes;
+			currRoleCodeList = '';
 			loadRoleTable(currUserName, currJobCodeList);
+			loadOrgTable(currUserName, currJobCodeList);
+			loadFunctionTable(currUserName, currJobCodeList, currRoleCodeList);
 		},
 		onLoadError : function() {
 			showErrorWindow('数据加载失败!');
@@ -296,8 +338,8 @@ $(function() {
 		title : '角色列表',
 		method : 'post',
 		fit : true,
-		rownumbers : true,
-		singleSelect : true,
+		rownumbers : false,
+		singleSelect : false,
 		pagination : false,
 		queryParams : {},
 		columns : [ [ {
@@ -332,8 +374,134 @@ $(function() {
 				}
 			}
 		} ] ],
+		onClickRow : function(rowIndex, rowData) {
+			var selections = $('#user_job_role_table').datagrid("getSelections");
+			var roleCodes = '';
+			if (selections.length > 0) {
+				for (var i = 0; i < selections.length; i++) {
+					roleCodes += "'" + selections[i].ROLE_CODE + "',";
+				}
+				roleCodes = roleCodes.substring(0, roleCodes.length - 1);
+			} else {
+				roleCodes = '';
+			}
+			currRoleCodeList = roleCodes;
+			loadFunctionTable(currUserName, currJobCodeList, currRoleCodeList);
+		},
 		onLoadError : function() {
 			showErrorWindow('数据加载失败!');
+		}
+	});
+
+	// 组织机构树
+	$('#user_job_org_all_table').tree({
+		checkbox : false,
+		parentField : "PARENT_ORG_CODE",
+		textFiled : "ORG_NAME",
+		idFiled : "ORG_CODE",
+		formatter : function(node) {
+			var text = node.text;
+			if (node.MAIN_ORG == "1") {
+				text = "<strong>" + text + "</strong>";
+			}
+			return text;
+		}
+	});
+	$('#user_job_org_higher_table').tree({
+		checkbox : false,
+		parentField : "PARENT_ORG_CODE",
+		textFiled : "ORG_NAME",
+		idFiled : "ORG_CODE",
+		formatter : function(node) {
+			var text = node.text;
+			if (node.MAIN_ORG == "1") {
+				text = "<strong>" + text + "</strong>";
+			}
+			return text;
+		}
+	});
+	$('#user_job_org_lower_table').tree({
+		checkbox : false,
+		parentField : "PARENT_ORG_CODE",
+		textFiled : "ORG_NAME",
+		idFiled : "ORG_CODE",
+		formatter : function(node) {
+			var text = node.text;
+			if (node.MAIN_ORG == "1") {
+				text = "<strong>" + text + "</strong>";
+			}
+			return text;
+		}
+	});
+
+	$('#user_job_org_function_all_table').tree({
+		checkbox : false,
+		parentField : "PARENT_FUNCTION_CODE",
+		textFiled : "FUNCTION_NAME",
+		idFiled : "FUNCTION_CODE"
+	});
+	$('#user_job_org_function_job_table').tree({
+		checkbox : false,
+		parentField : "PARENT_FUNCTION_CODE",
+		textFiled : "FUNCTION_NAME",
+		idFiled : "FUNCTION_CODE"
+	});
+	$('#user_job_org_function_user_table').tree({
+		checkbox : false,
+		parentField : "PARENT_FUNCTION_CODE",
+		textFiled : "FUNCTION_NAME",
+		idFiled : "FUNCTION_CODE"
+	});
+
+	// ----岗位授权
+	$('#user_table_job_permissions_btn').click(function() {
+		var row = $('#user_table').datagrid('getSelected');
+		if (row) {
+			$('#user_job_window_add').window({
+				title : '岗位授权',
+				collapsible : false,
+				minimizable : false,
+				maximizable : false,
+				resizable : false,
+				modal : true,
+				width : 900,
+				height : 500,
+				href : basePath + 'userController/toAddUserJob?userName=' + row.LOGIN_NAME,
+				tools : [ {
+					iconCls : 'icon-reload',
+					handler : function() {
+						$('#user_job_window_add').panel('refresh');
+					}
+				} ]
+			});
+		} else {
+			showErrorMsg('请选择要授权的用户');
+		}
+	});
+
+	// ----直接授权
+	$('#user_table_user_permissions_defpswd_btn').click(function() {
+		var row = $('#user_table').datagrid('getSelected');
+		if (row) {
+			$('#user_user_function_window_add').window({
+				title : '直接授权',
+				collapsible : false,
+				minimizable : false,
+				maximizable : false,
+				resizable : false,
+				modal : true,
+				width : 300,
+				height : 500,
+				href : basePath + 'userController/toAddUserFunction?userName=' + row.LOGIN_NAME,
+				tools : [ {
+					iconCls : 'icon-reload',
+					handler : function() {
+						$('#user_user_function_window_add').panel('refresh');
+					}
+				} ]
+			});
+		} else {
+			showErrorMsg('请选择要授权的用户');
 		}
 	});
 });

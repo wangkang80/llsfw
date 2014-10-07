@@ -111,15 +111,14 @@ public class SecurityService extends BaseService {
      * @return 权限列表
      */
     public Set<String> findUserPermissions(String loginName, List<String> roleList) {
+        Set<String> permissions = new HashSet<String>();
         if (!CollectionUtils.isEmpty(roleList)) {
             List<String> rolePermissions = getPermisions(ism.findRolePermissions(roleList));
-            List<String> userPermissions = getPermisions(ism.findUserPermissions(loginName));
-            Set<String> permissions = new HashSet<String>();
             permissions.addAll(rolePermissions);
-            permissions.addAll(userPermissions);
-            return permissions;
         }
-        return null;
+        List<String> userPermissions = getPermisions(ism.findUserPermissions(loginName));
+        permissions.addAll(userPermissions);
+        return permissions;
     }
 
     /**
@@ -150,13 +149,14 @@ public class SecurityService extends BaseService {
      * @return 用户名
      */
     public List<String> findUserFunctions(String loginName) {
+        List<String> functionList = new ArrayList<String>();
         List<String> roleList = this.findUserRoles(loginName);
         if (!CollectionUtils.isEmpty(roleList)) {
             List<String> roleFunctions = ism.findRoleFunctions(roleList);
-            List<String> userFunctions = ism.findUserFunctions(loginName);
-            roleFunctions.addAll(userFunctions);
-            return roleFunctions;
+            functionList.addAll(roleFunctions);
         }
-        return null;
+        List<String> userFunctions = ism.findUserFunctions(loginName);
+        functionList.addAll(userFunctions);
+        return functionList;
     }
 }

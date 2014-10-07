@@ -22,6 +22,9 @@ $(function() {
 		} ] ],
 		onClickRow : function(row) {
 			$('#job_search_btn').click();
+			$('#job_role_search_table').datagrid({
+				url : basePath + 'orgController/getRole?jobCode=""'
+			});
 		},
 		onLoadError : function() {
 			showErrorWindow('数据加载失败!');

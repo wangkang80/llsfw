@@ -165,9 +165,7 @@ public class MainController extends BaseController {
      */
     @RequestMapping("toTopPage")
     public String toTopPage(@CurrentUser String loginName, HttpServletRequest request) {
-        //TODO 需要改造
         request.setAttribute("userName", loginName);
-        request.setAttribute("role", ism.findUserRoles(loginName));
         return "/llsfw/top";
     }
 
