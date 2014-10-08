@@ -336,6 +336,8 @@ public class UserController extends BaseController {
      * 
      * @param page 当前页
      * @param rows 每页行数
+     * @param loginName 登录名
+     * @param userName 用户名
      * 
      * @return 用户列表
      * @throws Exception
@@ -343,8 +345,8 @@ public class UserController extends BaseController {
     @RequiresPermissions("userController:view")
     @RequestMapping("getUserList")
     @ResponseBody
-    public Map<String, Object> getUserList(int page, int rows) throws Exception {
-        return this.us.getUserList(page, rows);
+    public Map<String, Object> getUserList(int page, int rows, String loginName, String userName) throws Exception {
+        return this.us.getUserList(page, rows, loginName, userName);
     }
 
     /**

@@ -170,9 +170,24 @@ $(function() {
 		});
 	}
 
+	// 注意按钮
+	$('#user_table_warring_btn').click(function() {
+		showErrorWindow('<font style="color: red;">注意:<br />*.此处查询为模糊匹配,区分大小写<br />*.删除用户会一并删除此用户关联的所有权限信息</font>');
+	});
+
 	// 绑定查询按钮事件
 	$('#user_table_search_btn').click(function() {
-		$('#user_table').datagrid('reload');
+		$('#user_table').datagrid('load', {
+			loginName : $('#loginNameSearch').val(),
+			userName : $('#userNameSearch').val()
+		});
+	});
+
+	// 绑定查询按钮
+	$('#loginNameSearch,#userNameSearch').keydown(function(e) {
+		if (e.keyCode == 13) {
+			$('#user_table_search_btn').click();
+		}
 	});
 
 	// 新增按钮

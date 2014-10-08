@@ -14,25 +14,34 @@
 		<div class="easyui-layout" data-options="fit:true">
 			<div data-options="region:'center'">
 				<div id="user_table_param" style="padding: 5px; height: auto;">
-					<a id="user_table_search_btn" href="#" class="easyui-linkbutton" data-options="plain:true">查询</a>
-					<shiro:hasPermission name="userController:add">
-						<a id="user_table_add_btn" href="#" class="easyui-linkbutton" data-options="plain:true">新增</a>
-					</shiro:hasPermission>
-					<shiro:hasPermission name="userController:edit">
-						<a id="user_table_edit_btn" href="#" class="easyui-linkbutton" data-options="plain:true">修改</a>
-					</shiro:hasPermission>
-					<shiro:hasPermission name="userController:delete">
-						<a id="user_table_delete_btn" href="#" class="easyui-linkbutton" data-options="plain:true">删除</a>
-					</shiro:hasPermission>
-					<shiro:hasPermission name="userController:def_pswd">
-						<a id="user_table_set_defpswd_btn" href="#" class="easyui-linkbutton" data-options="plain:true">密码初始化</a>
-					</shiro:hasPermission>
-					<shiro:hasPermission name="userController:job_add">
-						<a id="user_table_job_permissions_btn" href="#" class="easyui-linkbutton" data-options="plain:true">岗位授权</a>
-					</shiro:hasPermission>
-					<shiro:hasPermission name="userController:function_add">
-						<a id="user_table_user_permissions_defpswd_btn" href="#" class="easyui-linkbutton" data-options="plain:true">直接授权</a>
-					</shiro:hasPermission>
+					<div style="padding: 2px;">
+						<a id="user_table_warring_btn" href="#" class="easyui-linkbutton" data-options="plain:true">
+							<font color="red">注意</font>
+						</a>
+						<a id="user_table_search_btn" href="#" class="easyui-linkbutton" data-options="plain:true">查询</a>
+						<shiro:hasPermission name="userController:add">
+							<a id="user_table_add_btn" href="#" class="easyui-linkbutton" data-options="plain:true">新增</a>
+						</shiro:hasPermission>
+						<shiro:hasPermission name="userController:edit">
+							<a id="user_table_edit_btn" href="#" class="easyui-linkbutton" data-options="plain:true">修改</a>
+						</shiro:hasPermission>
+						<shiro:hasPermission name="userController:delete">
+							<a id="user_table_delete_btn" href="#" class="easyui-linkbutton" data-options="plain:true">删除</a>
+						</shiro:hasPermission>
+						<shiro:hasPermission name="userController:def_pswd">
+							<a id="user_table_set_defpswd_btn" href="#" class="easyui-linkbutton" data-options="plain:true">密码初始化</a>
+						</shiro:hasPermission>
+						<shiro:hasPermission name="userController:job_add">
+							<a id="user_table_job_permissions_btn" href="#" class="easyui-linkbutton" data-options="plain:true">岗位授权</a>
+						</shiro:hasPermission>
+						<shiro:hasPermission name="userController:function_add">
+							<a id="user_table_user_permissions_defpswd_btn" href="#" class="easyui-linkbutton" data-options="plain:true">直接授权</a>
+						</shiro:hasPermission>
+					</div>
+					登陆名:
+					<input type="text" id="loginNameSearch" name="loginNameSearch" size="15" />
+					用户名:
+					<input type="text" id="userNameSearch" name="userNameSearch" size="15" />
 				</div>
 				<table id="user_table"></table>
 				<div id="user_window_add"></div>

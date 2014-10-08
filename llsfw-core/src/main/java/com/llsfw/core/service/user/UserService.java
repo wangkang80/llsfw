@@ -930,11 +930,13 @@ public class UserService extends BaseService {
      * 
      * @param page 当前页
      * @param rows 每页行数
+     * @param loginName 登录名
+     * @param userName 用户名
      * 
      * @return 用户列表
      * @throws Exception
      */
-    public Map<String, Object> getUserList(int page, int rows) throws Exception {
+    public Map<String, Object> getUserList(int page, int rows, String loginName, String userName) throws Exception {
         StringBuffer sql = null;
         sql = new StringBuffer();
         sql.append("    SELECT  ");
@@ -949,6 +951,13 @@ public class UserService extends BaseService {
         sql.append("    UPDATE_BY,  ");
         sql.append("    UPDATE_DATE ");
         sql.append("    FROM TT_APPLICATION_USER    ");
+        sql.append("    WHERE 1=1    ");
+        if (!StringUtils.isEmpty(loginName)) {
+            sql.append("    AND LOGIN_NAME LIKE '%" + loginName + "%'    ");
+        }
+        if (!StringUtils.isEmpty(userName)) {
+            sql.append("    AND USER_NAME LIKE '%" + userName + "%'    ");
+        }
         sql.append("    ORDER BY LOGIN_NAME ASC   ");
         PageResult pr = this.getPrs().pageQuery(sql.toString(), rows, page);
         Map<String, Object> rv = new HashMap<String, Object>();
