@@ -56,7 +56,7 @@ function showErrorMsg(msg) {
 		width : 200,
 		height : 80,
 		msg : '<center>' + msg + '</center>',
-		timeout : 2000,
+		timeout : 1500,
 		showType : null,
 		style : {
 			right : '',
@@ -78,7 +78,7 @@ function showInfoMsg(msg) {
 		width : 200,
 		height : 80,
 		msg : '<center>' + msg + '</center>',
-		timeout : 2000,
+		timeout : 1500,
 		showType : null,
 		style : {
 			right : '',
