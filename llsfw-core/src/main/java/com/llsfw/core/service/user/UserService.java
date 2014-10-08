@@ -629,7 +629,7 @@ public class UserService extends BaseService {
         StringBuffer sql = null;
         if (!StringUtils.isEmpty(loginName)) {
             sql = new StringBuffer();
-            sql.append(" SELECT ORG_CODE,ORG_NAME,PARENT_ORG_CODE,ORG_SORT FROM ( ");
+            sql.append(" SELECT AA.ORG_CODE,AA.ORG_NAME,AA.PARENT_ORG_CODE,AA.ORG_SORT FROM ( ");
             sql.append("    SELECT A.ORG_CODE,A.ORG_NAME,A.PARENT_ORG_CODE,A.ORG_SORT ");
             sql.append("    FROM TT_ORGANIZATION A,TT_JOB B,TT_USER_JOB C ");
             sql.append("    WHERE A.ORG_CODE=B.ORG_CODE AND B.JOB_CODE=C.JOB_CODE ");
@@ -638,8 +638,8 @@ public class UserService extends BaseService {
                 sql.append("    AND C.JOB_CODE IN (" + jobName + ") ");
             }
             sql.append("    GROUP BY A.ORG_CODE,A.ORG_NAME,A.PARENT_ORG_CODE,A.ORG_SORT ");
-            sql.append(" ) ");
-            sql.append(" ORDER BY ORG_SORT ASC ");
+            sql.append(" ) AA ");
+            sql.append(" ORDER BY AA.ORG_SORT ASC ");
             List<Map<String, Object>> orgList = this.getImqm().queryMap(sql.toString());
 
             //如果有数据,则进行后续的操作
