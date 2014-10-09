@@ -309,7 +309,7 @@ $(function() {
 			maximizable : true,
 			resizable : false,
 			modal : true,
-			width : 1000,
+			width : 1100,
 			height : 500,
 			href : basePath + 'quartzController/toExecutionHistoryPage' + param
 		});
