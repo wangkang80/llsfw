@@ -12,6 +12,18 @@ $(function() {
 		singleSelect : true,
 		toolbar : '#firedTriggers_search',
 		frozenColumns : [ [ {
+			title : '作业名称',
+			field : 'JOB_NAME',
+			align : 'left',
+			sortable : 'true',
+			width : 100
+		}, {
+			title : '作业组别',
+			field : 'JOB_GROUP',
+			align : 'left',
+			sortable : 'true',
+			width : 100
+		}, {
 			title : '触发器名称',
 			field : 'TRIGGER_NAME',
 			align : 'left',
@@ -23,21 +35,10 @@ $(function() {
 			width : 100
 		} ] ],
 		columns : [ [ {
-			title : '触发时间',
-			field : 'FIRED_TIME',
-			align : 'left',
-			width : 150,
-			formatter : function(value, row, index) {
-				if (value) {
-					var unixTimestamp = new Date(value);
-					return unixTimestamp.toLocaleString();
-				}
-			}
-		}, {
-			title : '执行时间',
+			title : '计划开始时间',
 			field : 'SCHED_TIME',
 			align : 'left',
-			width : 150,
+			width : 170,
 			formatter : function(value, row, index) {
 				if (value) {
 					var unixTimestamp = new Date(value);
@@ -45,50 +46,26 @@ $(function() {
 				}
 			}
 		}, {
-			title : '优先级',
-			field : 'PRIORITY',
+			title : '实际开始时间',
+			field : 'FIRED_TIME',
 			align : 'left',
-			width : 50
+			width : 170,
+			formatter : function(value, row, index) {
+				if (value) {
+					var unixTimestamp = new Date(value);
+					return unixTimestamp.toLocaleString();
+				}
+			}
 		}, {
-			title : '状态',
-			field : 'STATE',
-			align : 'left',
-			width : 80
-		}, {
-			title : '作业名称',
-			field : 'JOB_NAME',
-			align : 'left',
-			width : 100
-		}, {
-			title : '作业组别',
-			field : 'JOB_GROUP',
-			align : 'left',
-			width : 100
-		}, {
-			title : '禁止并发',
-			field : 'IS_NONCONCURRENT',
-			align : 'left',
-			width : 60
-		}, {
-			title : '请求恢复',
+			title : '遗漏恢复',
 			field : 'REQUESTS_RECOVERY',
 			align : 'left',
 			width : 60
-		}, {
-			title : '计划任务名称',
-			field : 'SCHED_NAME',
-			align : 'left',
-			width : 140
 		}, {
 			title : '条目编号',
 			field : 'ENTRY_ID',
 			align : 'left',
 			width : 260
-		}, {
-			title : '实例名称',
-			field : 'INSTANCE_NAME',
-			align : 'left',
-			width : 200
 		} ] ],
 		onDblClickRow : function(rowIndex, rowData) {
 			var triggerName = rowData.TRIGGER_NAME;

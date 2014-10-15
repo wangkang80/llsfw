@@ -170,7 +170,7 @@ public class QuartzController extends BaseController {
     @ResponseBody
     public Map<String, Object> addJobDetail(String jName, String jGroup, String jClass, String jDesc,
             boolean jobShouldRecover, boolean jobDurability, String jobDetailDataMapHid) throws Exception {
-        return this.qs.addJobDetail(jName, jGroup, jClass, jDesc, jobShouldRecover, jobDurability,jobDetailDataMapHid);
+        return this.qs.addJobDetail(jName, jGroup, jClass, jDesc, jobShouldRecover, jobDurability, jobDetailDataMapHid);
     }
 
     /**
@@ -510,11 +510,12 @@ public class QuartzController extends BaseController {
      * </p>
      * 
      * @return 正在执行的任务列表
+     * @throws SchedulerException 计划任务异常
      */
     @RequiresPermissions("quartzController:view")
     @RequestMapping("getFiredTriggers")
     @ResponseBody
-    public List<Map<String, Object>> getFiredTriggers() {
+    public List<Map<String, Object>> getFiredTriggers() throws SchedulerException {
         return this.qs.getFiredTriggers();
     }
 
