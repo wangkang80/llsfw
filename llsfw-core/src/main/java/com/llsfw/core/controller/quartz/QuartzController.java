@@ -458,6 +458,21 @@ public class QuartzController extends BaseController {
 
     /**
      * <p>
+     * Description: 返回计划任务元数据
+     * </p>
+     * 
+     * @return 元数据展示页面
+     * @throws SchedulerException 异常
+     */
+    @RequiresPermissions("quartzController:view")
+    @RequestMapping("toSchedulerMetaData")
+    public String toSchedulerMetaData(HttpServletRequest request) throws SchedulerException {
+        request.setAttribute("metaData", this.qs.toSchedulerMetaData());
+        return "llsfw/quartz/schedulerMetaData";
+    }
+
+    /**
+     * <p>
      * Description: 返回计划任务明细
      * </p>
      * 

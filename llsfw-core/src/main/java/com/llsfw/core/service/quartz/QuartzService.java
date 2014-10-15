@@ -24,6 +24,7 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobKey;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
+import org.quartz.SchedulerMetaData;
 import org.quartz.SimpleScheduleBuilder;
 import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
@@ -976,5 +977,67 @@ public class QuartzService extends BaseService {
             sql.append(" ORDER BY " + sort + " " + order + " ");
         }
         return this.getImqm().queryMap(sql.toString());
+    }
+
+    /**
+     * <p>
+     * Description: 返回MetaData
+     * </p>
+     * 
+     * @return 返回MetaData
+     * @throws SchedulerException 异常
+     */
+    public Map<String, Object> toSchedulerMetaData() throws SchedulerException {
+        Map<String, Object> rv = new HashMap<String, Object>();
+        SchedulerMetaData metaData = this.s.getScheduler().getMetaData();
+
+        rv.put("SCHEDULER_ID", metaData.getSchedulerInstanceId()); //计划任务编号
+        rv.put("SCHEDULER_NAME", metaData.getSchedulerName()); //计划任务名称
+        rv.put("SCHEDULER_CLASS", metaData.getSchedulerClass()); //计划任务实例
+        rv.put("VERSION", metaData.getVersion()); //计划任务版本
+        rv.put("RUNNING_SINCE",
+                metaData.getRunningSince() == null ? null : new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(metaData
+                        .getRunningSince())); //开始运行日期
+        rv.put("IS_STARTED", metaData.isStarted()); //是否启动
+        rv.put("IS_SHUTDOWN", metaData.isShutdown()); //是否关闭
+        rv.put("IS_IN_STANDBY_MODEL", metaData.isInStandbyMode()); //是否待机模式
+        rv.put("IS_SCHEDULER_REMOTE", metaData.isSchedulerRemote()); //计划任务是否远程监控
+
+        rv.put("JOB_STORE_CLASS", metaData.getJobStoreClass()); //作业存储实例
+        rv.put("JOB_STORE_CLUSTERED", metaData.isJobStoreClustered()); //作业存储是否集群模式
+        rv.put("JOB_STORE_S_P", metaData.isJobStoreSupportsPersistence()); //作业存储是否持久化
+        rv.put("THREAD_POOL_CLASS", metaData.getThreadPoolClass()); //线程池实例
+        rv.put("THREAD_POOL_SIZE", metaData.getThreadPoolSize()); //线程池大小
+        rv.put("NUMBER_OF_JOBS", metaData.getNumberOfJobsExecuted()); //执行作业数量
+
+        rv.put("SUMMARY", metaData.getSummary()); //计划任务摘要
+
+        return rv;
+    }
+
+    /**
+     * <p>
+     * Description: 判断job是否在运行中(false:未运行,true:正在运行)
+     * </p>
+     * 
+     * @param jobName 作业名称
+     * @param jobGroup 作业组别
+     * @return
+     * @throws SchedulerException
+     */
+    public boolean checkJobDetailIsExecuting(String jobName, String jobGroup) throws SchedulerException {
+        boolean rv = false;
+        List<JobExecutionContext> jobExecutionContextList = null;
+        jobExecutionContextList = this.s.getScheduler().getCurrentlyExecutingJobs();
+        if (!CollectionUtils.isEmpty(jobExecutionContextList)) {
+            for (JobExecutionContext context : jobExecutionContextList) {
+                if (context.getJobDetail().getKey().getName().equals(jobName)
+                        && context.getJobDetail().getKey().getGroup().equals(jobGroup)) {
+                    rv = true;
+                    break;
+                }
+            }
+        }
+        return rv;
     }
 }

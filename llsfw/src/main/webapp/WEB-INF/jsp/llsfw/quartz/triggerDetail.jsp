@@ -6,6 +6,34 @@
 <table cellpadding="0" cellspacing="0" border="0" style="width: 100%; height: auto; padding: 3px;">
 	<c:if test="${SchedulerRunningStatus!=null}">
 		<tr>
+			<td width="80px" style="border: solid 1px #B4B4B4; word-break: break-all; WORD-WRAP: break-word;">详细描述:</td>
+			<td width="165px" style="border: solid 1px #B4B4B4; word-break: break-all; WORD-WRAP: break-word;">
+				<a id="scheduler_META_DATA_VIEW_btn" href="#" class="easyui-linkbutton">查看</a>
+				<div id="scheduler_META_DATA_VIEW_window"></div>
+				<script type="text/javascript">
+					$('#scheduler_META_DATA_VIEW_btn').click(function() {
+						$('#scheduler_META_DATA_VIEW_window').window({
+							title : '计划任务元数据',
+							collapsible : false,
+							minimizable : false,
+							maximizable : false,
+							resizable : false,
+							modal : true,
+							width : 580,
+							height : 500,
+							href : basePath + 'quartzController/toSchedulerMetaData',
+							tools : [ {
+								iconCls : 'icon-reload',
+								handler : function() {
+									$('#scheduler_META_DATA_VIEW_window').panel('refresh');
+								}
+							} ]
+						});
+					});
+				</script>
+			</td>
+		</tr>
+		<tr>
 			<td width="80px" style="border: solid 1px #B4B4B4; word-break: break-all; WORD-WRAP: break-word;" title="只能停止单节点上的计划任务,需各个节点依次停止">是否停止:</td>
 			<td width="165px" style="border: solid 1px #B4B4B4; word-break: break-all; WORD-WRAP: break-word;">
 				${SchedulerRunningStatus.isShutdown}
