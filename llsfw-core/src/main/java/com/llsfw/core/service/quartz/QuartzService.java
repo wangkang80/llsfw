@@ -20,7 +20,6 @@ import org.quartz.Job;
 import org.quartz.JobBuilder;
 import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
-import org.quartz.JobExecutionContext;
 import org.quartz.JobKey;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
@@ -895,27 +894,27 @@ public class QuartzService extends BaseService {
      * </p>
      * 
      * @return 正在执行的任务列表
-     * @throws SchedulerException
      */
-    public List<Map<String, Object>> getFiredTriggers() throws SchedulerException {
-        List<Map<String, Object>> rv = new ArrayList<Map<String, Object>>();
-        List<JobExecutionContext> jobExecutionContextList = null;
-        jobExecutionContextList = this.s.getScheduler().getCurrentlyExecutingJobs();
-        if (!CollectionUtils.isEmpty(jobExecutionContextList)) {
-            for (JobExecutionContext context : jobExecutionContextList) {
-                Map<String, Object> item = new HashMap<String, Object>();
-                item.put("JOB_NAME", context.getJobDetail().getKey().getName());
-                item.put("JOB_GROUP", context.getJobDetail().getKey().getGroup());
-                item.put("TRIGGER_NAME", context.getTrigger().getKey().getName());
-                item.put("TRIGGER_GROUP", context.getTrigger().getKey().getGroup());
-                item.put("SCHED_TIME", context.getScheduledFireTime());
-                item.put("FIRED_TIME", context.getFireTime());
-                item.put("REQUESTS_RECOVERY", context.isRecovering());
-                item.put("ENTRY_ID", context.getFireInstanceId());
-                rv.add(item);
-            }
-        }
-        return rv;
+    public List<Map<String, Object>> getFiredTriggers() {
+        StringBuffer sql = null;
+        sql = new StringBuffer("");
+        sql.append(" SELECT ");
+        sql.append(Constants.COL_SCHEDULER_NAME + com.llsfw.core.common.Constants.COMMA);
+        sql.append(Constants.COL_ENTRY_ID + com.llsfw.core.common.Constants.COMMA);
+        sql.append(Constants.COL_TRIGGER_NAME + com.llsfw.core.common.Constants.COMMA);
+        sql.append(Constants.COL_TRIGGER_GROUP + com.llsfw.core.common.Constants.COMMA);
+        sql.append(Constants.COL_INSTANCE_NAME + com.llsfw.core.common.Constants.COMMA);
+        sql.append(Constants.COL_FIRED_TIME + com.llsfw.core.common.Constants.COMMA);
+        sql.append(Constants.COL_SCHED_TIME + com.llsfw.core.common.Constants.COMMA);
+        sql.append(Constants.COL_PRIORITY + com.llsfw.core.common.Constants.COMMA);
+        sql.append(Constants.COL_ENTRY_STATE + com.llsfw.core.common.Constants.COMMA);
+        sql.append(Constants.COL_JOB_NAME + com.llsfw.core.common.Constants.COMMA);
+        sql.append(Constants.COL_JOB_GROUP + com.llsfw.core.common.Constants.COMMA);
+        sql.append(Constants.COL_IS_NONCONCURRENT + com.llsfw.core.common.Constants.COMMA);
+        sql.append(Constants.COL_REQUESTS_RECOVERY);
+        sql.append(" FROM ");
+        sql.append(Constants.DEFAULT_TABLE_PREFIX + Constants.TABLE_FIRED_TRIGGERS);
+        return this.getImqm().queryMap(sql.toString());
     }
 
     /**
@@ -991,8 +990,6 @@ public class QuartzService extends BaseService {
         Map<String, Object> rv = new HashMap<String, Object>();
         SchedulerMetaData metaData = this.s.getScheduler().getMetaData();
 
-        rv.put("SCHEDULER_ID", metaData.getSchedulerInstanceId()); //计划任务编号
-        rv.put("SCHEDULER_NAME", metaData.getSchedulerName()); //计划任务名称
         rv.put("SCHEDULER_CLASS", metaData.getSchedulerClass()); //计划任务实例
         rv.put("VERSION", metaData.getVersion()); //计划任务版本
         rv.put("RUNNING_SINCE",
@@ -1012,32 +1009,6 @@ public class QuartzService extends BaseService {
 
         rv.put("SUMMARY", metaData.getSummary()); //计划任务摘要
 
-        return rv;
-    }
-
-    /**
-     * <p>
-     * Description: 判断job是否在运行中(false:未运行,true:正在运行)
-     * </p>
-     * 
-     * @param jobName 作业名称
-     * @param jobGroup 作业组别
-     * @return
-     * @throws SchedulerException
-     */
-    public boolean checkJobDetailIsExecuting(String jobName, String jobGroup) throws SchedulerException {
-        boolean rv = false;
-        List<JobExecutionContext> jobExecutionContextList = null;
-        jobExecutionContextList = this.s.getScheduler().getCurrentlyExecutingJobs();
-        if (!CollectionUtils.isEmpty(jobExecutionContextList)) {
-            for (JobExecutionContext context : jobExecutionContextList) {
-                if (context.getJobDetail().getKey().getName().equals(jobName)
-                        && context.getJobDetail().getKey().getGroup().equals(jobGroup)) {
-                    rv = true;
-                    break;
-                }
-            }
-        }
         return rv;
     }
 }

@@ -525,12 +525,11 @@ public class QuartzController extends BaseController {
      * </p>
      * 
      * @return 正在执行的任务列表
-     * @throws SchedulerException 计划任务异常
      */
     @RequiresPermissions("quartzController:view")
     @RequestMapping("getFiredTriggers")
     @ResponseBody
-    public List<Map<String, Object>> getFiredTriggers() throws SchedulerException {
+    public List<Map<String, Object>> getFiredTriggers() {
         return this.qs.getFiredTriggers();
     }
 

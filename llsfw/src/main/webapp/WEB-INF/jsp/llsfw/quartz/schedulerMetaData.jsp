@@ -13,22 +13,6 @@
 		<td style="border: solid 1px #B4B4B4; word-break: break-all; WORD-WRAP: break-word;">${metaData['RUNNING_SINCE']}</td>
 	</tr>
 	<tr>
-		<td style="border: solid 1px #B4B4B4; word-break: break-all; WORD-WRAP: break-word;">是否启动:</td>
-		<td style="border: solid 1px #B4B4B4; word-break: break-all; WORD-WRAP: break-word;">${metaData['IS_STARTED']}</td>
-	</tr>
-	<tr>
-		<td style="border: solid 1px #B4B4B4; word-break: break-all; WORD-WRAP: break-word;">是否关闭:</td>
-		<td style="border: solid 1px #B4B4B4; word-break: break-all; WORD-WRAP: break-word;">${metaData['IS_SHUTDOWN']}</td>
-	</tr>
-	<tr>
-		<td style="border: solid 1px #B4B4B4; word-break: break-all; WORD-WRAP: break-word;">是否待机:</td>
-		<td style="border: solid 1px #B4B4B4; word-break: break-all; WORD-WRAP: break-word;">${metaData['IS_IN_STANDBY_MODEL']}</td>
-	</tr>
-	<tr>
-		<td style="border: solid 1px #B4B4B4; word-break: break-all; WORD-WRAP: break-word;">是否远程监控:</td>
-		<td style="border: solid 1px #B4B4B4; word-break: break-all; WORD-WRAP: break-word;">${metaData['IS_SCHEDULER_REMOTE']}</td>
-	</tr>
-	<tr>
 		<td style="border: solid 1px #B4B4B4; word-break: break-all; WORD-WRAP: break-word;">作业存储实例:</td>
 		<td style="border: solid 1px #B4B4B4; word-break: break-all; WORD-WRAP: break-word;">${metaData['JOB_STORE_CLASS']}</td>
 	</tr>
