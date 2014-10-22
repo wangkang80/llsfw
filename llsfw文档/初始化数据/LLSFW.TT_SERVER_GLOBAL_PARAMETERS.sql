@@ -1,0 +1,5 @@
+﻿Insert into TT_SERVER_GLOBAL_PARAMETERS
+   (PARAMETERS_CODE, PARAMETERS_VALUE, PARAMETERS_DESC)
+ Values
+   ('test', 'test', '测试参数');
+COMMIT;
