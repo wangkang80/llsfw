@@ -110,7 +110,6 @@ $(function() {
 				href : basePath + 'serviceParamController/toServerParamEdit?PARAMETERS_CODE=' + row.PARAMETERS_CODE
 			});
 		} else {
-			// 登录失败,弹出提示
 			showErrorMsg('请选择要修改的数据');
 		}
 	});

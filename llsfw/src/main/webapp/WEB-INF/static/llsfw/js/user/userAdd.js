@@ -47,6 +47,7 @@ $(function() {
 			for ( var item in val[0]) {
 				if (item == "value") {
 					$(this).combobox("select", val[0][item]);
+					break;
 				}
 			}
 		}

@@ -66,7 +66,7 @@ public class ServiceParamController extends BaseController {
     @RequiresPermissions("serviceParamController:edit")
     @RequestMapping("toServerParamEdit")
     public String toServerParamEdit(String PARAMETERS_CODE, HttpServletRequest request) {
-        request.setAttribute(PARAMETERS_CODE, PARAMETERS_CODE);
+        request.setAttribute("PARAMETERS_CODE", PARAMETERS_CODE);
         return "llsfw/serverParam/serverParamEdit";
     }
 
