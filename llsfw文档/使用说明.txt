@@ -68,6 +68,14 @@
 	1.创建包结构:
 		src/main/java
 			com.公司名.项目名
+				aspectj[切面类]
+				common[公共类,常量]
+				exception[异常封装]
+				listener[监听器]
+				security[安全框架]
+				ws[webservice]
+					XXXXX[分割模块]
+				interceptors
 				controller[控制器]
 					XXXXX[分割模块]
 				mapper[dao接口]
