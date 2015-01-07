@@ -15,11 +15,7 @@ function addTab(iframeId, subtitle, url) {
 			tools : [ {
 				iconCls : 'icon-mini-refresh',
 				handler : function() {
-					var currTab = $('#maintabs').tabs('getSelected');
-					var iframe = $(currTab.panel('options').content);
-					var id = iframe.attr('id');
-					var src = iframe.attr('src');
-					document.getElementById(id).src = src;
+					refreshTab();
 				}
 			} ]
 		});
@@ -34,6 +30,18 @@ function addTab(iframeId, subtitle, url) {
 		$('#maintabs').tabs('select', subtitle);
 	}
 	$.messager.progress('close');
+}
+
+function refreshTab() {
+	var currTab = $('#maintabs').tabs('getSelected');
+	var iframe = $(currTab.panel('options').content);
+	var id = iframe.attr('id');
+	var src = iframe.attr('src');
+	document.getElementById(id).src = src;
+}
+
+function reloadApp() {
+	window.location.reload();
 }
 
 $(function() {

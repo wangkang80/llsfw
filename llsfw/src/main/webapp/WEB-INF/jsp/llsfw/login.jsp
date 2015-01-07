@@ -3,26 +3,17 @@
 <html>
 <head>
 <jsp:include page="/WEB-INF/jsp/llsfw/base/head.jsp" />
-<script type="text/javascript" charset="UTF-8" src="${pageContext.request.contextPath}/static/llsfw/js/login.js"></script>
 <title>${appConfig.appTitle}-登陆</title>
 </head>
 <body id="loginPageBody" background="${pageContext.request.contextPath}/${appConfig.loginPageConfig.loginPageBackgroundImagePath}">
+	<script type="text/javascript" charset="UTF-8" src="${pageContext.request.contextPath}/static/llsfw/js/login.js"></script>
 	<div
 		style="width: 100%; height: 62px; background-image: url(${pageContext.request.contextPath}/${appConfig.loginPageConfig.loginPageTileBackgroundImagePath});">
 		<img src="${pageContext.request.contextPath}/${appConfig.loginPageConfig.loginPageLogoImagePath}">
 	</div>
 	<input type="hidden" id="msg" value="${rv}" />
-	<div id="loginWindow" class="easyui-window"
-		data-options="
-    	title:'登录',
-    	collapsible:false,
-    	minimizable:false,
-    	maximizable:false,
-    	closable:false,
-    	resizable:false,
-    	draggable:false"
-		style="width: 300px; height: 165px;">
-		<form id="loginForm" name="loginForm" method="post">
+	<div id="loginWindow">
+		<form id="loginForm" name="loginForm" method="post" action="${pageContext.request.contextPath}/login">
 			<div style="padding: 0px 50px 0px 50px">
 				<table width="100%" border="0">
 					<tr>
@@ -41,8 +32,8 @@
 			</div>
 			<div class="separator"></div>
 			<div class="toolbar">
-				<a id="submitBtn" href="javascript:void(0)" class="easyui-linkbutton">登录</a>
-				<a id="resetBtn" href="javascript:void(0)" class="easyui-linkbutton">重置</a>
+				<a id="submitBtn" href="javascript:void(0)">登录</a>
+				<a id="resetBtn" href="javascript:void(0)">重置</a>
 			</div>
 		</form>
 	</div>
