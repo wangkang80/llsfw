@@ -51,6 +51,12 @@ public class HttpUtil {
      */
     public HttpGet proxy(HttpGet request, String proxyHost, String proxyPort) {
 
+        //设置请求和传输超时时间
+        RequestConfig requestConfig = null;
+        final int CONNECTREQUESTTIMEOUT = 5 * 1000;
+        final int SOCKETTIMEOUT = 5 * 1000;
+        final int CONNECTTIMEOUT = 5 * 1000;
+
         //host和port都不为空的时候就设置代理
         if (!StringUtils.isEmpty(proxyHost) && !StringUtils.isEmpty(proxyPort)) {
 
@@ -59,12 +65,17 @@ public class HttpUtil {
             proxy = new HttpHost(proxyHost, new Integer(proxyPort));
 
             //设置代理配置
-            RequestConfig config = null;
-            config = RequestConfig.custom().setProxy(proxy).build();
+            requestConfig = RequestConfig.custom().setProxy(proxy).setConnectionRequestTimeout(CONNECTREQUESTTIMEOUT)
+                    .setSocketTimeout(SOCKETTIMEOUT).setConnectTimeout(CONNECTTIMEOUT)
+                    .setStaleConnectionCheckEnabled(true).build();
 
             //设置代理
-            request.setConfig(config);
-
+            request.setConfig(requestConfig);
+        } else {
+            requestConfig = RequestConfig.custom().setConnectionRequestTimeout(CONNECTREQUESTTIMEOUT)
+                    .setSocketTimeout(SOCKETTIMEOUT).setConnectTimeout(CONNECTTIMEOUT)
+                    .setStaleConnectionCheckEnabled(true).build();
+            request.setConfig(requestConfig);
         }
 
         //返回
