@@ -6,6 +6,7 @@
  */
 package com.llsfw.core.common;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
@@ -38,12 +39,12 @@ public class WgetUtil {
      * @param download_url 下载地址
      * @return 成功返回文件路径，失败返回null
      */
-    public static void downloadFileByWget(String cmd) {
+    public static void downloadFileByWget(String downloadUrl, String saveFilePath) {
         int retry = 2;
         int res = -1;
         int time = 1;
         while (retry-- > 0) {
-            ProcessBuilder pb = new ProcessBuilder(cmd);
+            ProcessBuilder pb = new ProcessBuilder("wget", downloadUrl, "-t", "10", "-T", "120", "-O", saveFilePath);
             log.info("wget shell: {}", pb.command());
             Process ps = null;
             try {
