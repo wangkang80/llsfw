@@ -44,7 +44,8 @@ public class WgetUtil {
         int res = -1;
         int time = 1;
         while (retry-- > 0) {
-            ProcessBuilder pb = new ProcessBuilder("wget", downloadUrl, "-t", "10", "-T", "120", "-O", saveFilePath);
+            ProcessBuilder pb = new ProcessBuilder("wget", downloadUrl, "-c", "-t", "10", "-T", "120", "-O",
+                    saveFilePath);
             log.info("wget shell: {}", pb.command());
             Process ps = null;
             try {
