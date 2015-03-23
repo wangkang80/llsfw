@@ -53,9 +53,9 @@ public class HttpUtil {
 
         //设置请求和传输超时时间
         RequestConfig requestConfig = null;
-        final int CONNECTREQUESTTIMEOUT = 30 * 1000;
-        final int SOCKETTIMEOUT = 30 * 1000;
-        final int CONNECTTIMEOUT = 30 * 1000;
+        final int CONNECTREQUESTTIMEOUT = 2 * 60 * 1000;
+        final int SOCKETTIMEOUT = 2 * 60 * 1000;
+        final int CONNECTTIMEOUT = 2 * 60 * 1000;
 
         //host和port都不为空的时候就设置代理
         if (!StringUtils.isEmpty(proxyHost) && !StringUtils.isEmpty(proxyPort)) {
